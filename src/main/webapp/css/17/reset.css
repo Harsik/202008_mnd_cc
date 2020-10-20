@@ -1,0 +1,53 @@
+@charset "utf-8";
+
+html, body, header, section, article, aside, footer, nav, hgroup, h1, h2, h3, h4, h5, h6, div, p, ul, li, figure, fieldset {
+    padding: 0;
+    margin: 0;
+}
+html, body { height:100% }
+[hidden], area, base, basefont, command, datalist, head, input[type=hidden], link, menu[type=context], meta, noembed, noframes,
+param, script, source, style, track, title { /* case-insensitive */
+    display: none;
+}
+
+address, article, aside, blockquote, body, center, dd, dir, div, dl, dt, figure, figcaption, footer, form, h1, h2, h3, h4, h5, h6, header,
+hgroup, hr, html, legend, listing, menu, nav, ol, p, plaintext, pre, section, summary, ul, xmp { 
+    display: block; 
+}
+
+table { display: table; border-collapse: collapse; border-spacing:0;}
+caption { display: table-caption; }
+caption {position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;border-top-left-radius: }
+colgroup { display: table-column-group; }
+col { display: table-column; }
+thead { display: table-header-group; }
+tbody { display: table-row-group; }
+tfoot { display: table-footer-group; }
+tr { display: table-row; }
+td, th { display: table-cell; }
+th{font-weight:normal;}
+ul,li{list-style:none; padding:0; margin:0;}
+li { display: list-item; }
+
+ruby { display: ruby; }
+rt { display: ruby-text;}
+
+fieldset, img, img a { border: 0 none; }
+ul, li { list-style: none; }
+em, address { font-style: normal; }
+a { text-decoration: none; cursor: pointer; }
+a:hover { text-decoration: underline; }
+a,a:focus,a:hover,a:active{outline:0;}
+label{cursor:pointer;}
+img,input{border:0; vertical-align:middle;}
+button,input,select,textarea{margin:0;}
+button{cursor:pointer;}
+iframe,fieldset{border:0; margin:0; padding:0;}
+legend{padding:0; border:0;}
+textarea{overflow:auto; resize:none;}
+textarea,input,button,*:focus{outline:none!important;}h1,h2,h3,h4,h5,h6,dl,dt,dd, p, td,th{margin:0;padding:0}
+em,i,address{font-style:normal}
+
+a:link, a:visited {color:#000;text-decoration:none}
+a:hover, a:focus, a:active {color:#000;text-decoration:none}
+

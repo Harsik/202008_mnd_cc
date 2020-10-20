@@ -1,0 +1,18 @@
+.w_jstree{
+	width:100%;
+	height:calc(100% - 10%);
+	overflow: auto;
+	padding:10px;
+}
+
+.paging {
+	width: 100%;
+}
+
+.tabcontent {
+	display: none;
+	padding: 0;
+    border: 1px solid #e3e2e7;
+    height: 90%;
+    background: #fff;
+}

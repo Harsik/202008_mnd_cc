@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
+	
+	<!--VO 1번DB  실 JNDI-->
+<!--  	<bean id="dataSourceSpied" class="org.springframework.jndi.JndiObjectFactoryBean">
+	    <property name="jndiName" value="java:/Cubrid"/>
+	    <property name="resourceRef" value="true" />
+	</bean>   
+ 	   -->
+
+	
+     <bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>  
+     
+    <bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceSpied" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="SQL         :  "/>
+            </bean>
+        </property>
+    </bean> 	
+
+ 	<!--CTI 1번DB  실 JNDI-->
+ 	<!-- <bean id="dataSourceSpied1" class="org.springframework.jndi.JndiObjectFactoryBean">
+	    <property name="jndiName" value="java:/Cubrid01"/>
+	    <property name="resourceRef" value="true" />
+	</bean>  
+ 	 -->
+ 	 <bean id="dataSourceSpied1" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${cti.driver}" />
+        <property name="url" value="${cti.url}" />
+        <property name="username" value="${cti.username}" />
+        <property name="password" value="${cti.password}" />
+    </bean>  
+
+
+	<bean id="dataSource1" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceSpied1" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="SQL         :  "/>
+            </bean>
+        </property>
+    </bean> 	
+	<!--CTI 1번DB END -->
+
+
+<!--CTI 2번DB  실 JNDI-->
+ 	<!--  <bean id="dataSourceSpied2" class="org.springframework.jndi.JndiObjectFactoryBean">
+	    <property name="jndiName" value="java:/Cubrid02"/>
+	    <property name="resourceRef" value="true" />
+	</bean>  
+ 	 --> 
+ 	  <bean id="dataSourceSpied2" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${cti2.driver}" />
+        <property name="url" value="${cti2.url}" />
+        <property name="username" value="${cti2.username}" />
+        <property name="password" value="${cti2.password}" />
+    </bean>   
+
+
+	<bean id="dataSource2" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <constructor-arg ref="dataSourceSpied1" />
+        <property name="logFormatter">
+            <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <property name="loggingType" value="MULTI_LINE" />
+                <property name="sqlPrefix" value="SQL         :  "/>
+            </bean>
+        </property>
+    </bean> 	
+	<!--CTI 2번DB END -->
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	 <!-- hsql
+	<jdbc:embedded-database id="dataSource" type="HSQL">
+		<jdbc:script location= "classpath:/db/sampledb.sql"/>
+	</jdbc:embedded-database>
+	-->  
+    
+    <!-- hsql
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+        <property name="url" value="jdbc:log4jdbc:hsqldb:hsql://localhost/sampledb"/>
+        <property name="username" value="sa"/>
+    </bean>
+    -->  
+    
+    <!-- Mysql  
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/example" />
+        <property name="username" value="user"/>
+        <property name="password" value="password"/>
+    </bean>
+    -->
+    
+    <!-- oracle
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:example" />
+        <property name="username" value="user"/>
+        <property name="password" value="password"/>
+    </bean>
+    -->
+    
+   
+    
+</beans>

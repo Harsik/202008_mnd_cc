@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin.admin">
+
+<resultMap id="getBoardListMap" type="egovMap">
+	<result property="SEQ" column="SEQ" /> 
+	<result property="BOARD_CD" column="BOARD_CD" /> 
+	<result property="TITLE" column="TITLE" /> 
+	<result property="CONTENT" column="CONTENT" jdbcType="CLOB" javaType="java.lang.String" /> 
+	<result property="STATE" column="STATE" /> 
+	<result property="CNT" column="CNT" /> 
+	<result property="REG_DT" column="REG_DT" />
+	<result property="REG_ID" column="REG_ID" />
+	<result property="REG_MILDSC" column="REG_MILDSC" />
+	<result property="UPT_DT" column="UPT_DT" />
+	<result property="UPT_ID" column="UPT_ID" />
+	<result property="UPT_MILDSC" column="UPT_MILDSC" />
+  	<result property="FILEATCH_NUM" column="FILEATCH_NUM" />
+  	<result property="ATCH_CNT" column="ATCH_CNT" />
+
+</resultMap>
+
+	<!-- 최상위 군 코드로 1차 하위부서 리스트 가져옴  -->
+	<select id="selectDeptTopList" parameterType="map" resultType="egovMap">
+		
+		SELECT MILDSC, DEPT_CD, DEPT_NM, ORDER_NO, DEPT_ABRVWD, DEPT_ABRVWD2, Full_DEPT_NM, HGRNK_DEPT_CD, TELNO 
+		FROM tbl_dept
+		WHERE HGRNK_DEPT_CD IN (
+			SELECT DEPT_CD FROM tbl_dept
+			WHERE MILDSC = #{mildsc}
+			AND HGRNK_DEPT_CD = '#'
+			AND ROWNUM = 1
+		)
+		ORDER BY ORDER_NO, DEPT_NM
+		
+	</select>
+	
+	<!-- 군 코드 와 상위부서 코드로 하위부서 리스트 가져옴  -->
+	<select id="selectDeptList" parameterType="map" resultType="egovMap">
+		
+		SELECT MILDSC, DEPT_CD, DEPT_NM, ORDER_NO, DEPT_ABRVWD, DEPT_ABRVWD2, Full_DEPT_NM, HGRNK_DEPT_CD, TELNO 
+		FROM tbl_dept
+		WHERE 1=1
+		AND MILDSC = REPLACE(#{mildsc},'1290451','A')
+		AND HGRNK_DEPT_CD = #{hgrnkDeptCd}
+		ORDER BY ORDER_NO, DEPT_NM
+		
+	</select>
+
+
+	<!-- 군 코드 와 부서 코드로 부서명을 가져옴  -->
+	<select id="selectDeptNm" parameterType="map" resultType="egovMap">
+		
+		SELECT DEPT_CD, DEPT_NM 
+		FROM tbl_dept
+		WHERE 1=1
+		AND MILDSC = REPLACE(#{mildsc},'1290451','A')
+		AND DEPT_CD = #{deptCd}
+		
+		
+	</select>
+
+	<!-- 군 코드 와 부서 코드로 상위부서명을 가져옴  -->
+	<select id="selectDeptTopNm" parameterType="map" resultType="egovMap">
+		
+		SELECT 
+			  DEPT_CD
+			, DEPT_NM
+		FROM tbl_dept
+		WHERE 1=1
+		AND MILDSC = REPLACE(#{mildsc},'1290451','A')
+		AND DEPT_CD IN (SELECT HGRNK_DEPT_CD
+						 FROM tbl_dept
+						WHERE MILDSC = REPLACE(#{mildsc},'1290451','A')
+						  AND DEPT_CD = #{deptCd} 
+					   )
+	</select>
+
+
+
+
+
+	<!-- 입력된 정보로 회원정보가 있는지 확인  -->
+	<select id="selectUserList" parameterType="map" resultType="egovMap">
+		SELECT ROWNUM, A.*
+	FROM (
+		SELECT
+				a.seq,
+				a.reg_dt,
+			    a.mildsc,
+			 	(SELECT c.cd_ins_nm FROM tbl_code c WHERE cd='100' AND a.mildsc = c.cd_ins_id  )   AS mildsc_nm,
+				a.id,
+				a.nm,
+				a.dept_cd,
+			    b.dept_nm,
+   			    b.full_dept_nm, 
+				a.mil_no,
+				a.rspsblt_biznes,
+				a.RANK,
+				a.rspofc_nm,
+				a.telno,
+				a.mpno,
+				a.email,
+				b.telno AS dept_telno
+			FROM
+				tbl_user a
+				LEFT JOIN tbl_dept b ON a.dept_cd=b.dept_cd AND a.mildsc=b.mildsc
+			WHERE
+				1=1
+				<if test ='mildsc != null and mildsc != ""'>
+					AND a.mildsc = #{mildsc}
+				</if>
+				
+				<if test ='mildsc == null or mildsc == ""'>
+					AND a.mildsc = 'A'
+				</if>
+				
+				<if test ='searchTxt != null and searchTxt != ""'>
+					AND ( a.id like '%' || #{searchTxt} ||'%' OR a.nm like '%' || #{searchTxt} || '%'  )
+				</if>
+				
+				
+			ORDER BY a.seq
+		) A
+		WHERE 1=1
+		AND	ROWNUM BETWEEN #{firstIndex}+1 AND #{lastIndex} 
+	</select>
+	
+	<select  id="getUserCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)	
+		FROM  tbl_user  
+		WHERE  1=1
+		<if test ='mildsc != null and mildsc != ""'>
+			AND mildsc = #{mildsc}
+		</if>
+		
+		<if test ='mildsc == null or mildsc == ""'>
+			AND mildsc = 'A'
+		</if>
+		
+		<if test ='searchTxt != null and searchTxt != ""'>
+			AND ( id like '%' || #{searchTxt} ||'%'  OR nm like '%' || #{searchTxt} || '%'  )
+		</if>
+	</select>
+	
+	
+	
+	<!-- 공지사항(게시판) 가져옴  -->
+	<select id="selectBoardList" parameterType="map" resultType="egovMap">
+		
+		SELECT ROWNUM, A.*
+			FROM (
+				SELECT SEQ
+					 , BOARD_CD
+					 , TITLE
+					 , CONTENT
+					 , STATE
+					 , CNT
+					 , REG_DT
+					 , REG_ID
+					 , REG_MILDSC
+					 , UPT_DT
+					 , UPT_ID
+					 , UPT_MILDSC
+					 , FILEATCH_NUM
+          			 , (SELECT COUNT(*) FROM tbl_board_atch A WHERE  A.tbl_pk = FILEATCH_NUM) AS ATCH_CNT
+				FROM TBL_BOARD  
+				WHERE	1=1 
+				AND BOARD_CD = #{boardCd}
+				
+				<if test ='searchTxt != null and searchTxt != ""'>
+					AND ( TITLE like '%' || #{searchTxt} ||'%'  OR CONTENT like '%' || #{searchTxt} || '%'  )
+				</if>
+				
+				ORDER BY seq desc
+			) A
+		WHERE 1=1
+		AND	ROWNUM BETWEEN #{firstIndex}+1 AND #{lastIndex} 
+		
+	</select>
+	
+	
+	
+	<!-- 공지사항(게시판) 갯수  -->
+	<select  id="getBoardCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)	
+		FROM  TBL_BOARD  
+		WHERE  1=1
+		AND BOARD_CD= #{boardCd}
+		<if test ='searchTxt != null and searchTxt != ""'>
+			AND ( TITLE like '%' || #{searchTxt} ||'%'  OR CONTENT like '%' || #{searchTxt} || '%'  )
+		</if>
+	</select>
+	
+	
+	
+	
+	
+	<!-- 공지사항(게시판) 상세  -->
+	<select id="selectBoardDetail" parameterType="map" resultType="egovMap">
+		
+		SELECT SEQ
+			 , BOARD_CD
+			 , TITLE
+			 , CONTENT
+			 , STATE
+			 , CNT
+			 , REG_DT
+			 , REG_ID
+			 , REG_MILDSC
+			 , UPT_DT
+			 , UPT_ID
+			 , UPT_MILDSC
+			 , FILEATCH_NUM
+		FROM TBL_BOARD  
+		WHERE	1=1
+		AND SEQ = #{seq}
+		AND BOARD_CD = #{boardCd}
+				
+		
+	</select>
+	
+	
+	<!-- 공지사항(게시판) 등록  -->
+	<insert id="insertBoard" parameterType="map" >
+		
+		INSERT INTO	TBL_BOARD (		board_cd
+		                       ,	title
+		                       ,	content
+		                       ,	 cnt
+		                       ,	reg_dt
+		                       ,	reg_id
+		                       ,	reg_mildsc
+		                       ,	reg_ip
+		                       ,    fileatch_num)
+		VALUES (
+		
+			#{boardCd}
+			,#{title}
+			,#{content}
+			,'0'
+			,SYSDATETIME
+			,#{regId}
+			,#{regMildsc}
+			,#{regIp}
+			,#{fileatch_num}
+		)
+	
+	</insert>
+	
+	
+	
+	<!-- 공지사항(게시판) 수정  -->
+	<update id="updateBoard" parameterType="map" >
+		
+		UPDATE	TBL_BOARD
+		SET
+			title = #{title},
+			content = CHAR_TO_CLOB(#{content}),
+			upt_dt = SYSDATETIME,
+			upt_id = #{uptId},
+			upt_mildsc = #{uptMildsc},
+			upt_ip = #{uptIp}
+		WHERE
+			1=1
+			AND	seq = #{seq}
+			AND board_cd = #{boardCd}
+	
+	</update>
+	
+	
+	
+	<!-- 공지사항(게시판) 삭제  -->
+	<delete id="deleteBoard" parameterType="map" >
+		
+		DELETE FROM	TBL_BOARD
+		WHERE
+			1=1
+			AND	seq = #{seq}
+			AND board_cd = #{boardCd}
+	
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	<!-- 관리자 리스트 가져옴  -->
+	<select id="selectMngrList" parameterType="map" resultType="egovMap">
+		
+		SELECT ROWNUM, A.*
+			FROM (
+			
+				SELECT A.SEQ, A.MILDSC, A.MNGR_ID, A.DEPT_CD, B.DEPT_NM, B.FULL_DEPT_NM
+				FROM TBL_MNGR A 
+				LEFT JOIN TBL_DEPT B ON A.DEPT_CD = B.DEPT_CD AND A.MILDSC = B.MILDSC
+				WHERE 1=1
+				AND A.AUTH = #{auth}
+				
+				<if test ='searchTxt != null and searchTxt != ""'>
+					AND ( B.MNGR_ID like '%' || #{searchTxt} ||'%'  OR B.FULL_DEPT_NM like '%' || #{searchTxt} || '%'  )
+				</if>
+				
+				
+				ORDER BY A.SEQ desc
+			) A
+		WHERE 1=1
+		AND	ROWNUM BETWEEN #{firstIndex}+1 AND #{lastIndex} 
+		
+	</select>
+	
+	
+	
+	<!-- 관리자 갯수  -->
+	<select  id="getMngrCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)
+		FROM TBL_MNGR A 
+		LEFT JOIN TBL_DEPT B ON A.DEPT_CD = B.DEPT_CD AND A.MILDSC = B.MILDSC
+		WHERE 1=1
+		AND A.AUTH = #{auth}
+		<if test ='chkAuth == "0"'>
+			AND A.MILDSC = #{mildsc}
+		</if>		
+		<if test ='searchTxt != null and searchTxt != ""'>
+			<if test ='searchKey == null or searchKey == "0"'>
+			AND ( A.MNGR_ID like '%' || #{searchTxt} ||'%'  OR B.FULL_DEPT_NM like '%' || #{searchTxt} || '%'  )
+			</if>
+			<if test ='searchKey == "1"'>
+			AND A.MNGR_ID like '%' || #{searchTxt} ||'%'
+			</if>
+			<if test ='searchKey == "2"'>
+			AND FULL_DEPT_NM like '%' || #{searchTxt} ||'%'
+			</if>
+		</if>
+		
+	</select>
+	
+	
+	
+	<!-- 관리자 상세  -->
+	<select id="selectMngrDetail" parameterType="map" resultType="egovMap">
+		
+		SELECT SEQ, MILDSC, MNGR_ID, DEPT_CD, FULL_DEPT_CD
+		FROM TBL_MNGR A 
+		WHERE 1=1
+		AND SEQ = #{seq}
+		
+	</select>
+	
+	
+	
+	<!-- 관리자 등록  -->
+	<insert id="insertMngr" parameterType="map" >
+		
+		INSERT INTO	TBL_MNGR (	mildsc,	mngr_id,mngr_pw,full_dept_cd,dept_cd,auth,conn_fail_cnt,conn_fail_dt,reg_dt)
+		VALUES (
+			 REPLACE(#{mildsc},'1290451','A')
+			,#{mngrId}
+			,#{mngrPw}
+			,#{fullDeptCd}
+			,#{deptCd}
+			,#{auth}
+			,'0'
+			,SYSDATETIME
+			,SYSDATETIME
+		)
+	
+	</insert>
+	
+	
+	
+	<!-- 관리자 수정  -->
+	<update id="updateMngr" parameterType="map" >
+		
+		UPDATE	TBL_MNGR
+		SET
+			mildsc = REPLACE(#{mildsc},'1290451','A'),
+		<if test ='mngrPw != null and mngrPw != ""'>
+			mngr_pw = #{mngrPw},
+		</if>
+			full_dept_cd = #{fullDeptCd},
+			dept_cd = #{deptCd}
+		WHERE
+			1=1
+			AND	seq = #{seq}
+	
+	</update>
+	
+	
+	<!-- 관리자 삭제  -->
+	<delete id="deleteMngr" parameterType="map" >
+		
+		DELETE FROM	TBL_MNGR
+		WHERE
+			1=1
+			AND	seq = #{seq}
+	
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- 시설물 리스트 가져옴  -->
+	<select id="selectFacList" parameterType="map" resultType="egovMap">
+		
+		SELECT ROWNUM, A.*
+			FROM (
+				SELECT	A.seq
+					,	A.mildsc
+					,	A.facility_nm 
+					,	A.dept_cd
+					,	A.tel
+					,	TO_CHAR(A.reg_dt, 'YYYY-MM-DD') AS reg_dt
+					,	A.reg_id
+					,	A.reg_mildsc
+					,	A.reg_ip
+					,   C.dept_nm
+					,   NVL(C.full_dept_nm, d.cd_ins_nm) AS full_dept_nm
+				FROM
+					tbl_facility A
+					LEFT JOIN tbl_dept C ON A.dept_cd=C.dept_cd AND A.mildsc = C.mildsc 
+					LEFT JOIN tbl_code D ON A.dept_cd=d.cd_ins_id AND cd='100'
+				WHERE
+					1=1 
+					
+				<if test='auth == "1"'>	
+					AND A.reg_id = #{regId}
+				</if>	
+					
+				<if test ='searchTxt != null and searchTxt != ""'>
+					<if test ='searchKey == null or searchKey == "0"'>
+					AND (  A.facility_nm like '%' || #{searchTxt} ||'%' 
+						OR C.full_dept_nm like '%' || #{searchTxt} || '%'  
+						OR A.tel like '%' || #{searchTxt} || '%'   )
+					</if>
+					<if test ='searchKey == "1"'>
+					AND A.facility_nm like '%' || #{searchTxt} ||'%'
+					</if>
+					<if test ='searchKey == "2"'>
+					AND C.FULL_DEPT_NM like '%' || #{searchTxt} ||'%'
+					</if>
+					<if test ='searchKey == "3"'>
+					AND A.TEL like '%' || #{searchTxt} ||'%'
+					</if>
+				</if>			
+				
+				
+				ORDER BY A.FACILITY_NM, A.SEQ desc
+			) A
+		WHERE 1=1
+		AND	ROWNUM BETWEEN #{firstIndex}+1 AND #{lastIndex} 
+		
+	</select>
+	
+	
+	
+	<!-- 시설물 갯수  -->
+	<select  id="getFacCount" resultType="int" parameterType="map">
+		SELECT	count(*)
+		FROM
+			tbl_facility A
+			LEFT JOIN tbl_dept C ON A.dept_cd=C.dept_cd AND A.mildsc = C.mildsc 
+		WHERE
+			1=1
+			 
+		<if test='auth == "1"'>
+			AND A.reg_id = #{regId}
+		</if>
+			
+		<if test ='searchTxt != null and searchTxt != ""'>
+			<if test ='searchKey == null or searchKey == "0"'>
+			AND (  A.facility_nm like '%' || #{searchTxt} ||'%' 
+				OR C.full_dept_nm like '%' || #{searchTxt} || '%'  
+				OR A.tel like '%' || #{searchTxt} || '%'   )
+			</if>
+			<if test ='searchKey == "1"'>
+			AND A.facility_nm like '%' || #{searchTxt} ||'%'
+			</if>
+			<if test ='searchKey == "2"'>
+			AND C.FULL_DEPT_NM like '%' || #{searchTxt} ||'%'
+			</if>
+			<if test ='searchKey == "3"'>
+			AND A.TEL like '%' || #{searchTxt} ||'%'
+			</if>
+		</if>		
+		
+	</select>
+	
+	
+	
+	<!-- 시설물 상세  -->
+	<select id="selectFacDetail" parameterType="map" resultType="egovMap">
+		
+		SELECT	A.seq,	 A.mildsc, A.facility_cd, A.facility_nm,	A.dept_cd,	A.tel,	A. full_dept_cd
+		FROM
+			tbl_facility A
+		WHERE
+			1=1 
+		AND SEQ = #{seq} 
+		
+	</select>
+	
+	
+	
+	
+	
+	
+	<!-- 시설물 등록  -->
+	<insert id="insertFac" parameterType="map" >
+		
+		INSERT INTO	tbl_facility (	 mildsc,	facility_cd, facility_nm,	dept_cd,	tel,	reg_dt,	reg_id,	reg_mildsc,	reg_ip, full_dept_cd )
+		VALUES
+			(
+			 REPLACE(#{mildsc},'1290451','A')
+			,#{facilityCd}
+			,#{facilityNm}
+			,#{deptCd}
+			,#{tel}
+			,SYSDATETIME
+			,#{regId}
+			,#{regMildsc}
+			,#{regIp}
+			,#{fullDeptCd}
+		)
+	
+	</insert>
+	
+	
+	
+	<!-- 시설물 수정  -->
+	<update id="updateFac" parameterType="map" >
+		
+		UPDATE	TBL_FACILITY
+		SET
+			facility_nm = #{facilityNm},
+			mildsc = REPLACE(#{mildsc},'1290451','A'),
+			DEPT_CD = #{deptCd},
+			full_dept_cd = #{fullDeptCd},
+			tel = #{tel},
+			upt_dt = SYSDATETIME,
+			upt_id = #{uptId},
+			upt_mildsc = #{uptMildsc},
+			upt_ip = #{uptIp}
+		WHERE
+			1=1 
+		AND 
+			seq = #{seq}
+	
+	</update>
+	
+	
+	
+	
+	
+	<!-- 시설물 삭제  -->
+	<delete id="deleteFac" parameterType="map" >
+		
+		DELETE FROM	tbl_facility
+		WHERE
+			1=1
+			AND	seq = #{seq}
+			
+	</delete>
+	
+	
+	
+	
+	
+	
+	<!-- 관리자 로그인  -->
+	<select id="adminLogin" parameterType="map" resultType="egovMap">
+		SELECT SEQ, MILDSC, MNGR_ID, MNGR_PW, DEPT_CD, FULL_DEPT_CD, AUTH, CONN_FAIL_CNT, CONN_FAIL_DT
+			FROM TBL_MNGR A 
+			WHERE 1=1
+			AND MNGR_ID = #{id}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	<!-- 접속 로그  -->
+	<insert id="connLog" parameterType="map" >
+		INSERT INTO	tbl_cnntn_log ( mildsc, id, conn_cd, user_cd, reg_dt, reg_ip )
+		VALUES	( 
+				#{mildsc},
+				#{id},
+				#{connCd},
+				#{userCd},
+				SYSDATETIME,
+				#{regIp}
+				);
+	</insert>
+	
+	
+	
+	<!-- 관리자 접속  -->
+	<update id="connMngr" parameterType="map" >
+		
+		UPDATE	TBL_MNGR
+		SET
+			conn_fail_cnt = #{cnt},
+			conn_fail_dt = SYSDATETIME
+		WHERE
+			1=1
+			AND	MNGR_ID = #{id}
+	
+	</update>
+	
+	
+	<!-- 입력된 정보로 회원정보가 있는지 확인  -->
+	<select id="selectAdminList" parameterType="map" resultType="egovMap">
+	select 
+			seq,
+			mildsc,
+			mngr_id,
+			mngr_pw,
+			full_dept_cd,
+			dept_cd,
+			auth,
+			TO_CHAR (REG_DT, 'YYYY-MM-DD') AS REG_DT,
+			conn_fail_cnt,
+			conn_fail_dt
+			FROM
+					tbl_mngr a
+			WHERE 
+				(auth ='0' or auth ='2')
+	</select>
+
+	<select id="selectuserListCk" parameterType="map" resultType="egovMap">
+		select 
+			seq,
+			mildsc,
+			mngr_id,
+			mngr_pw,
+			full_dept_cd,
+			dept_cd,
+			auth,
+			TO_CHAR (REG_DT, 'YYYY-MM-DD') AS REG_DT,
+			conn_fail_cnt,
+			conn_fail_dt
+		FROM
+			tbl_mngr a
+		WHERE 
+			auth ='1'
+	</select>
+
+
+	<select id="selectGeneralList" parameterType="map" resultType="egovMap">
+	SELECT ROWNUM, A.*
+			FROM (
+				SELECT	 A.SEQ
+						,(SELECT C.cd_ins_nm FROM tbl_code C WHERE cd='100' AND A.mildsc = C.cd_ins_id) AS MILDSC_NM
+						,A.MNGR_ID
+						,A.MNGR_PW
+						,A.FULL_DEPT_CD
+						,A.DEPT_CD
+						,B.FULL_DEPT_NM
+						,A.AUTH
+						,TO_CHAR(A.REG_DT, 'YYYY-MM-DD') AS REG_DT
+						,A.CONN_FAIL_CNT
+						,A.CONN_FAIL_DT
+				FROM     TBL_MNGR A
+				LEFT JOIN TBL_DEPT B ON A.DEPT_CD = B.DEPT_CD AND A.MILDSC = B.MILDSC
+				WHERE    1=1 
+				AND      A.AUTH = #{auth}
+				<if test ='chkAuth == "0"'>
+					AND A.MILDSC = #{mildsc}
+				</if>
+				<if test ='searchTxt != null and searchTxt != ""'>
+					<if test ='searchKey == null or searchKey == "0"'>
+					AND ( A.MNGR_ID like '%' || #{searchTxt} ||'%'  OR B.FULL_DEPT_NM like '%' || #{searchTxt} || '%'  )
+					</if>
+					<if test ='searchKey == "1"'>
+					AND A.MNGR_ID like '%' || #{searchTxt} ||'%'
+					</if>
+					<if test ='searchKey == "2"'>
+					AND FULL_DEPT_NM like '%' || #{searchTxt} ||'%'
+					</if>
+				</if>				
+				ORDER BY A.MNGR_ID, A.SEQ desc
+			) A
+		WHERE 1=1
+		AND	ROWNUM BETWEEN #{firstIndex}+1 AND #{lastIndex} 
+	</select>
+	<select id="selectOperatorList" parameterType="map" resultType="egovMap">
+		SELECT employee_id
+		      ,employee_name
+		      , TO_CHAR (end_updatedate, 'YYYY-MM-DD') AS REG_DT 
+		FROM ma_employee
+	</select>
+	
+	<!-- 일반관리자 패스워드 변경  -->
+	<update id="changeMngrPw" parameterType="map" >
+		
+		UPDATE	TBL_MNGR
+		SET
+			mngr_pw = #{mngrPw}
+		WHERE
+			1=1
+			AND	mngr_id = #{mngrId}
+	
+	</update>
+
+	
+  <!-- 게시물 첨부파일 정보 조회 -->
+  <!-- <select id="selectFile" parameterType="java.util.HashMap" resultType="kr.co.twoksystem.vo.TbFileVO"> -->
+  <select id="selectFile" parameterType="map" resultType="egovMap">
+    SELECT  ROWNUM AS row_no
+          , t1.fl_id
+          , t1.tbl_nm
+          , t1.tbl_pk
+          , t1.loc_fl_nm
+          , t1.svr_fl_nm
+          , t1.svr_sv_pth
+          , t1.fl_sz
+          , t1.use_yn
+          , t1.reg_dt
+          , t1.reg_tm
+          , t1.reg_id
+          , t1.upt_dt
+          , t1.upt_tm
+          , t1.upt_id
+      FROM  tbl_board_atch  t1
+     WHERE  t1.fl_id = #{fl_id}
+  </select>
+    
+  <!-- 게시물 첨부파일 정보 저장 -->
+  <insert id="insertNoticeFileAtch" parameterType="map">
+    INSERT  INTO tbl_board_atch (
+            tbl_nm
+         ,  tbl_pk
+         ,  loc_fl_nm
+         ,  svr_fl_nm
+         ,  svr_sv_pth
+         ,  fl_sz
+         ,  use_yn
+         ,  reg_dt
+         ,  reg_tm
+         ,  reg_id
+         ,  upt_dt
+         ,  upt_tm
+         ,  upt_id
+         <if test = "tbl_pk2 != null and !tbl_pk2.equals('')">
+         ,  tbl_pk2
+         </if>
+      ) VALUES (
+            #{tbl_nm}
+         ,  #{tbl_pk}
+         ,  #{locfl_nm}
+         ,  #{svrfl_nm}
+         ,  #{svrfl_pth}
+         ,  #{fl_sz}
+         ,  'Y'
+         ,  TO_CHAR(SYSDATE, 'YYYYMMDD')
+         ,  TO_CHAR(SYSTIMESTAMP, 'HH24MISS')
+         ,  #{id}
+         ,  TO_CHAR(SYSDATE, 'YYYYMMDD')
+         ,  TO_CHAR(SYSTIMESTAMP, 'HH24MISS')
+         ,  #{id}
+       <if test = "tbl_pk2 != null and !tbl_pk2.equals('')">
+         ,  #{ tbl_pk2 }
+       </if>
+    )
+  </insert>
+
+  <!-- 게시물 첨부파일 정보 수정 -->
+  <update id="updateFileAtch" parameterType="map">
+    UPDATE  tbl_board_atch
+       SET  tbl_nm = #{tbl_nm}
+         ,  tbl_pk = #{tbl_pk}
+         ,  loc_fl_nm = #{locfl_nm}
+         ,  svr_fl_nm = #{svrfl_nm}
+         ,  svr_sv_pth = #{svrfl_pth}
+         ,  fl_sz = #{fl_sz}
+         ,  use_yn = #{use_yn}
+         ,  upt_dt = TO_CHAR(SYSDATE, 'YYYYMMDD')
+         ,  upt_tm = TO_CHAR(SYSTIMESTAMP, 'HH24MISS')
+         ,  upt_id = #{id}
+     WHERE  fl_id = #{fl_id}
+  </update>
+
+  <!-- 게시물 첨부파일 정보 삭제 -->
+  <delete id="deleteFileAtch" parameterType="map">
+    DELETE FROM tbl_board_atch
+     WHERE fl_id = #{fl_id}
+  </delete>	
+  
+  <select id="fileList" parameterType="map" resultType="map">
+    SELECT  ROWNUM ROW_NO
+         , T1.FL_ID
+         , T1.TBL_NM
+         , T1.TBL_PK
+         , T1.TBL_PK2
+         , T1.LOC_FL_NM
+         , T1.SVR_FL_NM
+         , T1.SVR_SV_PTH
+         , T1.FL_SZ
+         , T1.USE_YN
+         , REG_DT
+         , REG_TM
+         , REG_ID
+         , UPT_DT
+         , UPT_TM
+         , UPT_ID
+         , 'X' AS FILE_DELETE
+         , IF(LENGTH(FL_SZ) <![CDATA[ < ]]>4, FL_SZ, CEIL(FL_SZ/1024)|| 'KB') AS FL_KB_SZ
+    FROM  TBL_BOARD_ATCH  T1
+    WHERE 1 = 1
+      AND USE_YN = 'Y'  
+      AND T1.TBL_NM = #{tbl_nm}
+      AND T1.TBL_PK = #{tbl_pk}
+      <if test = "tbl_pk2 != null and !tbl_pk2.equals('')">
+      AND T1.TBL_PK2 = #{tbl_pk2}
+      </if>
+      ORDER BY REG_DT ASC, REG_TM ASC
+  </select>  
+	
+  <select id="selectAtchSeqNum" parameterType="map" resultType="int">
+      SELECT SER_FILEATCH_NUM.NEXTVAL AS FILE_NUM
+      <!-- SELECT CAST(SER_FILEATCH_NUM.NEXTVAL AS VARCHAR(100)) AS FILE_NUM -->
+  </select>
+  
+</mapper>

@@ -1,0 +1,11 @@
+.tabcontent_notice {
+    display: none;
+    padding:0;
+    border:1px solid #e3e2e7;
+    height: 95%;
+    background: #fff;
+}
+
+.paging {
+	border: none;
+}
