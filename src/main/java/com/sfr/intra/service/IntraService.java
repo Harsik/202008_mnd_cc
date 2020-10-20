@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface IntraService {
+	
+	List<Map> selectDeptTelTest(Map paramMap) throws Exception;	// 전화번호 검색 자동완성 기능 추가 20.10.20
 
 	Map intraLogin(Map paramMap) throws Exception;
 	

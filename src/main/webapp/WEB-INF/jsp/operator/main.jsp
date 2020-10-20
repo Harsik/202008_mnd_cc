@@ -429,6 +429,47 @@
 			});
 		});
 		
+		// 전화번호 검색 자동완성 기능 추가 20.10.20
+		$(function(){
+		    $("#query").autocomplete({
+		        source : function( request, response) {
+		            $.ajax({
+		                type:"post",
+		                async:true,
+		                url:"/search2.do",
+		                dataType: "json",
+		                data : {"telno" : $("#query").val().trim()},
+		                success: function(data){
+		                	data = data.list;
+		                	console.log(data);
+		                    //서버에서 json 데이터 response 후 목록에 뿌려주기 위함
+		                    response(
+
+		                        $.map(data, function(item){
+		                            return{
+		                                label:(item.fullDeptNm),
+		                                value:(item.fullDeptNm),
+		                                hidVal: (item.deptCd+"|"+item.fullDeptNm)
+		                            };
+		                        })
+
+		                    );
+		                }
+		            });
+		        },
+		        // 조회를 위한 최소글자수
+		        minLength:1,
+		        select: function(event, ui){
+		            ui.item.value="";
+		            var arItem=new Array(2);
+		            //만약 검색리스트에서 선택하였을때 선택한 데이터에 의한 이벤트 발생
+		            alert(JSON.stringify(ui));
+		            arItem=(ui.item.hidVal.toString()).split('|');
+		            $("#선택한 값 셋팅되는 곳").val(arItem[0]);
+		        }
+		    });
+		})
+		
 		function search(pageNm) {
 		var special_pattern = /['~!@#$%^&*|\\\'\";:\/"]/gi;
 

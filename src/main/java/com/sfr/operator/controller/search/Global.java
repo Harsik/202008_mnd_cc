@@ -32,6 +32,23 @@ public class Global {
 
 	@Autowired
 	private IntraService intraService;
+	
+	// 전화번호 검색 자동완성 기능 추가 20.10.20
+	@RequestMapping(value="/search2.do", method=RequestMethod.POST)
+	public @ResponseBody ModelAndView selectDeptList(HttpServletRequest request, @RequestParam Map paramMap) throws Exception {
+		
+		ModelAndView model = new ModelAndView("jsonView");
+		paramMap.put("telno", paramMap.get("telno"));
+		
+		List<Map> list = new ArrayList<>();
+		
+		// searchServer 없어서 임의로 deptTable 에서 조회
+		list = intraService.selectDeptTelTest(paramMap);
+
+		model.addObject("list",list);
+		
+		return model;
+	}
 
 	@RequestMapping(value = "/search.do", method = RequestMethod.POST)
 	public @ResponseBody ModelAndView search(@RequestParam Map paramMap, ModelMap moelMap, HttpServletRequest requset,
