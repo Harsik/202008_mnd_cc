@@ -1,3 +1,0 @@
-.cont_left {width: 100%; float: none; }
-.wrap {padding: 10px 10px 10px 10px; min-height: 500px;}
-.custom_basic {height: calc(100% - 90px); padding: 10px; margin: 0;}
