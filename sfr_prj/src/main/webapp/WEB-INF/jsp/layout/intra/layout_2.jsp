@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />	 -->
+	<meta name="keywords" content="전화번호 통합검색체계" />
+	<meta name="description" content="국방부,육군,공군,해군 전화번호 통합검색체계" />
+<!-- 	<meta http-equiv="Content-Script-Type" content="text/javascript">
+	<meta http-equiv="Content-Style-Type" content="text/css"> -->
+	<meta http-equiv="X-UA-Compatible" content="IE=8" />
+	<meta http-equiv="X-UA-Compatible" content="text/css" />
+	<meta http-equiv="X-UA-Compatible" content="text/javascript" />
+	
+    <title>전화번호 통합검색체계</title>
+
+	<!-- <link rel="stylesheet" href="../css/intra/intra.css" />  -->
+	
+	<link rel="stylesheet" href="../css/17/style.css" />   
+	<link rel="stylesheet" href="../css/17/jstree/style.min.css" /> 
+	
+	<!--[if lt ie 9]> 
+		 <link rel="stylesheet" href="../css/17/style_ie8.css" />
+	<![endif]-->
+	
+	<!-- <link rel="stylesheet" href="../css/layout.css" /> -->
+    <!-- <link rel="stylesheet" href="../css/common.css" /> -->
+	<!-- <link rel="stylesheet" href="../css/fonts.css" /> -->
+	
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.bpopup.min.js"></script>
+	<script type="text/javascript" src="../js/layer_popup.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <!-- <script type="text/javascript" src="../js/17/jstree.min.js"></script> -->
+</head>
+
+<body>
+	<tiles:insertAttribute name="intra_header" />
+	
+	<tiles:insertAttribute name="intra_content" />
+
+	<%-- <tiles:insertAttribute name="intra_footer" /> --%>
+
+</body>
+</html>

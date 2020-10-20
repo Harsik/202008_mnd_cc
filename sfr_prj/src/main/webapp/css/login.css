@@ -1,0 +1,74 @@
+
+/*로그인박스-교환원*/
+.loginWrap {}
+.loginWrap .loginBox{position:absolute; width:850px; height:289px;top:0;left:0;bottom:0;right:0;margin:auto;border-top:2px solid #0760ac;}
+.loginWrap .loginBox_img{float:left;width:270px;height:286px;background:url(../images/operator/login_O_bg.png) no-repeat;}
+.loginWrap .loginBox_img span.txt1{position:absolute;font-size:30px;font-weight:700;letter-spacing:-3px;color:#fff;padding:150px 0 0 100px;}
+.loginWrap .loginBox_01 {width:580px; height:286px;background-color:#fff;display: block; float: right;}
+.loginWrap .loginBox_01 .login_header { display: block; color: #2a2a2a;padding:30px 0 20px 50px;}
+.loginWrap .loginBox_01 .login_header span.txt2{padding-left:10px;color:#666;line-height:55px; font-size:30px;font-weight:700; letter-spacing:-3px;}
+
+.loginWrap .loginBox_01 .inputBox{ position:relative; width:480px; height:110px; margin:0 auto; padding-top:40px;}
+.loginWrap .loginBox_01 .inputBox .input01 { float: left; margin-left: 5px;}
+.loginWrap .loginBox_01 .inputBox .input02 {  float: left; width: 90px; height: 75px; margin-left: 10px; }
+
+.loginWrap .loginBox_01 .inputBox .input01 span.txtid,
+.loginWrap .loginBox_01 .inputBox .input01 span.txtpw { float:left; width:77px; }
+.loginWrap .loginBox_01 .inputBox .input01 .cont { height: 31px; line-height: 31px; }
+.loginWrap .loginBox_01 .inputBox .input01 .mgb10 { margin-bottom: 10px; }
+.loginWrap .loginBox_01 .inputBox .chk { clear: both; margin:5px 0 0 75px; font-size: 13px; color: #666666; }
+.loginWrap .loginBox_01 .inputBox .chk input[type="checkbox"]{ /*vertical-align: -1px;*/ margin:3px 3px 3px 0; }
+
+.loginWrap .loginBox_01 .inputBox .input01 .label_txt{line-height:30px;color:#394f88;font-size:17px;font-weight:700;}
+.loginWrap .loginBox_01 .inputBox .input01 input { font-size: 14px; color: #666666; }
+.loginWrap .loginBox_01 .inputBox .input01 input[type="text"],  
+.loginWrap .loginBox_01 .inputBox .input01 input[type="password"] { width: 240px; border: 1px solid #ccc; color: #666666; float:right; } 
+.loginWrap .loginBox_01 .inputBox .input01 input[type="radio"] { margin-left: -1px; vertical-align: -2px; } 
+
+.loginWrap .loginBox_01 .inputBox .input02 button { width: 120px; height: 70px; border: none; background: #2263bb; font-size: 20px;font-weight:700; color: #ffffff; }
+
+.loginWrap .loginBox_01 .btn_area{width:100%;  background:#fff; padding:0px 0 40px 0;}
+.loginWrap .loginBox_01 .btn_area li{  display:inline-block; text-align:center; font-size:14px; }
+.loginWrap .loginBox_01 .btn_area01{width:100%;  background:#ebf2f4; padding:30px 0;}
+.loginWrap .loginBox_01 .btn_area01 ul li{text-align:left;float:none;width:50%;  background:#ebf2f4; padding:0px 0 0 315px;}
+.loginWrap .loginBox_01 .btn_area01 ul li.login_b{font-weight:600;color:#333;}
+.loginWrap .loginBox_01 .btn_area01 span.txt_blue{font-weight:600;color:#0170c2;}
+
+/*로그인박스-인트라넷*/
+.loginWrap_i {}
+.loginWrap_i .loginBox{position:absolute; width:850px; height:285px;top:0;left:0;bottom:0;right:0;margin:auto;}
+.loginWrap_i .loginBox_img{float:left;width:390px;height:285px;background:url(../images/intra/login.png) no-repeat;}
+.loginWrap_i .loginBox_img span.txt1{position:absolute;font-size:30px;font-weight:700;letter-spacing:-3px;color:#fff;padding:150px 0 0 100px;}
+.loginWrap_i .loginBox_02 {width:460px; height:285px;background-color:#4975b4;display: block; float: left;}
+.loginWrap_i .loginBox_02 .login_header { display: block; color: #fff;padding:50px 0 10px 0px;text-align:left;}
+.loginWrap_i .loginBox_02 .login_header span.txt2{color:#fff;line-height:55px; font-size:35px;font-weight:300; letter-spacing:-3px;}
+
+.loginWrap_i .loginBox_02 .inputBox{ position:relative; width:480px; height:110px; margin:0 auto; padding-top:40px;}
+.loginWrap_i .loginBox_02 .inputBox .input01 { float: left; margin-left: 5px;}
+.loginWrap_i .loginBox_02 .inputBox .input02 {  float: left; width: 90px; height: 75px; margin-left: 10px; }
+
+.loginWrap_i .loginBox_02 .inputBox .input01 span.txtid,
+.loginWrap_i .loginBox_02 .inputBox .input01 span.txtpw { float:left; width:80px;text-align:left;}
+.loginWrap_i .loginBox_02 .inputBox .input01 .cont { height: 31px; line-height: 31px; }
+.loginWrap_i .loginBox_02 .inputBox .input01 .mgb10 { margin-bottom: 10px; }
+.loginWrap_i .loginBox_02 .inputBox .chk { clear: both; margin:5px 0 0 75px; font-size: 13px; color: #666666; }
+.loginWrap_i .loginBox_02 .inputBox .chk input[type="checkbox"]{ /*vertical-align: -1px;*/ margin:3px 3px 3px 0; }
+
+.loginWrap_i .loginBox_02 .inputBox .input01 .label_txt{line-height:30px;color:#99c6ee;font-size:18px;font-weight:700;}
+.loginWrap_i .loginBox_02 .inputBox .input01 input { font-size: 15px; color: #666666; }
+.loginWrap_i .loginBox_02 .inputBox .input01 input[type="text"],  
+.loginWrap_i .loginBox_02 .inputBox .input01 input[type="password"] { width: 220px; border: 1px solid #666; color: #333; float:right;height:28px; } 
+.loginWrap_i .loginBox_02 .inputBox .input01 input[type="radio"] { margin-left: -1px; vertical-align: -2px; } 
+
+.loginWrap_i .loginBox_02 .inputBox .input02 button { width: 120px; height: 70px; border: none; background: #0f3c7e; font-size: 25px;font-weight:700; color: #ffffff; }
+
+.loginWrap_i .loginBox_02 .btn_area{width:100%;  background:#fff; padding:0px 0 40px 0;}
+.loginWrap_i .loginBox_02 .btn_area li{  display:inline-block; text-align:center; font-size:14px; }
+.loginWrap_i .loginBox_02 .btn_area01{width:100%;  background:#ebf2f4; padding:30px 0;}
+.loginWrap_i .loginBox_02 .btn_area01 ul li{text-align:left;float:none;width:50%;  background:#ebf2f4; padding:0px 0 0 315px;}
+.loginWrap_i .loginBox_02 .btn_area01 ul li.login_b{font-weight:600;color:#333;}
+.loginWrap_i .loginBox_02 .btn_area01 span.txt_blue{font-weight:600;color:#0170c2;}
+
+
+
+

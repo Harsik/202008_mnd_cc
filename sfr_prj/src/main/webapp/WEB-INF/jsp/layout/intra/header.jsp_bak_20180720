@@ -1,0 +1,67 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<tiles:importAttribute name="user_name" />
+<!-- 상단 레이아웃 -->
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		$(function(){
+			setLogoutTimer("intra");
+		});
+		
+	});
+ 	  
+	function intraLogout(){
+		location.href = "/intra/logout.do";
+		localStorage.clear();
+	};
+	
+	//공지사항 팝업
+	function popup_notice(){ //경로, 가로, 세로, 아이디
+		gfn_popup("/intra/intraNoticeList.do", "700", "460", "noticepopup");
+	};
+	
+	function myPage() {
+		location.href= "/intra/myPage.do"
+	}
+
+	function main() {
+		location.href= "/intra/main.do"
+	}
+		
+</script>
+<div id="wrap_i">
+	<!--header-->
+    <div class="top_navi_i">
+    	<div class="m_wrap">
+            <!--logo-->
+			<div class="logo_i"><a href="#"><img src="../images/intra/logo_intranet.png" alt="전화번호 통합검색체계" />
+				<h1>전화번호 <span class="logo_txt">통합검색체계</span></h1></a>
+			</div>
+			<!--//logo-->
+			<!--gnb-->
+			<div class="gnb_i">
+				<ul>
+					<li><a href="javascript:void(0)" onclick=" main();">홈</a></li>
+					<li class="line"></li>
+					<li><a href="javascript:void(0)" onclick="myPage();">마이페이지</a></li>
+					<li class="line"></li>
+					<li><a href="javascript:void(0)" onclick="popup_notice();">공지사항</a></li>
+					<li class="line"></li>
+					<li><a href="javascript:void(0))" onclick="intraLogout();">로그아웃</a></li>
+				</ul>
+			</div>
+			<!--// gnb-->
+			<!--login_box 로그인 후-->
+			<!--<div class="login_box_i">
+				<span class="login_name pr5">고길동님</span><span class="login_status pr20">[통화중]</span><span class="login_time">시간 : </span><span class="login_time_b">00:00:00</span>
+				</div>-->
+			<!--//login_box-->
+			<!--login_box 로그인 전-->
+			<div class="login_box_i">
+				<span class="login_name pr5" id="id"></span>
+				</div>
+			<!--//login_box-->
+    	</div>
+    </div>
+    <!--//header-->

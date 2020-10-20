@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="operator.operator">
+
+<resultMap id="getBoardListMap" type="egovMap">
+	<result property="SEQ" column="SEQ" /> 
+	<result property="BOARD_CD" column="BOARD_CD" /> 
+	<result property="TITLE" column="TITLE" /> 
+	<result property="CONTENT" column="CONTENT" jdbcType="CLOB" javaType="java.lang.String" /> 
+	<result property="STATE" column="STATE" /> 
+	<result property="CNT" column="CNT" /> 
+	<result property="REG_DT" column="REG_DT" />
+	<result property="REG_ID" column="REG_ID" />
+	<result property="REG_MILDSC" column="REG_MILDSC" />
+	<result property="UPT_DT" column="UPT_DT" />
+	<result property="UPT_ID" column="UPT_ID" />
+	<result property="UPT_MILDSC" column="UPT_MILDSC" />
+
+</resultMap>
+
+	<!-- 군 코드 와 상위부서 코드로 하위부서 리스트 가져옴  -->
+	<select id="selectDeptList" parameterType="map" resultType="egovMap">
+		
+		SELECT  *
+		FROM (	
+			SELECT MILDSC 
+				 , (SELECT C.CD_INS_NM FROM TBL_CODE C WHERE CD = '100' AND CD_INS_ID = A.MILDSC) AS MILDSC_NM
+			     , DEPT_CD 
+			     , (SELECT B.DEPT_NM FROM TBL_DEPT B WHERE B.DEPT_CD = A.DEPT_CD) AS DEPT_NM
+			     , (SELECT B.FULL_DEPT_NM FROM TBL_DEPT B WHERE B.DEPT_CD = A.DEPT_CD) AS FULL_DEPT_NM
+			     , TELNO 
+			     , RANK 
+			     , NM
+	   		     , RSPOFC_NM 
+	   		     , RSPSBLT_BIZNES
+			     , MPNO  
+			     , ROWNUM AS rnum
+			FROM   TBL_USER A
+			WHERE  1=1
+			AND    MILDSC = #{mildsc}
+			AND    DEPT_CD = #{deptCd}
+			AND    ROWNUM  <![CDATA[ <= ]]> #{endRowNum} 
+		    ORDER BY DEPT_CD, rspofc_nm)
+		    WHERE rnum <![CDATA[ >= ]]> #{startRowNum}
+		
+	</select>
+	
+	<!-- 군 코드 와 상위부서 코드로 하위부서 리스트 갯수  -->
+	<select  id="getDeptCount" resultType="int" parameterType="map">
+	
+		SELECT COUNT(*) 
+		FROM tbl_user
+		WHERE 1=1
+		AND MILDSC = #{mildsc}
+		AND DEPT_CD = #{deptCd}
+		AND STATE = 'Y'
+		ORDER BY DEPT_CD, rspofc_nm
+		
+	</select>
+	
+	
+	<!-- 군 코드 와 전화번호로  부서 번호 가져옴  -->
+	<select id="selectDeptTel" parameterType="map" resultType="egovMap">
+		
+		SELECT	 C.SEQ
+	           , C.MILDSC
+	           , (SELECT A.cd_ins_nm FROM tbl_code A WHERE cd='100' AND mildsc = A.cd_ins_id) AS MILDSC_NM 
+	           , C.DEPT_CD 
+			   , (SELECT B.DEPT_NM FROM TBL_DEPT B WHERE B.DEPT_CD = C.DEPT_CD) AS DEPT_NM 
+	           , C.NM
+	           , C.MIL_NO
+	           , C.RSPSBLT_BIZNES
+	           , C.RANK
+	           , C.RSPOFC_NM
+	           , C.TELNO
+	           , C.MPNO
+	           , C.OPNPBL_YN
+	           , C.STATE
+		FROM TBL_USER C 
+		WHERE 1=1
+		<if test='telno!=""'>	
+			AND C.TELNO like '%' || #{telno} || '%'
+		</if>
+		<if test='mpno!=""'>	
+			AND C.MPNO like '%' || #{mpno} || '%'
+		</if>
+		AND ROWNUM = 1
+		<!-- <if test='telno!=""'>	
+			AND C.TELNO like '%' || #{telno} || '%'
+		</if> -->
+		<!-- <if test='mpno!=""'>	
+			AND C.MPNO like '%' || #{mpno} || '%'
+		</if> -->
+		
+		
+	</select>
+	
+	
+	<!-- 군 코드 와 부서 코드로 부서에 소속된 user 리스트 가져옴  -->
+	<select id="selectDeptUserList" parameterType="map" resultType="egovMap">
+		
+		SELECT ID, NM, DEPT_CD, MIL_NO, RSPSBLT_BIZNES, RANK, RSPOFC_NM, TELNO, MPNO, EMAIL
+		FROM TBL_USER 
+		WHERE	1=1
+		AND MILDSC = #{mildsc}
+		AND DEPT_CD = #{hgrnkDeptCd}
+		
+	</select>
+	
+	
+	
+	<!-- 공지사항(게시판) 가져옴  -->
+	<select id="selectBoardList" parameterType="map" resultType="egovMap">
+		SELECT ROWNUM, A.*
+			FROM (
+				SELECT SEQ, BOARD_CD, TITLE, CONTENT, STATE, CNT, REG_DT, REG_ID, REG_MILDSC, UPT_DT, UPT_ID, UPT_MILDSC
+				FROM TBL_BOARD  
+				WHERE	1=1 
+				AND BOARD_CD= #{boardCd}
+				ORDER BY seq desc
+			) A
+		WHERE 1=1
+		AND	ROWNUM BETWEEN #{firstIndex}+1 AND #{lastIndex}
+		
+	</select>
+	
+	
+	<!-- 공지사항(게시판) 상세  -->
+	<select id="selectBoardDetail" parameterType="map" resultType="egovMap">
+		
+		SELECT SEQ, BOARD_CD, TITLE, CONTENT, STATE, CNT, REG_DT, REG_ID, REG_MILDSC, UPT_DT, UPT_ID, UPT_MILDSC
+		FROM TBL_BOARD  
+		WHERE	1=1
+		AND SEQ = #{seq}
+		AND BOARD_CD= #{boardCd}
+				
+		
+	</select>
+	
+	
+	<!-- 공지사항(게시판) 조회수 ++  -->
+	<update id="updateBoardCnt" parameterType="map" >
+		
+		UPDATE TBL_BOARD 
+		SET	 CNT = (SELECT CNT+1 FROM TBL_BOARD WHERE 1=1 AND SEQ = #{seq}	AND BOARD_CD= #{boardCd})
+		WHERE 1=1
+		AND SEQ = #{seq}
+		AND BOARD_CD= #{boardCd}
+		
+	</update>
+	
+	
+	<select  id="getBoardCount" resultType="int" parameterType="map">
+		SELECT COUNT(*)	
+		FROM  TBL_BOARD  
+		WHERE  1=1
+		AND BOARD_CD= #{boardCd}
+	</select>
+	
+	<!-- DEPT TREE  -->
+	<select id="selectDeptTree" parameterType="map" resultType="egovMap">
+		SELECT	DEPT_CD AS ID, DEPT_NM AS TEXT,  HGRNK_DEPT_CD AS PARENT , LEVEL
+		FROM    TBL_DEPT   
+		START WITH HGRNK_DEPT_CD = #{hgrnkDeptCd} AND MILDSC = #{mildsc} CONNECT BY PRIOR DEPT_CD = HGRNK_DEPT_CD
+
+		<if test='mildsc!="C"'>	
+		ORDER SIBLINGS BY ORDER_NO
+		</if>
+		
+		<if test='mildsc=="C"'>	
+		ORDER SIBLINGS BY DEPT_CD
+		  </if>  
+	</select>
+	
+	
+	<select id="selectCtiUser" parameterType="map" resultType="egovMap">
+		SELECT   EMPLOYEE_NAME 
+		       , LOGIN_ID
+		FROM     MA_EMPLOYEE
+		WHERE    LOGIN_ID = #{id}
+	</select>
+	
+	<select id="selectCtiUserInfo70" parameterType="map" resultType="egovMap">
+		SELECT   EMPLOYEE_NAME 
+		       , LOGIN_ID
+		FROM     MA_EMPLOYEE
+		WHERE    LOGIN_ID = #{id}
+	</select>
+	
+	<select id="selectoperatorList" parameterType="map" resultType="egovMap">
+		SELECT 	 call_type 
+	           , employee_id
+	           , ani 
+	           , abandon_time 
+	           , dialring_time
+	           , call_time 
+	           , target_dn 
+	           , event_starttime 
+		FROM ot_callstat
+		WHERE employee_id = #{id}
+		ORDER BY event_starttime DESC
+	</select>
+	
+	<select id="selectoperatorList70" parameterType="map" resultType="egovMap">
+		SELECT 	 call_type 
+	           , employee_id
+	           , ani 
+	           , abandon_time 
+	           , dialring_time
+	           , call_time 
+	           , target_dn 
+	           , event_starttime 
+		FROM ot_callstat
+		WHERE employee_id = #{id}
+		ORDER BY event_starttime DESC
+	</select>
+	
+	
+	<!-- <select id="selectCtiList" parameterType="map" resultType="egovMap">
+		SELECT   EMPLOYEE_NAME 
+		       , EMPLOYEE_ID
+		FROM     MA_EMPLOYEE
+		WHERE    LOGIN_ID = #{id}
+	</select> -->
+	
+</mapper>

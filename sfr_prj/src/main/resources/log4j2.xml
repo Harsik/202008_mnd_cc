@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        </Console>
+        
+		<RollingFile name="file" fileName="/sfr_logs/log.log" filePattern="/sfr_logs/log.%i.%d{yyyy-MM-dd}.log">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100MB" /><!--  이 용량이 초과되면 아래 DefaultRolloverStrategy 정책만큼 넘버링 할거다. -->
+			</Policies>
+		</RollingFile>
+    </Appenders>
+        
+        
+    <Loggers>
+        <Logger name="java.sql" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        <Logger name="egovframework" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+          <!-- log SQL with timing information, post execution -->
+        <Logger name="jdbc.sqltiming" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        <Logger name="org.springframework" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        
+        <Logger name="org.mybatis.spring.SqlSessionUtils" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        
+        <Logger name="jdbc.audit" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+       
+       	<Logger name="jdbc.resultsettable" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        
+        <Logger name="jdbc.resultset" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        
+        <Logger name="log4jdbc.debug" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        
+         <Logger name="org.quartz.core" level="ERROR" additivity="false">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Logger>
+        
+        
+        <Root level="DEBUG">
+            <AppenderRef ref="console" />
+            <AppenderRef ref="file" />
+        </Root>
+    </Loggers>
+</Configuration>

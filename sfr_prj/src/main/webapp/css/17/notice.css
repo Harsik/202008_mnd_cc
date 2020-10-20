@@ -1,0 +1,16 @@
+html,body{height:100%; width:100%;min-width:100%;margin:0;padding:0;}
+
+.wrap_notice {
+	width: 1000px;
+	min-width : 500px !important;
+	min-height: 100px;
+	padding: 20px 30px 30px 30px;
+}
+
+.custom_basic_w {
+	height: 100%;
+}
+
+.section {height: calc(100% - 10%);}
+
+.paging a {padding: 0;}
