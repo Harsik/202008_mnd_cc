@@ -2,53 +2,43 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-	
 	<!-- 각군 일배치 -->
 	<bean name="sfrJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
 		<property name="jobClass" value="com.sfr.quartz.SfrScheduler" />
 	</bean>
-	
-	
 	<!-- 즐겨찾기 삭제 1년 -->
 	<bean name="sfrJob1" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
 		<property name="jobClass" value="com.sfr.quartz.SfrScheduler1" />
 	</bean>
-	
-	
 	<!-- 검색이력 삭제 5일 -->
 	<bean name="sfrJob2" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
 		<property name="jobClass" value="com.sfr.quartz.SfrScheduler2" />
 	</bean>
-	
-	
-	
+
 	<!-- 각군 일배치 -->
 	<bean id="sfrCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="sfrJob" />
 		<property name="cronExpression" value="0 30 4 * * ?" /> 
 	</bean>
-	
-	
-	
 	<!-- 즐겨찾기 삭제 1년 -->
 	<bean id="sfrCronTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="sfrJob1" />
 		<property name="cronExpression" value="0 0 1 31 12 ?" />
 	</bean>
-	
 	<!-- 검색이력 삭제 5일 -->
 	<bean id="sfrCronTrigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="sfrJob2" />
 		<property name="cronExpression" value="0 30 1 ? * 1 *" />
 	</bean>
-	
-	
+
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<!-- <property name="jobDetails">
+		<!-- 
+		<property name="jobDetails">
 			<list>
 				<ref bean="sfrJob"/>
 			</list>
-		</property> -->
+		</property>
+		-->
 		<property name="triggers">
 			<list>
 				<ref bean="sfrCronTrigger"/>

@@ -10,10 +10,10 @@
        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
 
-	<context:property-placeholder location="classpath:properties/*.properties" /> 
-	
+	<context:property-placeholder location="classpath:properties/*.properties" />
+
 	<util:properties id="sfr_config" location="classpath:properties/sfr.properties" />
-	
+
 	<bean id="leaveaTrace" class="egovframework.rte.fdl.cmmn.trace.LeaveaTrace">
 		<property name="traceHandlerServices">
 			<list>
@@ -21,7 +21,6 @@
 			</list>
 		</property>
 	</bean>
-	
 
 	<bean id="traceHandlerService" class="egovframework.rte.fdl.cmmn.trace.manager.DefaultTraceHandleManager">
 		<property name="reqExpMatcher">
@@ -38,8 +37,8 @@
 			</list>
 		</property>
 	</bean>
-	
+
 	<bean id="antPathMater" class="org.springframework.util.AntPathMatcher" />
 	<bean id="defaultTraceHandler" class="egovframework.rte.fdl.cmmn.trace.handler.DefaultTraceHandler" />
-	 
+
 </beans>

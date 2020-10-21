@@ -7,5 +7,3 @@
 		<!-- <typeAlias alias="commandMap" type="com.sfr.common.CommandMap"/> -->
     </typeAliases>
 </configuration>
-
-
