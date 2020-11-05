@@ -5,11 +5,35 @@
 
 	<!-- 검색 자동완성 리스트  -->
 	<select id="selectDeptTelTest" parameterType="map" resultType="egovMap">
-		
+		<!-- 
 		SELECT MILDSC, DEPT_CD, DEPT_NM, ORDER_NO, DEPT_ABRVWD, DEPT_ABRVWD2, FULL_DEPT_NM, HGRNK_DEPT_CD, TELNO 
 		FROM tbl_dept
 		WHERE 1=1
-		AND TELNO LIKE #{telno} || '%'
+		AND (TELNO LIKE #{searchContent} || '%' OR DEPT_NM LIKE #{searchContent} || '%' )
+		-->
+		
+		SELECT
+			B.dept_nm,
+			A.email,
+			'' AS facility_nm,
+			B.whl_dept_nm AS full_dept_nm,
+			A.srvno AS id,
+			(SELECT cd_ins_nm FROM tbl_code c WHERE cd='100' AND A.mdcd = c.cd_ins_id) as mildsc_nm,
+			A.mpno,
+			A.fulnm AS nm,
+			A.rank_nm AS rank,
+			A.rsponm AS rspofc_nm,
+			A.rspsblt_biznes_nm AS rspsblt_biznes,
+			A.telno
+		FROM
+			tbl_user_n A
+			LEFT JOIN tbl_dept_n B ON A.dept_cd = B.dept_cd
+		WHERE 1=1
+		AND B.dept_nm IS NOT NULL
+		<foreach collection="" index="i">
+		
+		</foreach>
+		AND ROWNUM <![CDATA[ <= ]]> #{searchCnt}
 		
 	</select>
 	

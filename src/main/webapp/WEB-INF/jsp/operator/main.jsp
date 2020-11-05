@@ -438,7 +438,11 @@
 		                async:true,
 		                url:"/search2.do",
 		                dataType: "json",
-		                data : {"telno" : $("#query").val().trim()},
+		                data : {
+		                //	"searchContent" : $("#query").val().trim(),
+		                	"searchContent" : $("#query").val().trim(),
+		                	"searchCnt" : $("#searchCnt").val()
+		                	},
 		                success: function(data){
 		                	data = data.list;
 		                	console.log(data);
@@ -465,7 +469,7 @@
 		            //만약 검색리스트에서 선택하였을때 선택한 데이터에 의한 이벤트 발생
 		            alert(JSON.stringify(ui));
 		            arItem=(ui.item.hidVal.toString()).split('|');
-		            $("#선택한 값 셋팅되는 곳").val(arItem[0]);
+		            $("#outDeptNm").val(arItem[1].trim());
 		        }
 		    });
 		})
@@ -964,6 +968,15 @@ function reClear(){
 						<input type="checkbox" name="range" rel="2" id="B" value="B" onclick="checkRange(2);">육군
 						<input type="checkbox" name="range" rel="2" id="C" value="C" onclick="checkRange(2);">해군/해병대
 						<input type="checkbox" name="range" rel="2" id="D" value="D" onclick="checkRange(2);">공군
+						
+						<select id="searchCnt" name="" title="조건을 선택하세요" class="select-type" style="height: 25px; float: right;">
+     						<option value="5">5개</option>
+					        <option value="10">10개</option>
+                            <option value="15">15개</option>
+                            <option value="20">20개</option>
+						</select>
+						<span style="float: right;">검색 나열 개수</span>
+						
 						<div class="search-box">
 						
 									<legend>통합검색</legend>

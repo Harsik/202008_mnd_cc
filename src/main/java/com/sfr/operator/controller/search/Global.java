@@ -38,7 +38,8 @@ public class Global {
 	public @ResponseBody ModelAndView selectDeptList(HttpServletRequest request, @RequestParam Map paramMap) throws Exception {
 		
 		ModelAndView model = new ModelAndView("jsonView");
-		paramMap.put("telno", paramMap.get("telno"));
+		paramMap.put("searchContent", paramMap.get("searchContent"));
+		paramMap.put("searchCnt", paramMap.get("searchCnt"));
 		
 		List<Map> list = new ArrayList<>();
 		
@@ -107,8 +108,8 @@ public class Global {
 		String requery = ""; // 결과내 재검색용 검색어
 		String refirst = ""; // 결과내 재검색용 체크
 
-//		String serverhost = "11.2.17.191"; // Mir-Search server(테스트)
-		String serverhost = "127.0.0.1"; // Mir-Search server(테스트)
+		String serverhost = "11.2.17.191"; // Mir-Search server(테스트)
+//		String serverhost = "127.0.0.1"; // Mir-Search server(테스트)
 		String searchport = "9100"; // Mir-Search port
 		String searchtarget = "total"; // 검색방식(total : 1번 검색으로 모든 컬렉션 검색,each :
 										// 1번에 1개의 컬렉션 검색)
@@ -179,19 +180,13 @@ public class Global {
 		String temptarget = temptargetlist[0];
 
 		//System.out.println("쿼리 : "+ arr_range+query);
-		System.out.println("==============> 여기");
 		System.out.println(arr_range+query+tar_range);
 		
 		collist = tempColllist[Integer.parseInt(target)];
-		System.out.println("collist ==>"+collist);
 		input = connector.setParam(serverhost, searchport, arr_range+"("+query+")"+tar_range, qy, parser, collist, fields, filter, pagemax,
 				pagenum, "mildsc asc rsort asc rank asc "+sortfield, sortorder, user, incharset, outcharset);
-		System.out.println("input ===>"+input);
 		output = connector.getJson(input);
-		System.out.println("output ===>"+output);
-		System.out.println("output ===>"+output.getJson());
 		code = jparser.getCode(output);
-		System.out.println("code ==>"+code);
 
 		if (code.equals("0")) {
 
@@ -199,7 +194,6 @@ public class Global {
 			String searchmode = jparser.getSearchmode(output);
 			System.out.println("=================================================================<br>");
 			System.out.println("[searchmode : " + searchmode + "]<br>");
-
 			// 묶음검색
 			if (searchmode.equals("Unify")) {
 				Collection collection = new Collection();
@@ -211,7 +205,6 @@ public class Global {
 
 				String temp = collection.getResultcount();
 				int resultcount = Integer.parseInt(temp);
-
 				if (resultcount == 0) {
 					System.out.println(".................................................................<br>");
 					System.out.println("검색어 [" + query + "] 결과가 없습니다.<br>");
