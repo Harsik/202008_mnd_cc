@@ -1,0 +1,84 @@
+﻿*{margin:0; padding:0;} 
+html {overflow-y:scroll;}
+body, div, th, td, select, input, textarea {color:#666666; font-size: 12px;line-height:16px;font-family:dotum, tahoma, verdana, arial}
+body{margin-left:10px;}
+table{border-collapse:collapse; border-spacing:0;}
+img {border:0px; vertical-align:middle;}
+li {list-style:none;}
+caption {display:none;}
+select, input {height:20px;line-height:20px;padding:0 0 0 2px;vertical-align:middle;}
+.ie10 select, .ie10 input {height:20px;line-height:20px;padding:0 2px;vertical-align:bottom;}
+input {height:38px;line-height:38px;}
+textarea{padding:5px;border:#b1b1b2 1px solid; scrollbar-highlight-color: #FFFFFF;scrollbar-shadow-color: #ababab;scrollbar-arrow-color: #808080;scrollbar-face-color: #FFFFFF;scrollbar-3dlight-color: #E5E5E5;scrollbar-darkshadow-color: #FFFFFF; scrollbar-track-color: #FFFFFF; scrollbar-base-color: #FFFFFF;}
+
+
+/* 전체 공통링크 */
+a:link {color:#333; text-decoration:none;}
+a:visited {color:#333; text-decoration:none;}
+a:hover {text-decoration:none; color: #000; text-decoration:underline;}
+a:active {text-decoration:none;}
+                                                              
+/* 전체레이아웃을 지정합니다.*/
+#container{width:960px; margin:0 auto;text-align:left;position:relative;} /*전체 영역-전체 width 지정*/
+#header{clear:both;height:100px;} /*헤더영역-반드시 width와 height 지정*/
+#center{clear:both;position:relative;} /*컨텐츠영역*/
+#footer{clear:both;}/*푸터영역*/   
+#side_left{width:190px;float:left;margin-bottom:50px;}
+#subcontent{float:left;margin-bottom:20px;}
+#side_right{width:200px;float:right;}
+#content{width:550px;float:left;margin-left:10px;margin-bottom:50px;}
+/*#side_right{width:200px;float:right;margin-bottom:50px;position:absolute;right:0}*/
+
+
+
+/* Common */
+.left{float:left;}
+.right{float:right;}
+.clear{clear:both}
+.center{text-align:center;}
+.blind, .skip {overflow:hidden;position:absolute;top:0;left:0;width:0;height:0;font-size:0;line-height:0;}
+.hide {display:none;}
+
+
+/*Side Left*/
+.login_bg ul {padding:10px 8px 0px 8px;}
+.login_bg li {display:block;padding:1px 0px 0px 0px;}
+.login_bg li.inpt input{width:100px;}
+.login_bg label {width:18px;display:inline-block;font-size:11px;letter-spacing:-0.5px;}
+.login_bg {position:relative;}
+.login_bg li.join {text-align:center;}
+.login_bg span {font-size:11px;padding:8px 0px 0px 10px;display:inline-block;letter-spacing:-0.5px;}
+.login_btn2 {position:absolute;top:8px;right:8px;}
+
+
+ /*공통*/
+#subcontent h2.subtitle_tag_rss {display:none;}
+#sub_make, #sub_list {width:760px;padding-left:10px;float:left;}
+.sub_tag_list,.sub_category_list {padding:15px;line-height:25px;border: 1px solid #E2E2E2;border-radius: 5px 5px 5px 5px;margin: 8px 0px;}
+
+
+/* Button */
+div.buttonArea {
+    clear:both; 	
+	margin:10px 0 0px;
+	*zoom:1;
+}
+div.buttonArea:after{
+	display:block;
+	clear:both;
+	content:''
+}
+div.buttonAreaC {
+	clear:both;
+	margin:15px 0;
+	text-align:center;	
+}
+div.buttonAreaR {
+	clear:both;
+	margin:15px 0;
+	text-align:right;
+}
+div.up {
+	margin-top:-40px;
+}
+

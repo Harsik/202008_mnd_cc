@@ -1,0 +1,223 @@
+/* login */
+.loginWrap {
+	width:700px;
+	margin:50px auto;
+	*zoom:1;
+}
+.loginWrap:after {
+	display:block;
+	clear:both;
+	content:''
+} 
+.loginWrap #header {
+	height:47px;
+	*height:41px;
+	margin-bottom:10px;
+	border-bottom:2px solid #6c6c6c;
+}
+.loginWrap h2 {
+	font-size:16px;
+	line-height:25px;
+	padding:0px 0px 10px;
+}
+.loginWrap .loginArea h2 {
+	padding:30px 0px 0px 0px;
+	font-size:16px;
+}
+.loginWrap .loginArea ul {
+	padding-bottom:40px;
+}
+.loginWrap ul {
+	padding-bottom:15px;	
+}
+.loginWrap li {
+	display:block;
+	color:#999;
+	font-size:12px;
+	font-weight:normal;
+	line-height:15px;
+	/* background:url(../images/bl_dash.png) no-repeat 0 7px; */
+	margin-left:7px;
+	padding:1px 0px 1px 8px;
+	letter-spacing: -0.04em;
+}
+.loginWrap p.description {
+	margin-bottom:30px;
+}
+.loginWrap .loginArea {
+	float:left;	
+	width:320px;
+	height:228px;
+	padding:0px 25px 0 25px;
+}
+
+.loginWrap .loginArea fieldset {
+	position:relative;
+	border:none;
+}
+.loginWrap .loginArea fieldset legend {
+	display:block;
+	margin-bottom:15px;
+	font-size:14px;
+	font-weight:bold;
+}
+.loginWrap .loginArea fieldset label {
+	line-height:29px;
+}
+.loginWrap .loginArea .input_txt {
+	position:absolute;
+	left:0;
+	width:175px;
+	height:25px;
+	border:1px solid #bebebe;
+
+	margin-left:55px;
+}
+.loginWrap .loginArea .input_txt:focus,
+.loginWrap .loginArea .focus {
+	border:1px solid #038e3d;
+}
+.loginWrap .loginArea .pw {
+	bottom:0;
+}
+
+.loginWrap .loginArea a.buttonLogin {
+	display:block;
+	position:absolute;
+	top:0px;
+	right:0;
+	width:83px;
+	height:59px;
+	background:url(../images/btn_login.png) 0 0 no-repeat;
+	line-height:100;
+	overflow:hidden;
+	vertical-align:bottom;
+}
+
+.loginWrap .loginArea a.buttonLogin:hover {
+	opacity:0.9;
+	filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=90);
+}
+
+.button {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font: 14px/100% HY¿ï¸ªµµM, Helvetica, sans-serif;
+  padding: .5em 2em .55em;
+  text-shadow: 0 1px 1px rgba(0,0,0,.3);
+  -webkit-border-radius: .5em;
+  -moz-border-radius: .5em;
+  border-radius: .5em;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.button:hover {
+  text-decoration: none;
+}
+.button:active {
+  position: relative;
+  top: 1px;
+}
+
+.orange {
+  color: #fef4e9;
+  border: solid 1px #da7c0c;
+  background: #f78d1d;
+  background: -webkit-gradient(linear, left top, left bottom, from(#faa51a), to(#f47a20));
+  background: -moz-linear-gradient(top,  #faa51a,  #f47a20);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#faa51a', endColorstr='#f47a20');
+}
+.orange:hover {
+  background: #f47c20;
+  background: -webkit-gradient(linear, left top, left bottom, from(#f88e11), to(#f06015));
+  background: -moz-linear-gradient(top,  #f88e11,  #f06015);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f88e11', endColorstr='#f06015');
+}
+.orange:active {
+  color: #fcd3a5;
+  background: -webkit-gradient(linear, left top, left bottom, from(#f47a20), to(#faa51a));
+  background: -moz-linear-gradient(top,  #f47a20,  #faa51a);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#f47a20', endColorstr='#faa51a');
+}
+
+.loginWrap .bannerArea {
+	float:right;
+	width:322px;
+	border:2px solid #e5e5e5;
+}
+.loginWrap .adArea {
+	float:right;
+	width:322px;
+	
+}
+
+.loginAreaWrap {
+	margin:20px 0px 20px 0px;
+	*zoom:1;
+	border:1px solid #e5e5e5;
+    border-radius: 5px;
+}
+.loginAreaWrap:after {
+	display:block;
+	clear:both;
+	content:'';
+}
+
+/* footer */
+.footer {
+	padding:0 20px 0 20px;
+	margin-bottom:20px;
+    border-top: 1px solid #E2E2E2;
+	text-align:center;    
+	clear:both;
+}
+.footer .copy {
+	display:inline-block;
+	padding-left:40px;
+	height:43px;
+	line-height:60px;
+	font-size:11px;
+
+}
+.footer .copy strong {
+	color:#6eae89;
+}
+
+/* class */
+.w100 {	width:100px !important; }
+.w174 {	width:174px !important; }
+.w200 {	width:200px !important; }
+.w260 {width: 260px !important; }
+.w300 {	width:300px !important; }
+.w400 {	width:400px !important; }
+.w500 {	width:500px !important; }
+.w600 {	width:600px !important; }
+
+
+
+#header h1 a {
+    background: url("../images/logo.png") no-repeat scroll 0 0px;
+    display: block;
+    float: left;
+    height: 40px;
+    overflow: hidden;
+    text-indent: -9999px;
+    transform: scale(1);
+    transform-origin: 0 0 0;
+    width: 250px;
+}
+
+.none {
+    display: inline-block;
+    padding-right: 10px;
+}
+
+
+
+
+
+
