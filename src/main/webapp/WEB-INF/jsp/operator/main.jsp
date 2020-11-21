@@ -439,7 +439,6 @@
 		                url:"/search2.do",
 		                dataType: "json",
 		                data : {
-		                //	"searchContent" : $("#query").val().trim(),
 		                	"searchContent" : $("#query").val().trim(),
 		                	"searchCnt" : $("#searchCnt").val()
 		                	},
@@ -451,9 +450,9 @@
 
 		                        $.map(data, function(item){
 		                            return{
-		                                label:(item.fullDeptNm),
-		                                value:(item.fullDeptNm),
-		                                hidVal: (item.deptCd+"|"+item.fullDeptNm)
+		                                label:(item.fullDeptNm+" "+item.nm),
+		                                value:(item.fullDeptNm+" "+item.nm),
+		                                hidVal: (item.deptCd+"|"+item.fullDeptNm+"|"+item.nm)
 		                            };
 		                        })
 
