@@ -20,8 +20,9 @@
 			A.telno
 		FROM
 			tbl_user_n A
-			LEFT JOIN tbl_dept_n B ON A.dept_cd = B.dept_cd
-			LEFT JOIN tbl_code C ON A.mdcd = c.cd_ins_id
+			<!-- LEFT JOIN 에서 변경 -->
+			INNER JOIN tbl_dept_n B ON A.dept_cd = B.dept_cd
+			INNER JOIN tbl_code C ON A.mdcd = c.cd_ins_id
 		WHERE 1=1
 		AND B.dept_nm IS NOT NULL
 		<foreach collection="usr_info" item="i" index="index">
