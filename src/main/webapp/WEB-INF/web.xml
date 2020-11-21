@@ -41,7 +41,7 @@
     </filter-mapping>
 	 
 	
-<!-- 
+	<!-- 
 	<filter>
 	    <filter-name>XSS</filter-name>
 	    <filter-class>com.sfr.common.CrossScriptingFilter</filter-class>
@@ -62,28 +62,29 @@
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
 
+<!--
+	<filter>
+		<filter-name>SSOFilter</filter-name>
+		<filter-class>com.ksign.access.wrapper.filter.SSOWrapperFilter</filter-class>
+		<init-param>
+		        <param-name>sso_home</param-name>
+		        <param-value>D:/SSOAgent/agent/</param-value>
+		</init-param>
+		<init-param>
+		        <param-name>TEST_MODE</param-name>
+		        <param-value>true</param-value>
+		</init-param>
+		<init-param>
+		        <param-name>KSign_KCMV</param-name>
+		        <param-value>false</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>SSOFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+-->
 
-   <filter>
-                <filter-name>SSOFilter</filter-name>
-                <filter-class>com.ksign.access.wrapper.filter.SSOWrapperFilter</filter-class>
-                <init-param>
-                        <param-name>sso_home</param-name>
-                        <param-value>D:/SSOAgent/agent/</param-value>
-                </init-param>
-                <init-param>
-                        <param-name>TEST_MODE</param-name>
-                        <param-value>true</param-value>
-                </init-param>
-                <init-param>
-                        <param-name>KSign_KCMV</param-name>
-                        <param-value>false</param-value>
-                </init-param>
-        </filter>
-        <filter-mapping>
-                <filter-name>SSOFilter</filter-name>
-                <url-pattern>/*</url-pattern>
-        </filter-mapping>
-    
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath*:egovframework/spring/context-*.xml</param-value>
