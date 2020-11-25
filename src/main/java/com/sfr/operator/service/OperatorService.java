@@ -30,6 +30,13 @@ public interface OperatorService {
 	List<Map> selectoperatorList70(Map paramMap) throws Exception;
 
 	Map selectCtiUserInfo70(Map paramMap) throws Exception;
+	
+	Map selectUser(Map paramMap) throws Exception;
+	
+	int insertBlock(Map paramMap) throws Exception;
 
-
+	List selectBlockList(Map paramMap) throws Exception;
+	
+	int selectBlockCheck(Map paramMap) throws Exception;
+	
 }

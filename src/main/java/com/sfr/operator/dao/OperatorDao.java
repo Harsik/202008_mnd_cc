@@ -165,5 +165,19 @@ public class OperatorDao {
 		return sqlSessionTemplate2.selectOne("operator.operator.selectCtiUserInfo70", paramMap);
 	}
 	
+	public Map selectUser(Map paramMap) {
+		return (Map)sqlSession.selectOne("operator.operator.selectUser", paramMap);
+	}
 	
+	public int insertBlock(Map paramMap) {
+		return sqlSession.update("operator.operator.insertBlock", paramMap);
+	}
+	
+	public List selectBlockList(Map paramMap) {
+		return (List)sqlSession.selectList("operator.operator.selectBlockList", paramMap);
+	}
+	
+	public int selectBlockCheck(Map paramMap) {
+		return sqlSession.selectOne("operator.operator.selectBlockCheck", paramMap);
+	}
 }

@@ -278,4 +278,111 @@ public class MainController {
 		return model;
 	}
 	
+	@RequestMapping("/blockPopup.do")
+	public String blockPopup(@RequestParam Map paramMap, Model model, HttpServletRequest requset) {
+		System.out.println(" >>>> 악성민원 팝업");
+		System.out.println(paramMap);
+		
+		model.addAttribute("nm", paramMap.get("nm"));
+		model.addAttribute("tel", paramMap.get("tel"));
+		model.addAttribute("stat", paramMap.get("stat"));
+		model.addAttribute("type", paramMap.get("type"));
+		
+		return "operator/blockPopup.popup";   
+	}
+	
+	@RequestMapping(value="/selectUser.do", method={RequestMethod.POST})
+	public @ResponseBody ModelAndView selectUser(@RequestParam Map paramMap, Model model, HttpServletRequest requset ) throws Exception {
+		
+		ModelAndView modelAndView = new ModelAndView("jsonView");
+		paramMap.put("telno", paramMap.get("telno"));
+		paramMap.put("fulnm", paramMap.get("fulnm"));
+		
+		
+		Map map = new HashMap<>();
+		
+		map = operatorService.selectUser(paramMap);
+
+		modelAndView.addObject("map", map);
+		
+		return modelAndView;
+	}
+	
+	@RequestMapping(value="/insertBlock.do", method=RequestMethod.POST)
+	public @ResponseBody ModelAndView insertBlock(@RequestParam Map paramMap, HttpServletRequest requset ) throws Exception{
+		System.out.println("paramMap >> " + paramMap);
+		
+		ModelAndView model = new ModelAndView("jsonView");
+		
+		String end_date = (String) paramMap.get("end_date");
+		paramMap.put("end_date", end_date.replace("&lrm;", ""));
+		
+		System.out.println("paramMap >> " + paramMap);
+		
+		int result =	operatorService.insertBlock(paramMap);
+		System.out.println("result >> "+result);
+		model.addObject("result", result);
+
+		return model;
+	} 
+	
+	/*
+	@RequestMapping(value="/selectBlockList.do", method=RequestMethod.POST)
+	public @ResponseBody ModelAndView selectBlockList(@RequestParam Map paramMap, HttpServletRequest requset, @ModelAttribute("searchVO") PagingVO vo ) throws Exception{
+		System.out.println("paramMap >> " + paramMap);
+		
+		vo.setPageSize(10); // 한 페이지에 보일 게시글 수
+		vo.setPageNo(1); // 현재 페이지 번호
+		
+		if(vo.getSetPageNum() != 0){
+			vo.setPageNo(vo.getSetPageNum());
+		}
+		vo.setBlockSize(10);
+		
+		ModelAndView model = new ModelAndView("jsonView");
+		
+		System.out.println("paramMap >> " + paramMap);
+		
+		List<Map> list = new ArrayList<>();
+		list = operatorService.selectBlockList(paramMap);
+		int toTalCount = list.size();
+		vo.setTotalCount(toTalCount);
+		
+		System.out.println("toTalCount >>" +toTalCount);
+		
+		System.out.println("list >> "+list);
+		
+		model.addObject("paging",vo);
+		model.addObject("list", list);
+
+		return model;
+	}
+	*/
+	
+	
+	@RequestMapping("/blockCheck.do")
+	public String blockCheck(@RequestParam Map paramMap, Model model, HttpServletRequest requset){
+		System.out.println(" >>>> blockCheck");
+		System.out.println(paramMap);
+		
+		int result;
+		try {
+			result = operatorService.selectBlockCheck(paramMap);
+			
+			System.out.println("int >>> "+result);
+			
+			if(result!=0) {
+				model.addAttribute("ANI", "Y");
+			}else {
+				model.addAttribute("ANI", "N");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			model.addAttribute("ANI", "N");
+			e.printStackTrace();
+		}
+		System.out.println("model >>>" + model);
+		
+		return "operator/blockCheck";   
+	}
 }

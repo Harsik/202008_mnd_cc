@@ -2,6 +2,106 @@
 <%@ include file="/WEB-INF/jsp/layout/include/incHeader.jspf" %>
 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+	<!--
+	<style>
+ 	tr {height: 25px;} 
+ 	td.sel_80 {width: 12%;	padding-left: 3px;} 
+ 	td.sel_left {width: 30%; padding-left: 3px;} 
+ 	td.nemo {width: 20%;	padding-left: 3px;	padding-bottom: 3px;} 
+ 	.select_al { 
+ 		height: 22px; 
+ 		margin-left: 1px;
+ 		margin-bottom: 2px; 
+ 		padding: 1px; 
+ 		border-style: solid; 
+ 		border-width: 1px; 
+ 		border-color: #bbbaba; 
+ 		font-family: 'Dotum', sans-serif; 
+ 		font-size: 9pt; 
+ 		color: #333;
+ 		text-align: left; 
+ 	} 
+	
+ 	.text_Date { 
+ 		width: 70px; 
+ 		height: 15px; 
+ 		margin-left: 1px; 
+ 		padding: 2px; 
+ 		border-style: solid; 
+ 		border-width: 1px; 
+ 		border-color: #bbbaba; 
+ 		font-family: 'Dotum', sans-serif;
+ 		font-size: 9pt; 
+ 		color: #333; 
+ 		text-align: left; 
+ 		ime-mode:active; 
+ 	} 
+	
+ 	.text_ol { 
+ 		width: 100%; 
+ 		height: 17px; 
+ 		margin-left: 1px; 
+ 		padding: 1px; 
+ 		border-style: solid; 
+ 		border-width: 1px; 
+ 		border-color: #bbbaba; 
+ 		font-family: 'Dotum', sans-serif; 
+ 		font-size: 9pt; 
+ 		color: #333; 
+ 		text-align: left; 
+ 		ime-mode:active; 
+ 	} 
+	
+ 	.text_ol_half { 
+	 	width: 30%; 
+	 	height: 15px; 
+	 	margin-left: 1px; 
+	 	padding: 2px; 
+	 	border-style: solid; 
+	 	border-width: 1px; 
+	 	border-color: #bbbaba; 
+	 	font-family: 'Dotum', sans-serif; 
+	 	font-size: 9pt; 
+	 	color: #333; 
+	 	text-align: left; 
+	 	ime-mode:active; 
+	 } 
+	.center {
+	  text-align: center;
+	}
+	
+	.pagination {
+	  display: inline-block;
+	}
+	
+	.pagination a {
+	  color: black;
+	  float: left;
+	  padding: 8px 16px;
+	  text-decoration: none;
+	  transition: background-color .3s;
+	  border: 1px solid #ddd;
+	  margin: 0 4px;
+	}
+	
+	.pagination a.active {
+	  background-color: #4CAF50;
+	  color: white;
+	  border: 1px solid #4CAF50;
+	}
+	
+	.pagination a:hover:not(.active) {background-color: #ddd;}
+
+	#content_block table{margin:0;padding:0;vertical-align:top;letter-spacing:0;word-break: keep-all;border-collapse:collapse;border-spacing:0;table-layout:fixed;}
+	#content_block table thead th{padding:8px 10px;box-sizing:border-box;border:1px solid #ccc;background:#888;color:#fff;font-weight:500;}
+	#content_block table tbody th{padding:8px 10px;box-sizing:border-box;border:1px solid #ccc;background:#888;color:#fff;font-weight:500;}
+	#content_block table tbody td{padding:8px 10px;box-sizing:border-box;border:1px solid #ccc;}
+	
+	#tab-block #content_block table{border:1px solid #888;box-sizing:border-box;}
+	#tab-block #content_block table tbody th{padding:8px 10px;box-sizing:border-box;border:0px;background:#ccc;color:#000;}
+	#tab-block #content_block table tbody td{padding:8px 10px;box-sizing:border-box;border:1px;}
+	</style>
+	-->
 	<link rel="stylesheet" type="text/css" href="../css/common.css" />  
 	<link rel="stylesheet" type="text/css" href="../css/tabs.css"/>
 	<link rel="stylesheet" type="text/css" href="../jsTree/jstree.3.3.5/dist/themes/default/style.min.css"/>
@@ -139,8 +239,103 @@
 				
 			});
 			
+			// 악성민원 버튼 클릭 이벤트
+	        $("#btnIn_Aksung1,#btnIn_Aksung2,#btnIn_Aksung3,#btnOut_Aksung1,#btnOut_Aksung2,#btnOut_Aksung3").bind("click", blockPopup);
+			
+	        datePicker("#start_dt");
+			datePicker("#end_dt");
+			
+			$("#start_dt").val(getDate());
+			$("#end_dt").val(getDate());
+			
+			//악성민원 조회 이벤트
+// 			$("#btnSelectBlock").bind("click", SelectBlock );
+			
 		});// ready END
 		
+		function blockPopup(){
+			var custTel = "";	// 번호
+			var custNm	= "";	// 이름
+			var custStat= "";	// 버튼 유형 : 1:언어폭력/2:성희롱/3:기타업무방해	
+			var callType= "";	// 콜 타입 : id값을 넘겨서 in/out 판단
+			var trnsCall= "";	// 전달큐
+			
+			callType= this.id;
+			custStat= this.value;
+			
+			if(callType=="btnIn_Aksung1" || callType=="btnIn_Aksung2" || callType=="btnIn_Aksung3"){ //IN
+				custTel = $("#tfTelno").val();
+				custNm	= $("#nm").val();
+			}else{
+				custTel = $("#outTelno").val();
+				custNm	= $("#outNm").val();
+			}
+			
+			if(custStat=="1"){
+				trnsCall = "5001";
+			}else if(custStat=="2"){
+				trnsCall = "5002";
+			}else{
+				trnsCall = "5003";
+			}
+			
+			if(confirm(this.title + "에 대한 자동 음원 송출을 하시겠습니까?")){
+ 				fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
+ 				window.sessionStorage.setItem("callType",""); 	// 초기화
+				block_popupEvent(custTel,custNm,custStat,callType);
+			}
+		}
+		
+		function block_popupEvent(tel,nm,stat,type){
+			var width = 1000;
+			var height = 400;
+			var left = Math.ceil((window.screen.width - width)/2);
+			var top = Math.ceil((window.screen.height - height)/2);
+			
+			var paramURL = getContextPath() + "/operator/blockPopup.do?tel="+encodeURI(tel)+"&nm="+encodeURI(nm)+"&stat="+stat+"&type="+type;
+			var option = "width=" + width + ", height=" + height
+				+ ", toolbar=no, directories=no, scrollbars=auto, location=no, resizable=no, status=no,menubar=no, top="
+				+ top + ",left=" + left +"";
+
+			var newWindow = window.open(paramURL, "악성민원", option);
+			newWindow.focus();	
+			
+		}
+		
+		/*
+		function SelectBlock(){
+			$.ajax({   
+				url:"/operator/selectBlockList.do",
+				dataType:'json',
+				type:"post",
+				async:true,
+				data:{
+					
+				},
+				success:function(data) {
+					console.log("data >> "+data);
+					var datas = data.list;
+					
+					if(datas > 1){ // data != null
+						var str = "";
+						str += '<TR>';
+						$.each(datas , function(i){
+							str += '<td>'+datas[i].rgst_dttm+'</td>';
+							str += '<td>'+datas[i].rgst_id+'</td>';
+							str += '<td>'+datas[i].rgst_dttm+'</td>';
+							str += '<td>'+datas[i].rtn_rsn+'</td>';
+							str += '<td>'+datas[i].act_type+'</td>';
+							str += '<td>'+datas[i].strt_date+'</td>';
+							str += '<td>'+datas[i].fulnm+'</td>';
+						});
+						str += '</TR>';
+						
+						$("#content_block tbody").append(str); 
+					}
+				},
+			});
+		}
+		*/
 		
 		function createTree(mildsc){
 			
@@ -429,6 +624,8 @@
 			});
 		});
 		
+		/*
+		// 자동검색 주석 20.11.25
 		// 전화번호 검색 자동완성 기능 추가 20.10.20
 		$(function(){
 		    $("#query").autocomplete({
@@ -472,6 +669,7 @@
 		        }
 		    });
 		})
+		*/
 		
 		function search(pageNm) {
 		var special_pattern = /['~!@#$%^&*|\\\'\";:\/"]/gi;
@@ -878,6 +1076,11 @@ function reClear(){
 					<li class="Call_box_left">
 					<!--인입콜 정보-->
 						<div class="inCall_box01">
+							<div class="topButton" style="float: right; margin-top: -55px;">
+							  <button type="button" name="btnIn_Aksung1" id="btnIn_Aksung1" value="1" class="button" title="언어폭력">언어폭력</button>
+							  <button type="button" name="btnIn_Aksung2" id="btnIn_Aksung2" value="2" class="button" title="성희롱" style="margin-left: 10px;">성희롱</button>
+							  <button type="button" name="btnIn_Aksung3" id="btnIn_Aksung3" value="3" class="button" title="기타업무방해" style="margin-left: 10px;">기타업무방해</button>
+							</div>
 							<div class="inner01">
 							<h2><span class="tit_i">인입콜정보</span></h2>
 									<!--인입콜 내용-->
@@ -910,6 +1113,11 @@ function reClear(){
 						<!--//인입콜 정보-->
 						<!--아웃콜 정보-->
 						<div class="outCall_box01">
+							<div class="bottonButton" style="float: right; margin-top: -55px;">
+							  <button type="button" name="btnOut_Aksung1" id="btnOut_Aksung1" value="1" class="button" title="언어폭력">언어폭력</button>
+							  <button type="button" name="btnOut_Aksung2" id="btnOut_Aksung2" value="2" class="button" title="성희롱" style="margin-left: 10px;">성희롱</button>
+							  <button type="button" name="btnOut_Aksung3" id="btnOut_Aksung3" value="3" class="button" title="기타업무방해" style="margin-left: 10px;">기타업무방해</button>
+							</div>
 							<div class="inner01">
 								<h2><span class="tit_i">아웃콜 정보</span></h2>
 									<!--검색이력정보 내용-->
@@ -959,6 +1167,7 @@ function reClear(){
 					<ul class="tabs01">
 						<li class="tab-link current" data-tab="tab-4">전화번호 검색</li>
 						<li class="tab-link" data-tab="tab-5">조직도</li>
+<!-- 						<li class="tab-link" data-tab="tab-block">악성민원인</li> -->
 					</ul>
 					<div id="tab-4" class="tab-content01 current">
 						<!--검색-->
@@ -967,7 +1176,7 @@ function reClear(){
 						<input type="checkbox" name="range" rel="2" id="B" value="B" onclick="checkRange(2);">육군
 						<input type="checkbox" name="range" rel="2" id="C" value="C" onclick="checkRange(2);">해군/해병대
 						<input type="checkbox" name="range" rel="2" id="D" value="D" onclick="checkRange(2);">공군
-						
+						<!-- 
 						<select id="searchCnt" name="" title="조건을 선택하세요" class="select-type" style="height: 25px; float: right;">
      						<option value="5">5개</option>
 					        <option value="10">10개</option>
@@ -975,7 +1184,7 @@ function reClear(){
                             <option value="20">20개</option>
 						</select>
 						<span style="float: right;">검색 나열 개수</span>
-						
+						 -->
 						<div class="search-box">
 						
 									<legend>통합검색</legend>
@@ -1092,6 +1301,199 @@ function reClear(){
 						</div>
 						<!--//조직도-->
 					</div>
+					
+					<!-- 악성민원 -->
+					<!--
+					<div id="tab-block" class="tab-content01">
+					<div id="search-block" style="height: 55px;">
+							<table summary="상담이력조회" class="search2_tbl">
+							<tr>
+								<th scope="row">접수기간</th>
+								<td>
+									<select id="date_type" style="height: 20px;">
+										<option value="crt_dt">등록일</option>
+										<option value="block_dt">차단일</option>
+									</select>
+								</td>
+								<td class="sel_left" style="width:230px;" colspan="2">
+								<input type="text" class="text_ol_half"  id="start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="height: 24px;"> ~ <input style="height: 24px;" type="text" class="text_ol_half" id="end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" >
+								</td>
+								<th scope="row" style="width:40px;">교환원</th>
+								<td style="width:130px;">
+									<select class="select_al" id="usr_id" style="width: 92%;" title="교환원"></select>
+								</td>
+								<td class="btn"  style="text-align:left;">
+									<button type="button" id="btnSelectBlock"  class="button">조회</button>
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">유형</th>
+								<td>
+									<select class="select_al" style="width:100px;" id="block_type" title="유형">
+										<option value="all">전체</option>
+										<option value="1">언어폭력</option>
+										<option value="2">성희롱</option>
+										<option value="3">기타업무방해</option>
+									</select>
+								</td>
+								<th scope="row">처리결과</th>
+								<td>
+									<select class="select_al" id="block_stat" title="처리결과">
+										<option value="all">전체</option>
+										<option value="1">요청</option>
+										<option value="2">완료</option>
+										<option value="3">반려</option>
+									</select>
+								</td>
+								<td>
+									<select class="select_al" id="block_search" title="처리결과">
+										<option value="all">전체</option>
+										<option value="cust_nm">민원인명</option>
+										<option value="cust_tel">전화번호</option>
+									</select>
+								</td>
+								<td>
+									<input type="text" class="text_ol" id="cust_info_search" style="margin-left: 5px;width:160px;" alt="검색어" title="검색어">
+								</td>
+							</tr>
+						</table>
+						<div class="center" style="margin-top: 270px;">
+						  <div class="pagination">
+						  <a href="#">&laquo;</a>
+						  <a href="#">1</a>
+						  <a href="#" class="active">2</a>
+						  <a href="#">3</a>
+						  <a href="#">4</a>
+						  <a href="#">5</a>
+						  <a href="#">6</a>
+						  <a href="#">&raquo;</a>
+						  </div>
+						</div>
+					</div>
+               
+               <div id="content_block">
+                  	<table>
+						<colgroup>
+							<col width="*">
+						</colgroup>
+					</table>
+					<table>
+						<colgroup>
+							<col width="*">
+						</colgroup>
+						<thead>
+							<tr>
+								<th>번호</th>
+								<th>등록일</th>
+								<th>교환원</th>
+								<th>사유</th>
+								<th>유형</th>
+								<th>처리결과</th>
+								<th>차단일</th>
+								<th>민원인</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>6</td>
+								<td>2015.07.15 10:00</td>
+								<td>홍길동</td>
+								<td></td>
+								<td>언어폭력</td>
+								<td>요청</td>
+								<td>2020.01.01 ~ 2020.01.10</td>
+								<td>변사또</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>2015.07.15 10:00</td>
+								<td>홍길동</td>
+								<td></td>
+								<td>언어폭력</td>
+								<td>요청</td>
+								<td>2020.01.01 ~ 2020.01.10</td>
+								<td>변사또</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>2015.07.15 10:00</td>
+								<td>홍길동</td>
+								<td></td>
+								<td>언어폭력</td>
+								<td>요청</td>
+								<td>2020.01.01 ~ 2020.01.10</td>
+								<td>변사또</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>2015.07.15 10:00</td>
+								<td>홍길동</td>
+								<td></td>
+								<td>언어폭력</td>
+								<td>요청</td>
+								<td>2020.01.01 ~ 2020.01.10</td>
+								<td>변사또</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>2015.07.15 10:00</td>
+								<td>홍길동</td>
+								<td></td>
+								<td>언어폭력</td>
+								<td>요청</td>
+								<td>2020.01.01 ~ 2020.01.10</td>
+								<td>변사또</td>
+							</tr>
+						</tbody>
+					 </table>
+               </div>
+
+               <div id="detailBolck" style="margin-top: 100px;">
+               		<table>
+					<thead>
+						  <tr>
+						    <th>등록일시</th>
+						    <th>2020-11-23 10:30</th>
+						    <th>민원인</th>
+						    <th>홍길동</th>
+						    <th>직책</th>
+						    <th></th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr>
+						    <td>연락처</td>
+						    <td>010-1234-1234</td>
+						    <td>부대</td>
+						    <td colspan="3"></td>
+						  </tr>
+						  <tr>
+						    <td>유형</td>
+						    <td>언어폭력(selectBox)</td>
+						    <td>부서</td>
+						    <td colspan="3"></td>
+						  </tr>
+						  <tr>
+						    <td>차단일</td>
+						    <td>2020-11-23 ~ 2020-11-30</td>
+						    <td rowspan="2">차단사유</td>
+						    <td colspan="3" rowspan="2"></td>
+						  </tr>
+						  <tr>
+						    <td>등록자</td>
+						    <td>아무개</td>
+						  </tr>
+						  <tr>
+						    <td>결제자</td>
+						    <td>관리자</td>
+						    <td>반려사유</td>
+						    <td colspan="3"></td>
+						  </tr>
+						</tbody>
+						</table>
+               		</div>
+            	</div>
+ 				-->
 				</div>
 				<!--//전화번호검색 / 조직도-->
 			

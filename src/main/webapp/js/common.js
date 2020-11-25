@@ -156,6 +156,41 @@ function getToday()
 }
 
 /**
+ * getDate : 현재날짜
+ */
+function getDate()
+{
+	var date = new Date();
+	var year = date.getFullYear();
+	var month = date.getMonth() + 1;
+	var day = date.getDate();
+	
+	if(month < 10)
+		month = "0"+month;
+	if(day < 10)
+		day = "0"+day;
+	
+	return year + "-" + month + "-" + day; 
+}
+
+/**
+ * getTime : 현재시간
+ */
+function getTime()
+{
+	var date = new Date();
+	var hh = date.getHours();
+	var mm = date.getMinutes();
+	
+	if (hh < 10) 
+		hh = "0" + hh;
+	if (mm < 10)
+		mm = "0" + mm;
+	
+	return hh + ":" + mm;
+}
+
+/**
 * 한달 전 날짜 반환 함수
 * @return new Date()
 */
@@ -420,6 +455,25 @@ function fileExtnsCheck(fileFormName)
 	else
 		return false;
 
+}
+//jquery datepicker
+function datePicker(id)
+{
+	$(function() {	    
+	    $(id).datepicker({
+	    	showOn: 'button',
+	    	buttonImage : "/images/icon_cal_drop.gif",
+	    	buttonImageOnly: true,
+	    	dateFormat : 'yy-mm-dd',
+	    	monthNamesShort : ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+	        dayNamesMin : ['일','월','화','수','목','금','토'],
+	    	changeMonth : true,
+	        changeYear : true,
+	    	showMonthAfterYear : true,
+	      });
+	    
+	    $(".ui-datepicker-trigger").css("vertical-align","middle");
+	});
 }
 
 

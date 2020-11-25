@@ -125,5 +125,22 @@ public class OperatorServiceImpl implements OperatorService{
 		return operatorDao.selectCtiUserInfo70(paramMap);
 	}
 
+	@Override
+	public Map selectUser(Map paramMap) throws Exception {
+		return  operatorDao.selectUser(paramMap);
+	}
+	
+	@Override
+	public int insertBlock(Map paramMap) throws Exception {
+		return operatorDao.insertBlock(paramMap);
+	}
+	
+	public List selectBlockList(Map paramMap) throws Exception {
+		return operatorDao.selectBlockList(paramMap);
+	}
+	
+	public int selectBlockCheck(Map paramMap) throws Exception {
+		return operatorDao.selectBlockCheck(paramMap);
+	}
 
 }

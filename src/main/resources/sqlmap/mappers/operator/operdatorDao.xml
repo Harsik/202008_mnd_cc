@@ -298,4 +298,116 @@
 		WHERE    LOGIN_ID = #{id}
 	</select> -->
 	
+	<select id="selectUser" parameterType="map" resultType="egovMap">
+		
+		SELECT	 C.SEQ
+	           , C.MDCD  AS MILDSC
+	           , DECODE(C.MDCD , 'A', '국방부'
+			                         , 'B', '육군'
+			                         , 'C', '해군'
+			                         , 'D', '공군') AS MILDSC_NM  
+	           , C.DEPT_CD 
+			   , (SELECT B.DEPT_NM FROM TBL_DEPT_N B WHERE B.DEPT_CD = C.DEPT_CD) AS DEPT_NM 
+	           , C.FULNM AS NM
+	           , C.SRVNO AS MIL_NO
+	           , C.RSPSBLT_BIZNES_NM AS RSPSBLT_BIZNES
+	           , C.RANK_NM AS RANK
+	           , C.RSPONM AS RSPOFC_NM
+	           , C.TELNO
+	           , C.MPNO
+	           , C.OPNPBL_YN
+	           , C.USER_EXSTNC_EXNEX AS STATE
+		FROM TBL_USER_N C 
+		WHERE 1=1
+	        <if test='telno!=""'>	
+			AND REPLACE(C.TELNO,'-','') like '%' || #{telno} || '%'
+		</if> 
+		<if test='fulnm!=""'>	
+			AND FULNM like '%' || #{fulnm} || '%'
+		</if> 
+		AND ROWNUM = 1
+		
+	</select>
+	
+	<!-- 악성민원인 추가 -->
+	<insert id="insertBlock" parameterType="map" >
+		
+		INSERT INTO TBL_BLOCK_USER(		 [type]
+			                             ,	fulnm
+			                             ,	mdcd
+			                             ,	servno
+			                             ,	dept_cd
+			                             ,	dept_nm	
+			                             ,  full_dept_nm
+			                             ,	rank_nm
+			                             ,	telno
+			                             ,	mpno
+			                             ,	strt_date
+			                             ,	end_date
+			                             ,	rgst_dttm
+			                             ,	rgst_rsn
+			                             ,	rgst_id
+			                             ,	act_type
+			                             ,	act_dttm
+			                             ,	act_id
+			                             )
+			VALUES(
+									       #{type}
+										 , #{fulnm}
+										 , #{mdcd}
+										 , #{servno}
+										 , #{dept_cd}
+										 , #{dept_nm}
+										 , #{full_dept_nm}
+										 , #{rank_nm}
+										 , #{telno}
+										 , #{mpno}
+										 , #{strt_date}
+										 , #{end_date}
+										 , SYSDATETIME	<!-- #{rgst_dttm} -->
+										 , #{rgst_rsn}
+										 , #{rgst_id}
+										 , #{act_type}
+										 , SYSDATETIME 	<!-- #{act_dttm} -->
+										 , #{act_id}
+										)
+			
+	</insert>
+	
+	<select id="selectBlockList" parameterType="map" resultType="egovMap">
+		SELECT
+			seq,
+			[type],
+			fulnm,
+			mdcd,
+			servno,
+			dept_cd,
+			dept_nm,
+			full_dept_nm,
+			rank_nm,
+			telno,
+			mpno,
+			strt_date,
+			end_date,
+			rgst_dttm,
+			rgst_rsn,
+			rgst_id,
+			act_type,
+			act_dttm,
+			rtn_rsn,
+			act_id
+		FROM
+			tbl_block_user
+	</select>
+	
+	<select id="selectBlockCheck" resultType="int" parameterType="map">
+		SELECT
+			COUNT(*)
+		FROM
+			tbl_block_user
+		WHERE 1=1
+			AND mpno = #{ANI}
+			AND SYSDATE BETWEEN strt_date AND end_date
+	</select>
+	
 </mapper>
