@@ -38,5 +38,8 @@ public interface OperatorService {
 	List selectBlockList(Map paramMap) throws Exception;
 	
 	int selectBlockCheck(Map paramMap) throws Exception;
+
+	int insertPrompt(Map paramMap) throws Exception;
 	
+	Map selectReqPrompt(Map paramMap) throws Exception;
 }

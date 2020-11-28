@@ -359,30 +359,78 @@ public class MainController {
 	}
 	*/
 	
-	
-	@RequestMapping("/blockCheck.do")
-	public String blockCheck(@RequestParam Map paramMap, Model model, HttpServletRequest requset){
+	/*
+	 * 악성민원 IVR 조회
+	 */
+	@RequestMapping(value="/blockCheck.do", produces="application/text;charset=utf8")
+	@ResponseBody
+	public String blockCheck(@RequestParam Map paramMap, HttpServletRequest requset){
 		System.out.println(" >>>> blockCheck");
 		System.out.println(paramMap);
 		
 		int result;
+		String check ="";
 		try {
 			result = operatorService.selectBlockCheck(paramMap);
 			
 			System.out.println("int >>> "+result);
 			
 			if(result!=0) {
-				model.addAttribute("ANI", "Y");
+				check = "Y";
 			}else {
-				model.addAttribute("ANI", "N");
+				check = "N";
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			model.addAttribute("ANI", "N");
-			e.printStackTrace();
+			check = "N";
 		}
-		System.out.println("model >>>" + model);
+		System.out.println("check >>>" + check);
 		
-		return "operator/blockCheck";   
+		return check;   
+	}
+	
+	@RequestMapping(value="/insertPrompt.do", method=RequestMethod.POST)
+	public @ResponseBody ModelAndView insertPrompt(@RequestParam Map paramMap, HttpServletRequest requset ) throws Exception{
+		System.out.println("paramMap >> " + paramMap);
+		
+		ModelAndView model = new ModelAndView("jsonView");
+		
+		System.out.println("paramMap >> " + paramMap);
+		
+		int result =	operatorService.insertPrompt(paramMap);
+		System.out.println("result >> "+result);
+		model.addObject("result", result);
+
+		return model;
+	}
+	
+	/*
+	 * 상담사 자동 전화 연결 안내멘트
+	 */
+	@RequestMapping(value="/reqPrompt.do", produces="application/text;charset=utf8")
+	@ResponseBody
+	public String reqPrompt(@RequestParam Map paramMap, HttpServletRequest requset ){
+		System.out.println(" >>>> reqPromptCheck");
+		System.out.println(paramMap);
+		
+		String result = "";
+		String name	= "";
+		String rank = "";
+		String telno = "";
+		
+		Map map = new HashMap<>();
+		try {
+			map = operatorService.selectReqPrompt(paramMap);
+			System.out.println("map >>>" + map);
+			name	= (String) map.get("fulnm");
+			rank = (String) map.get("rankNm");
+			telno = (String) map.get("telno");
+			result= "문의하신 "+name+" "+rank+" 전화번호는 "+telno+" 입니다";
+			
+		} catch (Exception e) {
+			result = "해당 전화번호가 없습니다 다시 문의해 주시기 바랍니다.";
+		}
+		
+		System.out.println("check >>> " +result);
+		return result;   
 	}
 }

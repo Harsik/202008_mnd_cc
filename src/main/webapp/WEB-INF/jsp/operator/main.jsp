@@ -272,11 +272,11 @@
 			}
 			
 			if(custStat=="1"){
-				trnsCall = "5001";
+				trnsCall = "3010";
 			}else if(custStat=="2"){
-				trnsCall = "5002";
+				trnsCall = "3011";
 			}else{
-				trnsCall = "5003";
+				trnsCall = "3012";
 			}
 			
 			if(confirm(this.title + "에 대한 자동 음원 송출을 하시겠습니까?")){

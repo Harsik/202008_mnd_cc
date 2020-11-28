@@ -135,12 +135,23 @@ public class OperatorServiceImpl implements OperatorService{
 		return operatorDao.insertBlock(paramMap);
 	}
 	
+	@Override
 	public List selectBlockList(Map paramMap) throws Exception {
 		return operatorDao.selectBlockList(paramMap);
 	}
 	
+	@Override
 	public int selectBlockCheck(Map paramMap) throws Exception {
 		return operatorDao.selectBlockCheck(paramMap);
 	}
-
+	
+	@Override
+	public int insertPrompt(Map paramMap) throws Exception {
+		return operatorDao.insertPrompt(paramMap);
+	}
+	
+	@Override
+	public Map selectReqPrompt(Map paramMap) throws Exception {
+		return  operatorDao.selectReqPrompt(paramMap);
+	}
 }

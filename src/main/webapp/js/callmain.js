@@ -85,7 +85,8 @@ $(document).ready(function()
 							
 					if(sStat=="[보류]"||sStat=="[통화중]"){
 						 window.sessionStorage.setItem("callType","transfer"); // onestep Transfer
-				 		makeCall(pureNum);
+						 insertTemp(outTelno); //호전환시 prompt insert
+						 makeCall(pureNum);
 					}
 					else
 					{
@@ -417,6 +418,8 @@ function makeCall(p_phoneNum)
 	{
 		// 호전환일 경우
 		//fnLog("Request [fnSingleStepTransfer]");
+//		fnSingleStepTransfer( phonNum, "", $("#CALLNO").val());
+		var phonNum = "3013"; //민원인 안내멘트
 		fnSingleStepTransfer( phonNum, "", $("#CALLNO").val());
 	}
 	else if(calltype == "makecall")
@@ -698,3 +701,44 @@ function dragElement(elmnt) {
   }
 }
 //*********************** 전화걸기 모달 드래그 ************************** 
+
+
+
+/*
+ * 호전환시 prompt에 정보 저장
+ * 일시,전화번호,이름,계급
+ */
+function insertTemp(phoneNum){
+	// 민원인 정보 찾기
+	$.ajax({   
+		url:"/operator/selectUser.do",
+		type:"post",
+		dataType:'json',
+		data:{
+			"telno":phoneNum,	//전화번호
+			"fulnm":$("#outNm").val().trim(),	//이름
+		},
+		success:function(data) {
+			var result = data.map;
+			
+			//prompt_table insert
+			$.ajax({   
+				url:"/operator/insertPrompt.do",
+				type:"post",
+				dataType:"json",
+				async:true,
+				data:{
+					"fulnm"		:result.nm,		//이름
+					"telno" 	:result.telno,	//전화번호
+					"rank_nm" 	:result.rank,	//전화번호
+				},
+				success:function(data) {
+			        console.log(">>> prompt_table insert");
+				},error:function(request, status, error){  
+			    	console.log("[" + request.status + "] " + "서비스 오류가 발생하였습니다. 잠시후 다시 실행하십시오.");  
+			    } 
+			});
+			
+		}
+	});
+}

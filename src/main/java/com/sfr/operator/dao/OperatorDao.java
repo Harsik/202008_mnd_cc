@@ -180,4 +180,12 @@ public class OperatorDao {
 	public int selectBlockCheck(Map paramMap) {
 		return sqlSession.selectOne("operator.operator.selectBlockCheck", paramMap);
 	}
+	
+	public int insertPrompt(Map paramMap) {
+		return sqlSession.update("operator.operator.insertPrompt", paramMap);
+	}
+	
+	public Map selectReqPrompt(Map paramMap) {
+		return (Map)sqlSession.selectOne("operator.operator.selectReqPrompt", paramMap);
+	}
 }
