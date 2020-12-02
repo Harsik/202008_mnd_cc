@@ -40,9 +40,9 @@
 					return;
 				}
 				// 20.12.01 시설물 특수문자 제한
-				var special_pattern = /["':;&%#-]/gi;
+				var special_pattern = /["':;&%#]/gi;
 				 
-				if( $("#facilityNm").val().length > 50 || special_pattern.test($("#facilityNm").val()) ){
+				if( $("#facilityNm").val().length > 50 || special_pattern.test($("#facilityNm").val()) || $("#facilityNm").val().indexOf("--") ==1){
 					alert("문자 50자 이상 및 특수문자는 등록이 제한됩니다.\n다시 입력해 주시기 바랍니다.");
 					$("#facilityNm").focus();
 					return;
