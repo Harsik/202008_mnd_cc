@@ -112,7 +112,12 @@
 		$(document).on("click", "#btnDels", function() {
 			fnFacSelDels();
 		});	
-				
+		
+		$(document).on("click", "#btnCsv", function() {
+			var frm = document.form1;
+			frm.action = "/csv/csvDownload.do";
+			frm.submit();
+		});
 	</script>
    <!--contents_area-->
     <div id="content_a">
@@ -231,6 +236,7 @@
 					<div class="f_left">
 						<button type="button" name="btnDels" id="btnDels" class="btnComm gr_line mr5" title="선택 삭제">선택 삭제</button>
 					</div>
+					<button type="button" name="btnCsv" id="btnCsv" class="btnComm grblue addBt" title="CSV다운" style="float: right;margin-left: 10px;">CSV다운</button>
 				<c:if test='${sessionScope.auth=="1"}'>
 					<div class="t_right">
 					  <button type="button" name="btnAdd" id="btnAdd" class="btnComm grblue addBt" title="등록">등록</button>

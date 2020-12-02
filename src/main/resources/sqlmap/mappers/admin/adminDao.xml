@@ -457,9 +457,10 @@
 	
 	<!-- 시설물 리스트 가져옴  -->
 	<select id="selectFacList" parameterType="map" resultType="egovMap">
-		
+		<if test = "firstIndex != null">
 		SELECT ROWNUM, A.*
 			FROM (
+		</if>
 				SELECT	A.seq
 					,	A.MDCD AS mildsc
 					,	A.INSTLA_NM as facility_nm 
@@ -507,9 +508,11 @@
 				
 				
 				ORDER BY A.INSTLA_NM, A.SEQ desc
+		<if test = "firstIndex != null">
 			) A
 		WHERE 1=1
 		AND	ROWNUM BETWEEN #{firstIndex}+1 AND #{lastIndex} 
+		</if>
 		
 	</select>
 	

@@ -69,6 +69,8 @@
 	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
 
 	<bean id="pageRedirectView" class="com.sfr.common.PageRedirectView"/>
+	
+	<bean id="excelCsvWriteView" class="com.sfr.admin.controller.ExcelCsvWriteView"/>
 
 	<mvc:interceptors>
 		<!-- 공통 Interceptor -->
