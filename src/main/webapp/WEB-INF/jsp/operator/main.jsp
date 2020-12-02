@@ -2,106 +2,6 @@
 <%@ include file="/WEB-INF/jsp/layout/include/incHeader.jspf" %>
 
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-	<!--
-	<style>
- 	tr {height: 25px;} 
- 	td.sel_80 {width: 12%;	padding-left: 3px;} 
- 	td.sel_left {width: 30%; padding-left: 3px;} 
- 	td.nemo {width: 20%;	padding-left: 3px;	padding-bottom: 3px;} 
- 	.select_al { 
- 		height: 22px; 
- 		margin-left: 1px;
- 		margin-bottom: 2px; 
- 		padding: 1px; 
- 		border-style: solid; 
- 		border-width: 1px; 
- 		border-color: #bbbaba; 
- 		font-family: 'Dotum', sans-serif; 
- 		font-size: 9pt; 
- 		color: #333;
- 		text-align: left; 
- 	} 
-	
- 	.text_Date { 
- 		width: 70px; 
- 		height: 15px; 
- 		margin-left: 1px; 
- 		padding: 2px; 
- 		border-style: solid; 
- 		border-width: 1px; 
- 		border-color: #bbbaba; 
- 		font-family: 'Dotum', sans-serif;
- 		font-size: 9pt; 
- 		color: #333; 
- 		text-align: left; 
- 		ime-mode:active; 
- 	} 
-	
- 	.text_ol { 
- 		width: 100%; 
- 		height: 17px; 
- 		margin-left: 1px; 
- 		padding: 1px; 
- 		border-style: solid; 
- 		border-width: 1px; 
- 		border-color: #bbbaba; 
- 		font-family: 'Dotum', sans-serif; 
- 		font-size: 9pt; 
- 		color: #333; 
- 		text-align: left; 
- 		ime-mode:active; 
- 	} 
-	
- 	.text_ol_half { 
-	 	width: 30%; 
-	 	height: 15px; 
-	 	margin-left: 1px; 
-	 	padding: 2px; 
-	 	border-style: solid; 
-	 	border-width: 1px; 
-	 	border-color: #bbbaba; 
-	 	font-family: 'Dotum', sans-serif; 
-	 	font-size: 9pt; 
-	 	color: #333; 
-	 	text-align: left; 
-	 	ime-mode:active; 
-	 } 
-	.center {
-	  text-align: center;
-	}
-	
-	.pagination {
-	  display: inline-block;
-	}
-	
-	.pagination a {
-	  color: black;
-	  float: left;
-	  padding: 8px 16px;
-	  text-decoration: none;
-	  transition: background-color .3s;
-	  border: 1px solid #ddd;
-	  margin: 0 4px;
-	}
-	
-	.pagination a.active {
-	  background-color: #4CAF50;
-	  color: white;
-	  border: 1px solid #4CAF50;
-	}
-	
-	.pagination a:hover:not(.active) {background-color: #ddd;}
-
-	#content_block table{margin:0;padding:0;vertical-align:top;letter-spacing:0;word-break: keep-all;border-collapse:collapse;border-spacing:0;table-layout:fixed;}
-	#content_block table thead th{padding:8px 10px;box-sizing:border-box;border:1px solid #ccc;background:#888;color:#fff;font-weight:500;}
-	#content_block table tbody th{padding:8px 10px;box-sizing:border-box;border:1px solid #ccc;background:#888;color:#fff;font-weight:500;}
-	#content_block table tbody td{padding:8px 10px;box-sizing:border-box;border:1px solid #ccc;}
-	
-	#tab-block #content_block table{border:1px solid #888;box-sizing:border-box;}
-	#tab-block #content_block table tbody th{padding:8px 10px;box-sizing:border-box;border:0px;background:#ccc;color:#000;}
-	#tab-block #content_block table tbody td{padding:8px 10px;box-sizing:border-box;border:1px;}
-	</style>
-	-->
 	<link rel="stylesheet" type="text/css" href="../css/common.css" />  
 	<link rel="stylesheet" type="text/css" href="../css/tabs.css"/>
 	<link rel="stylesheet" type="text/css" href="../jsTree/jstree.3.3.5/dist/themes/default/style.min.css"/>
@@ -126,6 +26,7 @@
 	var JsonArrayB = new Array();
 	var JsonArrayC = new Array();
 	var JsonArrayD = new Array();
+	var adminYn = window.sessionStorage.getItem("ADMIN_YN");
 	
 		$(document).ready(function(){
 			// 정렬 start
@@ -244,12 +145,22 @@
 			
 	        datePicker("#start_dt");
 			datePicker("#end_dt");
-			
-			$("#start_dt").val(getDate());
+			$("#start_dt").val(retDate());
 			$("#end_dt").val(getDate());
 			
+			datePicker("#blockd_start_dt");
+			datePicker("#blockd_end_dt");
+			
+			$("#btnAgree,#btnReject").css( "visibility", "hidden" );
+			
 			//악성민원 조회 이벤트
-// 			$("#btnSelectBlock").bind("click", SelectBlock );
+			$("#btnSelectBlock").click(function(){
+				initBlockDetail();
+				SelectBlock("0");
+		  	});
+			
+			//반려,승인 버튼 클릭 이벤트
+			$("#btnReject, #btnAgree").bind("click", updateBlock );
 			
 		});// ready END
 		
@@ -302,40 +213,207 @@
 			
 		}
 		
-		/*
-		function SelectBlock(){
+		function SelectBlock(pageNum){
 			$.ajax({   
 				url:"/operator/selectBlockList.do",
 				dataType:'json',
 				type:"post",
 				async:true,
 				data:{
-					
+					"setPageNum" : pageNum,
+					"dateType"	 : $("#date_type").val(),
+					"startDt"	 : $("#start_dt").val().replace(/-/gi, ""),
+					"endDt"	 	 : $("#end_dt").val().replace(/-/gi, ""),
+					"blockType"	 : $("#block_type").val(),
+					"blockStat"	 : $("#block_stat").val(),
+					"blockSearch"	 : $("#block_search").val(),
+					"blockSearchContent"	 : $("#cust_info_search").val(),
+					"adminYn"	 : adminYn,
+					"usrId"		 : window.sessionStorage.getItem("USERID"),
 				},
 				success:function(data) {
 					console.log("data >> "+data);
-					var datas = data.list;
-					
-					if(datas > 1){ // data != null
-						var str = "";
-						str += '<TR>';
-						$.each(datas , function(i){
-							str += '<td>'+datas[i].rgst_dttm+'</td>';
-							str += '<td>'+datas[i].rgst_id+'</td>';
-							str += '<td>'+datas[i].rgst_dttm+'</td>';
-							str += '<td>'+datas[i].rtn_rsn+'</td>';
-							str += '<td>'+datas[i].act_type+'</td>';
-							str += '<td>'+datas[i].strt_date+'</td>';
-							str += '<td>'+datas[i].fulnm+'</td>';
-						});
-						str += '</TR>';
-						
-						$("#content_block tbody").append(str); 
-					}
+					setBlockPaging(data);
+					createBlock(data);
 				},
 			});
 		}
-		*/
+		
+		function setBlockPaging(data){
+			var htmlStr = "";
+			htmlStr += "<div class='pagination'>";
+			htmlStr += "<a href='javascript:void(0)' onclick='SelectBlock("+data.paging.prevPageNo+");' class='list_btn'><img src='../images/operator/paging_btn_prev.png' alt='이전'/></a>";
+			var pageSizeVal = data.paging.endPageNo - data.paging.startPageNo;
+
+			for (var i = data.paging.startPageNo; i <= data.paging.endPageNo; i++) {
+				if (i == data.paging.pageNo) {
+					htmlStr += "<a href='javascript:void(0)' onclick='SelectBlock("+i+");' class='list_btn'><b>"+i+"</b></a>";
+				} else {
+					htmlStr += "<a href='javascript:void(0)' onclick='SelectBlock("+i+");' class='list_btn'>"+i+"</a>";
+				}
+			}
+			htmlStr += "<a href='javascript:void(0)' onclick='SelectBlock("+data.paging.nextPageNo+");' class='list_btn'><img src='../images/operator/paging_btn_next.png' alt='다음'/></a>";
+			htmlStr += "</div>";
+			$("#block_paging").html(htmlStr);
+		}
+		
+		function createBlock(data){
+			$("#content_block tbody").empty();
+			
+			var datas = data.list;
+			
+			if(datas.length != 0){ // data != null
+				var str = "";
+				$.each(datas , function(i){
+					var tel = datas[i].telno.replace(/ /gi, "");
+					str += "<TR id='blockTr'>";
+					str += '<td>'+datas[i].rownum+'</td>'; 		//번호
+					str += '<input type="hidden" id="seq" value='+datas[i].seq+'>'; //PK
+					str += '<td>'+datas[i].rgstDttm+'</td>'; 	//등록일시
+					str += '<td>'+datas[i].rgstId+'</td>';		//교환원
+					str += '<td>'+datas[i].rgstRsn+'</td>';		//차단사유
+					str += '<input type="hidden" id="type" value='+datas[i].type+'>';		//유형 - 1:언어폭력, 2:성희롱, 3:기타업무방해
+					str += '<td>'+datas[i].typeNm+'</td>';		//유형 - 1:언어폭력, 2:성희롱, 3:기타업무방해
+					str += '<td>'+datas[i].actType+'</td>';		//처리결과
+					str += '<td>'+datas[i].strtDate+" ~ "+datas[i].endDate+'</td>';		//차단일
+					str += '<td>'+datas[i].fulnm+'</td>';		//민원인
+					str += "<input type='hidden' id='rsponm' value='"+ datas[i].rsponm +"'/>/";				//직책
+					str += "<input type='hidden' id='full_dept_nm' value='"+ datas[i].fullDeptNm +"'/>/";	//부대
+					str += "<input type='hidden' id='dept_nm' value='"+ datas[i].deptNm +"'/>/";			//부서
+					str += "<input type='hidden' id='rtn_rsn' value='"+ datas[i].rtnRsn +"'/>/";			//반려사유
+					str += "<input type='hidden' id='telno' value='"+ datas[i].telno +"'/>/";				//전화번호
+					str += "<input type='hidden' id='act_id' value='"+ datas[i].actId +"'/>/";				//결재자
+					str += "<input type='hidden' id='rank_nm' value='"+ datas[i].rankNm +"'/>/";			//계급
+					str += '</TR>';
+				});
+				
+				$("#content_block tbody").append(str); 
+				$("#block_paging").show(); 
+			} else{
+				$("#block_paging").hide();
+			}
+		}
+		
+		$(document).on( "click","#blockTr", function() {
+			
+			$("#content_block tbody tr").css("background-color", "white" );
+			$( this ).css( "background-color", "#f4f4f4" );
+			var tr = $(this);
+			var td = tr.children();
+			
+			var seq = td.eq(1).val();			//PK
+            var rgstDt = td.eq(2).text(); 		//등록일시
+            var rgstId = td.eq(3).text();		//교환원
+            var rgstRsn = td.eq(4).text();		//차단사유
+            var type = td.eq(5).val();			//유형 - 1:언어폭력, 2:성희롱, 3:기타업무방해
+            var actType = td.eq(7).text();		//처리결과
+            
+            var rgstDttm = td.eq(8).text().split(" ~ ");;	//차단기간
+            var startDt = rgstDttm[0];			//차단시작날짜
+            var endDt = rgstDttm[1];			//차단끝날짜
+            
+            var custNm = td.eq(9).text();		//민원인
+            var rsponm = td.eq(10).val();		//직책
+            var fullDeptNm = td.eq(11).val();	//부대
+            var deptNm = td.eq(12).val();		//부서
+            var rtnRsn = td.eq(13).val() == "undefined" ? "" : td.eq(13).val();	//반려사유
+            var telno = td.eq(14).val();		//전화번호
+            var actId = td.eq(15).val();		//결재자
+            var rankNm = td.eq(16).val();		//계급
+            
+            if(adminYn == "Y"){
+            	if(actType=="요청"){
+                	$("#btnAgree,#btnReject").css( "visibility", "visible" );
+                }else{
+                	$("#btnAgree,#btnReject").css( "visibility", "hidden" );
+                }
+            }else{
+            	$("#btnAgree,#btnReject").css( "visibility", "hidden" );
+            }
+			
+	        $("#blockd_seq").val(seq);					
+	        $("#blockd_rgst_dttm").html(rgstDt);		
+			$("#blockd_cust_nm").html(custNm);		
+			$("#blockd_rsponm").html(rsponm);		
+			$("#blockd_rank").html(rankNm);		
+			$("#blockd_telno").html(telno);			
+			$("#blockd_full_dept_nm").html(fullDeptNm);
+			$("#blockd_type").val(type);
+			$("#blockd_dept_nm").html(deptNm);
+			$("#blockd_start_dt").val(startDt);
+			$("#blockd_end_dt").val(endDt);
+			$("#blockd_rgst_rsn").html(rgstRsn);
+			$("#blockd_rgst_id").html(rgstId);
+			$("#blockd_act_id").html(actId);
+			$("#blockd_rtn_rsn").html(rtnRsn);
+   	 	}); 
+		
+		function initBlockDetail(){
+			$("#blockd_seq").val("");					
+	        $("#blockd_rgst_dttm").html("");		
+			$("#blockd_cust_nm").html("");		
+			$("#blockd_rsponm").html("");
+			$("#blockd_rank").html("");	
+			$("#blockd_telno").html("");			
+			$("#blockd_full_dept_nm").html("");
+			$("#blockd_type").val("all");
+			$("#blockd_dept_nm").html("");
+			$("#blockd_start_dt").val(getDate());
+			$("#blockd_end_dt").val(getDate());
+			$("#blockd_rgst_rsn").html("");
+			$("#blockd_rgst_id").html("");
+			$("#blockd_act_id").html("");
+			$("#blockd_rtn_rsn").html("");
+		}
+		
+		function updateBlock(){
+			var clickId = this.id;
+			var clickNm = this.textContent;
+			var actType = "";
+			var selectPage = $(".pagination").children().children(2).text();
+			if(clickId == "btnReject"){ //반려
+				if($("#blockd_rtn_rsn").val().trim()==""){
+					alert("반려사유를 입력해주세요.");
+					$("#blockd_rtn_rsn").focus();
+					return false;
+				}
+				actType = "3";
+			}else{	//승인
+				actType = "2";
+			}
+			
+			if(confirm(clickNm+"하시겠습니까?")) {
+				
+				$.ajax({   
+					url:"/operator/updateBlock.do",
+					dataType:'json',
+					type:"post",
+					async:true,
+					data:{
+						"seq" : $("#blockd_seq").val(),		//PK
+						"actType" : actType,				//처리유형
+						"actId" : window.sessionStorage.getItem("USERID"),				//처리자
+						"blockdType" : $("#blockd_type").val(),	//민원유형
+						"blockdStartDt" : $("#blockd_start_dt").val().replace(/-/gi, ""), 	//차단 시작일
+						"blockdEndDt" : $("#blockd_end_dt").val().replace(/-/gi, ""), 		//차단 종료일
+						"blockdRtnRsn" : $("#blockd_rtn_rsn").val().trim(),	//반려사유
+					},
+					success:function(data) {
+						if(data=="200"){
+							alert(clickNm+"요청 되었습니다.");
+							SelectBlock(selectPage);
+						}else{
+							alert(clickNm+"요청 실패.");
+						}
+					},error:function(request, status, error){  
+				    	console.log("[" + request.status + "] " + "서비스 오류가 발생하였습니다. 잠시후 다시 실행하십시오.");  
+				    }
+				});
+				
+			}
+			
+		}
+		//Block End
 		
 		function createTree(mildsc){
 			
@@ -1136,7 +1214,7 @@ function reClear(){
 										</ul>
 										<ul>
 											<li class="outCall_cont_le">부서</li>
-											<li class="outCall_cont_ri"><input type="text" class="w100p"id="outDeptNm"></li>
+											<li class="outCall_cont_ri"><input type="text" class="w100p" id="outDeptNm"></li>
 										</ul>
 										<ul>
 											<li class="outCall_cont_le">부대</li>
@@ -1167,7 +1245,7 @@ function reClear(){
 					<ul class="tabs01">
 						<li class="tab-link current" data-tab="tab-4">전화번호 검색</li>
 						<li class="tab-link" data-tab="tab-5">조직도</li>
-<!-- 						<li class="tab-link" data-tab="tab-block">악성민원인</li> -->
+						<li class="tab-link" data-tab="tab-block">악성민원인</li>
 					</ul>
 					<div id="tab-4" class="tab-content01 current">
 						<!--검색-->
@@ -1241,26 +1319,7 @@ function reClear(){
 								<tbody id="searchTbody"></table>
 								<div id="searchData"></div>
 							</div>
-								<div class="tbl_bottom mt30">
-									 <%-- <page:paging paginationInfo="${paginationInfo}" jsFunction="onListPage" rowControl="false"  /> --%>   
-									
-								<!--  <div class="pagination">
-											<a title="처음페이지" class="btn_first"><span>첫페이지로 이동</span></a>
-											<a title="이전페이지" class="btn_prev"><span>이전 페이지로 이동</span></a>
-											<a title="1" class="on">1</a>
-											<a title="2">2</a>
-											<a title="3">3</a>
-											<a title="4">4</a>
-											<a title="5">5</a>
-											<a title="6">6</a>
-											<a title="7">7</a>
-											<a title="8">8</a>
-											<a title="9">9</a>
-											<a title="19">10</a>
-											<a title="다음페이지" class="btn_next"><span>다음 페이지로 이동</span></a>
-											<a title="마지막페이지" class="btn_last"><span>마지막페이지로 이동</span></a>
-										</div>  -->  
-								</div> 
+								<div class="tbl_bottom mt30"></div> 
 							</div>
 						<!--//전화번호 검색-->
 					<div id="tab-5" class="tab-content01">
@@ -1303,197 +1362,157 @@ function reClear(){
 					</div>
 					
 					<!-- 악성민원 -->
-					<!--
+					<style>
+					#tab-block .selectBox {height: 20px; font-size: 13px}
+					#search-block th {text-align: left; padding-right: 5px;}
+					#content_block,#detailBolck th {text-align: center;}
+					
+					</style>
 					<div id="tab-block" class="tab-content01">
-					<div id="search-block" style="height: 55px;">
+					<div id="search-block" style="height: 45px;">
 							<table summary="상담이력조회" class="search2_tbl">
 							<tr>
-								<th scope="row">접수기간</th>
 								<td>
-									<select id="date_type" style="height: 20px;">
+									<select id="date_type" style="margin: 0px 5px -2px 1px; height: 20px;">
 										<option value="crt_dt">등록일</option>
 										<option value="block_dt">차단일</option>
 									</select>
 								</td>
-								<td class="sel_left" style="width:230px;" colspan="2">
-								<input type="text" class="text_ol_half"  id="start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="height: 24px;"> ~ <input style="height: 24px;" type="text" class="text_ol_half" id="end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" >
+								<td class="selectBox" style="width: 230px;" colspan="2">
+								<input type="text" class="text_ol_half"  id="start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="border: 1px solid rgb(205, 205, 205); border-image: none; width: 80px; height: 20px; line-height: 0px; font-size: 13px;"> ~ <input style="border: 1px solid rgb(205, 205, 205); border-image: none; width: 80px; height: 20px; line-height: 0px; font-size: 13px;" type="text" class="text_ol_half" id="end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" >
 								</td>
-								<th scope="row" style="width:40px;">교환원</th>
-								<td style="width:130px;">
-									<select class="select_al" id="usr_id" style="width: 92%;" title="교환원"></select>
-								</td>
-								<td class="btn"  style="text-align:left;">
-									<button type="button" id="btnSelectBlock"  class="button">조회</button>
-								</td>
-							</tr>
-							<tr>
-								<th scope="row">유형</th>
+								<th scope="row" style="text-align: left;">유형</th>
 								<td>
-									<select class="select_al" style="width:100px;" id="block_type" title="유형">
+									<select class="selectBox" style="width:100px; font-size: 13px" id="block_type" title="유형">
 										<option value="all">전체</option>
 										<option value="1">언어폭력</option>
 										<option value="2">성희롱</option>
 										<option value="3">기타업무방해</option>
 									</select>
 								</td>
-								<th scope="row">처리결과</th>
+								<th scope="row" style="width: 5px; padding-left: 10px;">처리결과</th>
 								<td>
-									<select class="select_al" id="block_stat" title="처리결과">
+									<select class="selectBox" id="block_stat" title="처리결과" style="margin-right: 10px;">
 										<option value="all">전체</option>
 										<option value="1">요청</option>
-										<option value="2">완료</option>
+										<option value="2">승인</option>
 										<option value="3">반려</option>
 									</select>
 								</td>
 								<td>
-									<select class="select_al" id="block_search" title="처리결과">
+									<select class="selectBox" id="block_search" title="검색" style="padding-left: 15px;">
 										<option value="all">전체</option>
 										<option value="cust_nm">민원인명</option>
 										<option value="cust_tel">전화번호</option>
 									</select>
 								</td>
 								<td>
-									<input type="text" class="text_ol" id="cust_info_search" style="margin-left: 5px;width:160px;" alt="검색어" title="검색어">
+									<input type="text" class="text_ol" id="cust_info_search" style=" font-size: 13px; margin-left: 5px; line-height: 0px; font-family: 'Nanum Gothic';" alt="검색어" title="검색어">
+								</td>
+								<td>
+									<button type="button" id="btnSelectBlock"  class="btnComm gray" style="padding: 0px; width: 40px; line-height: 20px; font-size: 13px; margin-left: 50px;">조회</button>
 								</td>
 							</tr>
 						</table>
-						<div class="center" style="margin-top: 270px;">
-						  <div class="pagination">
-						  <a href="#">&laquo;</a>
-						  <a href="#">1</a>
-						  <a href="#" class="active">2</a>
-						  <a href="#">3</a>
-						  <a href="#">4</a>
-						  <a href="#">5</a>
-						  <a href="#">6</a>
-						  <a href="#">&raquo;</a>
-						  </div>
-						</div>
 					</div>
                
-               <div id="content_block">
-                  	<table>
-						<colgroup>
-							<col width="*">
-						</colgroup>
-					</table>
-					<table>
-						<colgroup>
-							<col width="*">
-						</colgroup>
-						<thead>
+	               	<div id="content_block" class="tbl_type_board" style="width: 100%; height: 250px; margin-bottom: 0px;">
+						<table>
+							<colgroup>
+								<col width="5%">
+								<col width="17%">
+								<col width="5%">
+								<col width="22%">
+								<col width="11%">
+								<col width="5%">
+								<col width="20%">
+								<col width="10%">
+							</colgroup>
+							<thead>
+								<tr>
+									<th>번호</th>
+									<th>등록일</th>
+									<th>교환원</th>
+									<th>사유</th>
+									<th>유형</th>
+									<th>처리결과</th>
+									<th>차단일</th>
+									<th>민원인</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						 </table>
+						 <div id="block_paging" style="margin-top: 5px;"></div>
+	               	</div>
+	               	<div id="detailBolck" class="tbl_type_board" style="margin-bottom: 0px;">
+	               		<div style="float: right; margin-bottom: 10px;">
+	               			<button class="btnComm gray" id="btnReject" style="padding: 0px; width: 40px; line-height: 20px; font-size: 13px; margin-left: 10px;">반려</button>
+	               			<button class="btnComm gray" id="btnAgree" style="padding: 0px; width: 40px; line-height: 20px; font-size: 13px; margin-left: 10px;">승인</button>
+	               		</div>
+	               		<table style="width: 100%; border:1px solid #ccc;">
+	               			<colgroup>
+								<col width="10%">
+								<col width="30%">
+								<col width="10%">
+								<col width="25%">
+								<col width="10%">
+								<col width="25%">
+							</colgroup>
 							<tr>
-								<th>번호</th>
-								<th>등록일</th>
-								<th>교환원</th>
-								<th>사유</th>
-								<th>유형</th>
-								<th>처리결과</th>
-								<th>차단일</th>
-								<th>민원인</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>6</td>
-								<td>2015.07.15 10:00</td>
-								<td>홍길동</td>
-								<td></td>
-								<td>언어폭력</td>
-								<td>요청</td>
-								<td>2020.01.01 ~ 2020.01.10</td>
-								<td>변사또</td>
-							</tr>
-							<tr>
-								<td>6</td>
-								<td>2015.07.15 10:00</td>
-								<td>홍길동</td>
-								<td></td>
-								<td>언어폭력</td>
-								<td>요청</td>
-								<td>2020.01.01 ~ 2020.01.10</td>
-								<td>변사또</td>
-							</tr>
-							<tr>
-								<td>6</td>
-								<td>2015.07.15 10:00</td>
-								<td>홍길동</td>
-								<td></td>
-								<td>언어폭력</td>
-								<td>요청</td>
-								<td>2020.01.01 ~ 2020.01.10</td>
-								<td>변사또</td>
-							</tr>
-							<tr>
-								<td>6</td>
-								<td>2015.07.15 10:00</td>
-								<td>홍길동</td>
-								<td></td>
-								<td>언어폭력</td>
-								<td>요청</td>
-								<td>2020.01.01 ~ 2020.01.10</td>
-								<td>변사또</td>
+								<input type="hidden" id="blockd_seq" value="">
+							  	<th>등록일시</th>
+							  	<td id="blockd_rgst_dttm"></td>
+							  	<th>민원인</th>
+							  	<td id="blockd_cust_nm"></td>
+							  	<th>계급</th>
+							  	<td id="blockd_rank"></td>
 							</tr>
 							<tr>
-								<td>6</td>
-								<td>2015.07.15 10:00</td>
-								<td>홍길동</td>
-								<td></td>
-								<td>언어폭력</td>
-								<td>요청</td>
-								<td>2020.01.01 ~ 2020.01.10</td>
-								<td>변사또</td>
+							  	<th>연락처</th>
+							  	<td id="blockd_telno"></td>
+							  	<th>부대</th>
+							  	<td id="blockd_full_dept_nm" colspan="3"></td>
 							</tr>
-						</tbody>
-					 </table>
-               </div>
-
-               <div id="detailBolck" style="margin-top: 100px;">
-               		<table>
-					<thead>
-						  <tr>
-						    <th>등록일시</th>
-						    <th>2020-11-23 10:30</th>
-						    <th>민원인</th>
-						    <th>홍길동</th>
-						    <th>직책</th>
-						    <th></th>
-						  </tr>
-						</thead>
-						<tbody>
-						  <tr>
-						    <td>연락처</td>
-						    <td>010-1234-1234</td>
-						    <td>부대</td>
-						    <td colspan="3"></td>
-						  </tr>
-						  <tr>
-						    <td>유형</td>
-						    <td>언어폭력(selectBox)</td>
-						    <td>부서</td>
-						    <td colspan="3"></td>
-						  </tr>
-						  <tr>
-						    <td>차단일</td>
-						    <td>2020-11-23 ~ 2020-11-30</td>
-						    <td rowspan="2">차단사유</td>
-						    <td colspan="3" rowspan="2"></td>
-						  </tr>
-						  <tr>
-						    <td>등록자</td>
-						    <td>아무개</td>
-						  </tr>
-						  <tr>
-						    <td>결제자</td>
-						    <td>관리자</td>
-						    <td>반려사유</td>
-						    <td colspan="3"></td>
-						  </tr>
-						</tbody>
+							<tr>
+							  	<th>유형</th>
+							  	<td>
+							  		<select class="selectBox" style="width: 175px; font-size: 14px;" id="blockd_type" title="유형">
+										<option value="all">전체</option>
+										<option value="1">언어폭력</option>
+										<option value="2">성희롱</option>
+										<option value="3">기타업무방해</option>
+									</select>
+							  	</td>
+							  	<th>부서</th>
+							  	<td id="blockd_dept_nm"></td>
+							  	<th>직책</th>
+							  	<td id="blockd_rsponm"></td>
+							</tr>
+							<tr>
+							  	<th>차단일</th>
+							  	<td class="selectBox">
+								<input type="text" class="text_ol_half"  id="blockd_start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="width: 80px; height: 20px; line-height: 0px; font-size: 13px;"> ~ 
+								<input type="text" class="text_ol_half" id="blockd_end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" style="width: 80px; height: 20px; line-height: 0px; font-size: 13px;">
+								</td>
+							  	<th rowspan="2">차단사유</th>
+							  	<td id="blockd_rgst_rsn" colspan="3" rowspan="2"></td>
+							</tr>
+							<tr>
+							  	<th>등록자</th>
+							  	<td id="blockd_rgst_id"></td>
+							</tr>
+							<tr>
+							 	<th>결제자</th>
+							  	<td id="blockd_act_id"></td>
+							  	<th>반려사유</th>
+							  	<td colspan="3">
+								   <textarea id="blockd_rtn_rsn" style="height:35px;" title="반려사유"></textarea>
+								</td>
+							</tr>
 						</table>
-               		</div>
+	               	</div>
             	</div>
- 				-->
 				</div>
 				<!--//전화번호검색 / 조직도-->
 			

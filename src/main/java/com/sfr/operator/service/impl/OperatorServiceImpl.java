@@ -141,6 +141,16 @@ public class OperatorServiceImpl implements OperatorService{
 	}
 	
 	@Override
+	public int getBlockUserCount(Map paramMap) throws Exception {
+		return operatorDao.getBlockUserCount(paramMap);
+	}
+	
+	@Override
+	public int updateBlock(Map paramMap) throws Exception {
+		return operatorDao.updateBlock(paramMap);
+	}
+	
+	@Override
 	public int selectBlockCheck(Map paramMap) throws Exception {
 		return operatorDao.selectBlockCheck(paramMap);
 	}

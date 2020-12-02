@@ -273,6 +273,12 @@ function ctiInit()
 		// cti id와 내선번호를 셋팅 후 서버 연결 시도
 		USERID = $("#CTIID").val();
 		EXT = $("#EXTNO").val(); 
+		// 20.12.01 관리자/교환원 구분
+		if(USERID == "2019"){
+			window.sessionStorage.setItem("ADMIN_YN","Y");
+		}else{
+			window.sessionStorage.setItem("ADMIN_YN","N");
+		}
 		window.sessionStorage.setItem("USERID",USERID); 
 		window.sessionStorage.setItem("EXTNO",EXT); 
 		if(USERID != "" && EXT != "")

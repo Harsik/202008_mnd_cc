@@ -326,18 +326,20 @@ public class MainController {
 		return model;
 	} 
 	
-	/*
 	@RequestMapping(value="/selectBlockList.do", method=RequestMethod.POST)
 	public @ResponseBody ModelAndView selectBlockList(@RequestParam Map paramMap, HttpServletRequest requset, @ModelAttribute("searchVO") PagingVO vo ) throws Exception{
 		System.out.println("paramMap >> " + paramMap);
 		
-		vo.setPageSize(10); // 한 페이지에 보일 게시글 수
+		vo.setPageSize(5); // 한 페이지에 보일 게시글 수
 		vo.setPageNo(1); // 현재 페이지 번호
 		
 		if(vo.getSetPageNum() != 0){
 			vo.setPageNo(vo.getSetPageNum());
 		}
-		vo.setBlockSize(10);
+		vo.setBlockSize(5);
+		
+		paramMap.put("endRowNum", vo.getEndRowNum());
+		paramMap.put("startRowNum", vo.getStartRowNum());
 		
 		ModelAndView model = new ModelAndView("jsonView");
 		
@@ -345,7 +347,7 @@ public class MainController {
 		
 		List<Map> list = new ArrayList<>();
 		list = operatorService.selectBlockList(paramMap);
-		int toTalCount = list.size();
+		int toTalCount = operatorService.getBlockUserCount(paramMap);
 		vo.setTotalCount(toTalCount);
 		
 		System.out.println("toTalCount >>" +toTalCount);
@@ -357,7 +359,26 @@ public class MainController {
 
 		return model;
 	}
-	*/
+	
+	/*
+	 * 악성민원 반려 및 승인
+	 */
+	@RequestMapping("/updateBlock.do")
+	@ResponseBody
+	public String updateBlock(@RequestParam Map paramMap, Model model, HttpServletRequest requset, @ModelAttribute("searchVO") PagerVO vo ) throws Exception {
+		System.out.println(" >>>> updateBlock");
+		System.out.println(paramMap);
+		
+		String success = "500";
+		
+		int result = operatorService.updateBlock(paramMap);
+		System.out.println("result >>> "+result);
+	    if(result > 0) {
+	    	success = "200";
+	    }
+	    System.out.println("success >>> "+success);
+	    return success; 
+	}
 	
 	/*
 	 * 악성민원 IVR 조회

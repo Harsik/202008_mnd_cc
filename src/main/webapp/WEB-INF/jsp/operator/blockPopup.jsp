@@ -32,6 +32,7 @@
 	    var stat = '${param.stat}';
 	    var type = '${param.type}';
 	    var usrId = window.sessionStorage.getItem("USERID");
+	    var adminYn = window.sessionStorage.getItem("ADMIN_YN");
 	    
 	    function init(){
 	    	$("#crt_dt").html(getDate()+" "+getTime());	// 등록일시
@@ -78,7 +79,7 @@
 				dataType:'json',
 				data:{
 					//dept_nm 으로도 조회하면 좋을것 같음
-					"telno":tel.replace(/-/gi, ""),	//전화번호
+					"telno":tel.replace(/-/gi, "").trim(),	//전화번호
 					"fulnm":nm.trim(),	//이름
 				},
 				success:function(data) {
@@ -95,30 +96,28 @@
 						dataType:"json",
 						async:true,
 						data:{
-							"fulnm"			:nm,						//이름
-							"type"			:$("#cust_type").val(),		//유형	1:언어폭력/2:성희롱/3:기타업무방해
-							"mdcd"			:result.mildsc,				//부대
-							"servno" 		:result.milNo,				//군번
-							"dept_cd" 		:result.deptCd,				//부서코드
-							"dept_nm"		:result.deptNm,				//부서명
-							"full_dept_nm"	:$("#cust_dept").html(),	//전체부서명
-							"rank_nm"       :result.rank,				//직책
-							"telno"         :result.telno,				//일반전화번호
-							"mpno"          :result.mpno,				//핸드폰
-							"strt_date"     :blockStartDt,				//차단시작일
-							"end_date"		:blockEdnDt,				//차단종료일
-// 							"rgst_dttm"     :"SYSDATETIME",				//등록일시
-							"rgst_rsn"      :$("#block_content").html(),//등록사유
-							"rgst_id"       :usrId,						//등록자
-							// 처리유형 -> 권한에 따라 바로 승인될수있는 조건문 추가해야함
-							"act_type"      :"1",						//처리유형	1:등록요청/2:승인/3:반려
-// 							"act_dttm"      :"SYSDATETIME",				//처리일시
-// 							"rtn_rsn"       :"반송사유",					//반송사유
-							"act_id"        :usrId,						//처리자
+							"fulnm"			:nm,							//이름
+							"type"			:$("#cust_type").val(),			//유형	1:언어폭력/2:성희롱/3:기타업무방해
+							"mdcd"			:result.mildsc,					//군별코드
+							"servno" 		:result.milNo,					//군번
+							"dept_cd" 		:result.deptCd,					//부서코드
+							"dept_nm"		:$("#cust_dept").html().trim(),	//부서명
+							"full_dept_nm"	:$("#cust_group").html().trim(),//전체부서명
+							"rank_nm"       :result.rank,					//계급
+							"rsponm"       	:$("#cust_position").html().trim(),				//직책
+							"telno"         :result.telno,					//일반전화번호
+							"mpno"          :result.mpno,					//핸드폰
+							"strt_date"     :blockStartDt,					//차단시작일
+							"end_date"		:blockEdnDt,					//차단종료일
+							"rgst_rsn"      :$("#block_content").html().trim(),	//등록사유
+							"rgst_id"       :usrId,							//등록자
+							"act_type"      :adminYn == "Y" ? "2" : "1",	//처리유형	1:등록요청/2:승인/3:반려 (관리자면 바로 승인)
+							"act_id"        :usrId,							//처리자
 							
 						},
 						success:function(data) {
 					        alert("요청되었습니다.");
+					        window.close();
 						},error:function(request, status, error){  
 					    	console.log("[" + request.status + "] " + "서비스 오류가 발생하였습니다. 잠시후 다시 실행하십시오.");  
 					    } 

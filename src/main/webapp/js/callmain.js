@@ -728,9 +728,9 @@ function insertTemp(phoneNum){
 				dataType:"json",
 				async:true,
 				data:{
-					"fulnm"		:result.nm,		//이름
-					"telno" 	:result.telno,	//전화번호
-					"rank_nm" 	:result.rank,	//전화번호
+					"fulnm"		:$("#outNm").val().trim(),		//이름
+					"telno" 	:$("#outTelno").val().trim(),	//전화번호
+					"rank_nm" 	:result.rank,					//계급
 				},
 				success:function(data) {
 			        console.log(">>> prompt_table insert");

@@ -196,8 +196,18 @@ function getTime()
 */
 function retDate(){
 	
-	var prevDate = new Date(new Date().setMonth(new Date().getMonth()-1)); // 한달전 날짜
-	return prevDate;
+	var prevDate = new Date();
+	var FormatDate = prevDate.toLocaleDateString( prevDate.setMonth(prevDate.getMonth()-1) );
+	var arrDate = FormatDate.split(" ");
+	
+	var y = arrDate[0].replace(/년/g, "");
+	var m = arrDate[1].replace(/월/g, "");
+	var d = arrDate[2].replace(/일/g, "");
+	
+	if(m.length == 3) m = "0" + m;
+	if(d.length == 3) d = "0" + d;
+	
+	return y+ m + d;
 }
 
 //==============================================================================

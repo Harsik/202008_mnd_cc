@@ -320,7 +320,7 @@
 		FROM TBL_USER_N C 
 		WHERE 1=1
 	        <if test='telno!=""'>	
-			AND REPLACE(C.TELNO,'-','') like '%' || #{telno} || '%'
+			AND ( REPLACE(C.TELNO,'-','') like '%' || #{telno} || '%' OR REPLACE(C.MPNO,'-','') like '%' || #{telno} || '%' )
 		</if> 
 		<if test='fulnm!=""'>	
 			AND FULNM like '%' || #{fulnm} || '%'
@@ -340,6 +340,7 @@
 			                             ,	dept_nm	
 			                             ,  full_dept_nm
 			                             ,	rank_nm
+			                             ,	rsponm
 			                             ,	telno
 			                             ,	mpno
 			                             ,	strt_date
@@ -360,15 +361,16 @@
 										 , #{dept_nm}
 										 , #{full_dept_nm}
 										 , #{rank_nm}
+										 , #{rsponm}
 										 , #{telno}
 										 , #{mpno}
 										 , #{strt_date}
 										 , #{end_date}
-										 , SYSDATETIME	<!-- #{rgst_dttm} -->
+										 , SYSDATETIME
 										 , #{rgst_rsn}
 										 , #{rgst_id}
 										 , #{act_type}
-										 , SYSDATETIME 	<!-- #{act_dttm} -->
+										 , SYSDATETIME
 										 , #{act_id}
 										)
 			
@@ -376,29 +378,113 @@
 	
 	<select id="selectBlockList" parameterType="map" resultType="egovMap">
 		SELECT
+			rownum,
 			seq,
 			[type],
+			DECODE([type],1,'언어폭력',2,'성희롱',3,'기타업무방해') AS type_nm,
 			fulnm,
 			mdcd,
 			servno,
 			dept_cd,
 			dept_nm,
 			full_dept_nm,
+			rsponm,
 			rank_nm,
 			telno,
 			mpno,
-			strt_date,
-			end_date,
-			rgst_dttm,
+			DATE_FORMAT(strt_date, '%Y-%m-%d') as strt_date,
+			DATE_FORMAT(end_date, '%Y-%m-%d') as end_date,
+			TO_CHAR(rgst_dttm, 'YYYY-MM-DD HH24:MI' ) AS rgst_dttm,
 			rgst_rsn,
 			rgst_id,
-			act_type,
+			DECODE(act_type,1,'요청',2,'승인',3,'반려') AS act_type,
 			act_dttm,
 			rtn_rsn,
 			act_id
 		FROM
 			tbl_block_user
+		WHERE  1=1
+		<if test="!blockStat.equals('all')">
+		AND act_type = #{blockStat}
+		</if>
+		<if test="!blockType.equals('all')">
+		AND [type] = #{blockType}
+		</if>
+		<if test="blockSearchContent != null and !blockSearchContent.equals('')">
+			<if test="!blockSearch.equals('all')">
+				<if test="blockSearch.equals('cust_nm')">
+				    AND fulnm LIKE '%' || #{blockSearchContent} || '%'
+				</if>
+				<if test="blockSearch.equals('cust_tel')">
+				    AND (REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR TELNO like '%' || #{blockSearchContent} || '%' )
+				</if>
+			</if>
+			<if test="blockSearch.equals('all')">
+			AND ((REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR TELNO like '%' || #{blockSearchContent} || '%' ) OR fulnm LIKE '%' || #{blockSearchContent} || '%')
+			</if>
+		</if>
+		<if test="dateType.equals('crt_dt')">
+		    AND TO_CHAR(rgst_dttm, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+		</if>
+		<if test="dateType.equals('block_dt')">
+		    AND (strt_date <![CDATA[ <= ]]> #{endDt} AND end_date <![CDATA[ >= ]]> #{startDt} )
+		</if>
+		<if test='adminYn.equals("N")'>
+		    AND rgst_id =#{usrId}
+		</if>
+		AND ROWNUM BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
+	
+	<select  id="getBlockUserCount" resultType="int" parameterType="map">
+		SELECT  COUNT(*) 
+		FROM 	TBL_BLOCK_USER 
+		WHERE   1=1
+		<if test="!blockStat.equals('all')">
+		AND act_type = #{blockStat}
+		</if>
+		<if test="!blockType.equals('all')">
+		AND [type] = #{blockType}
+		</if>
+		<if test="blockSearchContent != null and !blockSearchContent.equals('')">
+			<if test="!blockSearch.equals('all')">
+				<if test="blockSearch.equals('cust_nm')">
+				    AND fulnm LIKE '%' || #{blockSearchContent} || '%'
+				</if>
+				<if test="blockSearch.equals('cust_tel')">
+				    AND (REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR TELNO like '%' || #{blockSearchContent} || '%' )
+				</if>
+			</if>
+			<if test="blockSearch.equals('all')">
+			AND ((REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR TELNO like '%' || #{blockSearchContent} || '%' ) OR fulnm LIKE '%' || #{blockSearchContent} || '%')
+			</if>
+		</if>
+		<if test="dateType.equals('crt_dt')">
+		    AND TO_CHAR(rgst_dttm, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+		</if>
+		<if test="dateType.equals('block_dt')">
+		    AND (strt_date <![CDATA[ <= ]]> #{endDt} AND end_date <![CDATA[ >= ]]> #{startDt} )
+		</if>
+		<if test='adminYn.equals("N")'>
+		    AND rgst_id =#{usrId}
+		</if>
+	</select>
+	
+	<update id="updateBlock" parameterType="map" >
+		UPDATE
+			TBL_BLOCK_USER
+		SET
+			[type] = #{blockdType},
+			<if test="!blockdRtnRsn.equals('') and blockdRtnRsn != null">
+			rtn_rsn = #{blockdRtnRsn},
+			</if>
+			strt_date = #{blockdStartDt},
+			end_date = #{blockdEndDt},
+			act_type = #{actType},
+			act_dttm = SYSDATETIME,
+			act_id = #{actId}
+		WHERE 1=1
+			AND seq = #{seq}
+	</update>
 	
 	<select id="selectBlockCheck" resultType="int" parameterType="map">
 		SELECT
@@ -406,7 +492,8 @@
 		FROM
 			tbl_block_user
 		WHERE 1=1
-			AND telno = #{ANI}
+			AND ((REPLACE(TELNO,'-','') like '%' || #{ANI} || '%' OR TELNO like '%' || #{ANI} || '%' ) OR (REPLACE(MPNO,'-','') like '%' || #{ANI} || '%' OR MPNO like '%' || #{ANI} || '%' ))
+			AND act_type = 2
 			AND SYSDATE BETWEEN strt_date AND end_date
 	</select>
 	

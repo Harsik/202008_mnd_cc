@@ -177,8 +177,16 @@ public class OperatorDao {
 		return (List)sqlSession.selectList("operator.operator.selectBlockList", paramMap);
 	}
 	
+	public int updateBlock(Map paramMap) {
+		return sqlSession.update("operator.operator.updateBlock", paramMap);
+	}
+	
 	public int selectBlockCheck(Map paramMap) {
 		return sqlSession.selectOne("operator.operator.selectBlockCheck", paramMap);
+	}
+	
+	public int getBlockUserCount(Map paramMap) {
+		return sqlSession.selectOne("operator.operator.getBlockUserCount", paramMap);
 	}
 	
 	public int insertPrompt(Map paramMap) {
