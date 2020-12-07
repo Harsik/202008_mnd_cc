@@ -180,11 +180,11 @@
 .btnComm_s{display:inline-block; padding:5px 10px; font-size:15px; line-height:18px;border:1px solid #9098a4; text-align:center; white-space:nowrap;}
 .btnComm_reply{display:inline-block; padding: 19px 23px; font-size:18px; line-height:22px;border:1px solid #9098a4; border-radius:2px; text-align:center; white-space:nowrap;}
 .btnComm_replyb{display:inline-block; padding: 0px 10px; font-size:13px; line-height:22px;border:1px solid #9098a4; border-radius:2px; text-align:center; white-space:nowrap;}
-.blue{background-color:#0071ad; border-color:#0071ad; color:#fff;}
+.blue{background-color:#0071ad; border-color:#0071ad; color:#fff; font-size: 20px; margin-right: 15px;}
 .grblue{background-color:#4c7299; border-color:#4c7299; color:#fff;}
 .blue_b{background-color:#1b4c95; border-color:#2468cd; color:#fff;font-weight:700;}
 .gray{background-color:#7f8891; border-color:#7f8891; color:#fff;}
-.red{background-color:#ff6666; border-color:#ff6666; color:#fff;}
+.red{background-color:#ff6666; border-color:#ff6666; color:#fff; font-size: 20px;}
 .g_gray{background-color:#5b5b5b; border-color:#5b5b5b; color:#fff;}
 .gray_line{background-color:#fff; border-color:#969ea6; color:#4c7299;}
 .blue_line{background-color:#fff; border-color:#1d91ce; color:#1d91ce;}

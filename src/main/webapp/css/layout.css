@@ -266,7 +266,7 @@ h4.sta_tit{font-size:18px;color:#333;font-weight:700;}
 .inCall_cont01 ul li.inCall_cont_le{padding-left:0px;font-size:16px;color:#fff;width:20%;padding-top:3px;}
 .inCall_cont01 ul li.inCall_cont_ri{padding-left:0px;font-size:16px;color:#fff;width:80%;padding-top:3px;}
 
-.outCall_box01{width:100%;height:260px;padding:30px 10px 10px 30px;background-color:#64cad9;}
+.outCall_box01{width:100%;height:280px;padding:30px 10px 10px 30px;background-color:#64cad9;}
 .outCall_box01 .inner01{width:75%;margin:0 auto;height:150px;}
 .outCall_box01 ul li{float:left;}
 .outCall_box01 ul li.outCall_box_tit{width:100%;height:150px;/*background:url(../images/operator/m_output.png) no-repeat 0px 25px;*/}

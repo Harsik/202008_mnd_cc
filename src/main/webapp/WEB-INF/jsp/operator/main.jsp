@@ -1234,7 +1234,7 @@ function reClear(){
 											</li>
 										</ul> -->
 										<ul>
-											<li class="f_right mr15 mt10">
+											<li class="f_right mt15">
 												<button type="button" class="btnComm_s blue" title="연결" id="btnTransfer" />연결</button>
 												<button type="button" class="btnComm_s red" title="호전환"  id="btnConsult" />호전환</button>
 											</li>
