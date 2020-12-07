@@ -483,7 +483,16 @@
 					
 				<if test='auth == "1"'>	
 					AND A.RGST_ID = #{regId}
-				</if>	
+				</if>
+				
+				<if test = "fullDeptCd != null and !fullDeptCd.equals('all')">
+				    <if test="mildsc != null and !mildsc.equals('')">
+					AND A.MDCD = #{mildsc}
+					</if>	
+					<if test="deptCd != null and !deptCd.equals('')">
+					AND C.DEPT_CD = #{deptCd}
+					</if>		
+				</if>
 					
 				<if test ='searchTxt != null and searchTxt != ""'>
 					<if test ='searchKey == null or searchKey == "0"'>
@@ -529,6 +538,15 @@
 			 
 		<if test='auth == "1"'>
 			AND A.RGST_ID = #{regId}
+		</if>
+		
+		<if test = "fullDeptCd != null and !fullDeptCd.equals('all')">
+		    <if test="mildsc != null and !mildsc.equals('')">
+			AND A.MDCD = #{mildsc}
+			</if>	
+			<if test="deptCd != null and !deptCd.equals('')">
+			AND C.DEPT_CD = #{deptCd}
+			</if>	
 		</if>
 			
 		<if test ='searchTxt != null and searchTxt != ""'>

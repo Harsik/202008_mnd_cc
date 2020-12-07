@@ -15,9 +15,36 @@
 		function onListPage(page) {
 			var frm = document.form1;
 			frm.currentPage.value = page;
+			frm.fullDeptCd.value = deptCodeSearch();
 			frm.action = "/admin/main.do";
 			frm.submit();
 		};
+		
+		function deptCodeSearch(){
+			var DeptCd = "";
+			var fullDeptCdArr = [];
+			var cnt = $('select[name=deptCd]').length;
+			
+			fullDeptCdArr.push($("#mildsc").val());
+			
+			for(var i=0; i<cnt; i++){
+				if($('select[name=deptCd]').eq(i).val()!=""){
+					fullDeptCdArr.push($('select[name=deptCd]').eq(i).val());
+				}
+			}
+			console.log(fullDeptCdArr);
+			
+			$.each(fullDeptCdArr, function(id, value){
+				if(id==0){
+					DeptCd += value;
+				}else{
+					DeptCd += "^"+value;
+				}
+	        });
+			console.log("DeptCd >> "+DeptCd);
+			
+			return DeptCd;
+		}
 	
 		function fnFacDel(seq) {
 			/* var frm = document.form1;
@@ -118,6 +145,102 @@
 			frm.action = "/csv/csvDownload.do";
 			frm.submit();
 		});
+		
+		function setTopComboBox(o){
+
+			var code = o.value;
+			var div = $(o).parent(); // 셀렉트 박스의 상위 객체
+			var cnt = $('select', div).size(); // 셀렉트 박스 갯수
+			var idx = $('select', div).index(o); // 현재 셀렉트 박스의 순서
+			var mildsc = $('#mildsc option:selected').val(); // 최상위 코드
+			
+			var text = '<option value="">- 선택 -</option>';
+			
+			for(var i=cnt-1;i>idx;i--){
+				$('select', div).eq(i).remove();
+			}
+			if(code == ''){ // 전체를 선택했을 경우
+				
+			}else{
+				
+				$.ajax({   
+					url:"/admin/getFacilityTop.do",
+					type:"post",
+					dataType:'json',
+					data:{"mildsc":mildsc},
+					success:function(data) {
+						
+						if(data!=null && data.length>0){
+							var cnt = $('select', div).size(); // 셀렉트 박스 갯수
+							var idx = $('select', div).index(o); // 현재 셀렉트 박스의 순서
+							
+							if(cnt-1==idx){
+								div.append("<select name=\"deptCd\" id=\"deptCd\" onchange=\"setComboBox(this);\" class=\"select-type w250\" >");
+								div.append("</select>");
+							}
+							
+							var combo = $('select', div).eq(idx + 1);
+							combo.empty();
+							combo.append(text);
+							
+							for(var i=0 ; i<data.length ; i++){
+								combo.append('<option value="' + data[i].deptCd + '">' + data[i].deptNm + '</option>');
+							}	
+						}
+										
+					}
+					
+				});
+			}
+
+		}
+		
+		function setComboBox(o){
+			var code = o.value;
+			var div = $(o).parent(); // 셀렉트 박스의 상위 객체
+			var cnt = $('select', div).size(); // 셀렉트 박스 갯수
+			var idx = $('select', div).index(o); // 현재 셀렉트 박스의 순서
+			var mildsc = $('#mildsc option:selected').val(); // 최상위 코드
+			
+			var text = '<option value="">- 선택 -</option>';
+			
+			for(var i=cnt-1;i>idx;i--){
+				$('select', div).eq(i).remove();
+			}
+			
+			if(code == ''){ // 전체를 선택했을 경우
+				
+			}else{
+				
+				$.ajax({   
+					url:"/admin/getFacility.do",
+					type:"post",
+					dataType:'json',
+					data:{"hgrnkDeptCd":code,"mildsc":mildsc},
+					success:function(data) {
+						if(data!=null && data.length>0){
+							var cnt = $('select', div).size(); // 셀렉트 박스 갯수
+							var idx = $('select', div).index(o); // 현재 셀렉트 박스의 순서
+							
+							if(cnt-1==idx){
+								div.append("<select name=\"deptCd\" id=\"deptCd\" onchange=\"setComboBox(this);\" class=\"select-type w250\" >");
+								div.append("</select>");
+							}
+							
+							var combo = $('select', div).eq(idx + 1);
+							combo.empty();
+							combo.append(text);
+							for(var i=0 ; i<data.length ; i++){
+								combo.append('<option value="' + data[i].deptCd + '">' + data[i].deptNm + '</option>');
+							}
+						}
+					}
+					
+				});
+			}
+
+		}
+			
 	</script>
    <!--contents_area-->
     <div id="content_a">
@@ -131,10 +254,34 @@
 				<!--검색-->
 				<form method="post" action="#" class="search-box_ad" id="form1" name="form1">
 				<input type="hidden" id="seq" name="seq" value='' />
+				<input type="hidden" id="fullDeptCd" name="fullDeptCd" value="${paramMap.fullDeptCd}" />
 				<input type="hidden" id="currentPage" name="currentPage" value='<c:out value="${paginationInfo.currentPageNo}"/>' />
 				<input type="hidden" id="recordCountPerPage" name="recordCountPerPage" value='<c:out value="${paginationInfo.recordCountPerPage}"/>' />
 						<fieldset>
 							<legend>검색</legend>
+									<div style="float:left;">
+									<select name="mildsc" id="mildsc" onchange="setTopComboBox(this);" title="조건을 선택하세요" class="select-type w250">
+										<option value="all" ${mildsc.equals('all')?'selected':'' }>선택하세요</option>
+										<option value="A" ${mildsc.equals('A')?'selected':'' }>국방부</option>
+										<option value="B" ${mildsc.equals('B')?'selected':'' }>육군</option>
+										<option value="C" ${mildsc.equals('C')?'selected':'' }>해군</option>
+										<option value="D" ${mildsc.equals('D')?'selected':'' }>공군</option>
+										<option value="1290451" ${mdcdFlg.equals('Y')?'selected':'' }>합동참모본부</option>
+									</select>
+									
+									<c:if test="${fn:length(subDeptList)>0}">	
+									<c:forEach items="${subDeptList}" var="data1" varStatus="status1">
+									<c:if test="${fn:length(data1)>0}">
+									<select name="deptCd" id="deptCd" onchange="setComboBox(this);" title="조건을 선택하세요" class="select-type w250" >
+										<option value="" selected>- 선택 -</option>
+									<c:forEach items="${data1}" var="data2" varStatus="status2">
+										<option value="${data2.deptCd}" ${subDeptNmList[status1.index].deptCd.equals(data2.deptCd)?'selected':'' }>${data2.deptNm}</option>
+									</c:forEach>
+									</select>
+									</c:if>
+									</c:forEach>
+									</c:if>
+								</div>
 								<select name="searchKey" id="searchKey" title="조건을 선택하세요" class="select-type">
 									<option value="0" ${paramMap.searchKey.equals('0')?'selected':'' }>선택하세요</option>
 									<option value="1" ${paramMap.searchKey.equals('1')?'selected':'' }>시설물명</option>
