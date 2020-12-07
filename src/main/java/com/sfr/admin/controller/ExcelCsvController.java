@@ -32,8 +32,15 @@ public class ExcelCsvController {
 	public ModelAndView facilityCsvDownload(HttpServletRequest request, HttpServletResponse response,@RequestParam Map params) throws Exception {
 		System.out.println(">> csvDownload");
 		ModelAndView mav = new ModelAndView("CsvDownloadView");
+		String mildsc = params.get("mildsc").toString();
+		
 		params.put("regId", request.getSession().getAttribute("user_id"));
 		params.put("auth", request.getSession().getAttribute("auth"));
+		
+		if(mildsc.equals("1290451")) {
+			params.put("mildsc", "A");	//합참
+		}
+		
 		System.out.println("paramMap >> " + params);
 		
 		//데이터
