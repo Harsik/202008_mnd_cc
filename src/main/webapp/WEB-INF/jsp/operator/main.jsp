@@ -190,9 +190,17 @@
 				trnsCall = "3012";
 			}
 			
-			if(confirm(this.title + "에 대한 자동 음원 송출을 하시겠습니까?")){
- 				fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
- 				window.sessionStorage.setItem("callType",""); 	// 초기화
+			if(callType=="btnIn_Aksung1" || callType=="btnIn_Aksung2" || callType=="btnIn_Aksung3"){ //IN
+				if(confirm(this.title + "에 대한 자동 음원 송출을 하시겠습니까?")){
+	 				fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
+	 				window.sessionStorage.setItem("callType",""); 	// 초기화
+					block_popupEvent(custTel,custNm,custStat,callType);
+				}
+			}else{	//OUT
+				if($("#outNm").val()=="" || $("#outTelno").val()=="" || $("#outFullDeptNm").val()=="" || $("#outDeptNm").val()=="" || $("#outMildsc").val()==""){
+					alert("민원인 정보를 기입해주세요.");
+					return false;
+				}
 				block_popupEvent(custTel,custNm,custStat,callType);
 			}
 		}
