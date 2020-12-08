@@ -490,7 +490,7 @@
 					AND A.MDCD = #{mildsc}
 					</if>	
 					<if test="deptCd != null and !deptCd.equals('')">
-					AND C.DEPT_CD = #{deptCd}
+					AND C.WHL_DEPT_NM LIKE '%' || (SELECT whl_dept_nm FROM tbl_dept_n WHERE dept_cd=#{deptCd}) || '%'
 					</if>		
 				</if>
 					
@@ -545,7 +545,7 @@
 			AND A.MDCD = #{mildsc}
 			</if>	
 			<if test="deptCd != null and !deptCd.equals('')">
-			AND C.DEPT_CD = #{deptCd}
+			AND C.WHL_DEPT_NM LIKE '%' || (SELECT whl_dept_nm FROM tbl_dept_n WHERE dept_cd=#{deptCd}) || '%'
 			</if>	
 		</if>
 			
