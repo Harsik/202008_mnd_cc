@@ -33,6 +33,8 @@ public class ExcelCsvController {
 		System.out.println(">> csvDownload");
 		ModelAndView mav = new ModelAndView("CsvDownloadView");
 		String mildsc = params.get("mildsc").toString();
+		String[] deptCdArray = null;
+		deptCdArray = params.get("fullDeptCd").toString().split("\\^");
 		
 		params.put("regId", request.getSession().getAttribute("user_id"));
 		params.put("auth", request.getSession().getAttribute("auth"));
@@ -40,6 +42,7 @@ public class ExcelCsvController {
 		if(mildsc.equals("1290451")) {
 			params.put("mildsc", "A");	//합참
 		}
+		params.put("deptCd", deptCdArray[deptCdArray.length-1]);	//부서코드
 		
 		System.out.println("paramMap >> " + params);
 		
