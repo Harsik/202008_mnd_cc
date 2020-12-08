@@ -377,7 +377,8 @@
 	</insert>
 	
 	<select id="selectBlockList" parameterType="map" resultType="egovMap">
-		SELECT
+		SELECT * FROM (
+	    SELECT
 			rownum,
 			seq,
 			[type],
@@ -432,7 +433,8 @@
 		<if test='adminYn.equals("N")'>
 		    AND rgst_id =#{usrId}
 		</if>
-		AND ROWNUM BETWEEN #{startRowNum} AND #{endRowNum}
+		ORDER BY rgst_dttm DESC
+		) WHERE ROWNUM BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
 	
 	<select  id="getBlockUserCount" resultType="int" parameterType="map">

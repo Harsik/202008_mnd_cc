@@ -141,21 +141,21 @@
 	</head>
 	<body>
 		<div>
-			<button type="button" name="saveBtn" id="saveBtn" class="button" title="저장" style="margin: 10px 0px 10px 925px;">저장</button>
+			<button type="button" name="saveBtn" id="saveBtn" class="button" title="저장" style="margin: 0px 0px 9px 986px;">저장</button>
 		</div>
-		<div style="margin-left: 20px;">
-			<table>
+		<div>
+			<table style="width: 90%; margin-left: 60px;">
 				<colgroup>
 					<col width="*">
 				</colgroup>
 				<tbody>
 					<tr>
 					   <th>등록일시</th>
-					   <td id ="crt_dt"></td>
+					   <td id ="crt_dt" style="width: 23%;"></td>
 					   <th>민원인</th>
-					   <td id ="cust_nm" style="width: 200px;"></td>
+					   <td id ="cust_nm" style="width: 150px;"></td>
 					   <th>직책</th>
-					   <td id ="cust_position" style="width: 340px;"></td>
+					   <td id ="cust_position" style="width: 300px;"></td>
 					</tr>
 					<tr>
 					   <th>연락처</th>
@@ -173,7 +173,7 @@
 							</select>
 						</td>
 					   <th>부서</th>
-					   <td colspan="3" id="cust_dept"></td>
+					   <td colspan="3"><div id="cust_dept" style="-ms-overflow-y: scroll;"></div></td>
 					</tr>
 					<tr>
 					   <th>차단일</th>

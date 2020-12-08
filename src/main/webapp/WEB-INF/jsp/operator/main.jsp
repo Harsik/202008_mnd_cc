@@ -206,7 +206,7 @@
 		}
 		
 		function block_popupEvent(tel,nm,stat,type){
-			var width = 1000;
+			var width = 1100;
 			var height = 400;
 			var left = Math.ceil((window.screen.width - width)/2);
 			var top = Math.ceil((window.screen.height - height)/2);
@@ -1162,10 +1162,10 @@ function reClear(){
 					<li class="Call_box_left">
 					<!--인입콜 정보-->
 						<div class="inCall_box01">
-							<div class="topButton" style="float: right; margin-top: -55px;">
-							  <button type="button" name="btnIn_Aksung1" id="btnIn_Aksung1" value="1" class="button" title="언어폭력">언어폭력</button>
-							  <button type="button" name="btnIn_Aksung2" id="btnIn_Aksung2" value="2" class="button" title="성희롱" style="margin-left: 10px;">성희롱</button>
-							  <button type="button" name="btnIn_Aksung3" id="btnIn_Aksung3" value="3" class="button" title="기타업무방해" style="margin-left: 10px;">기타업무방해</button>
+							<div class="topButton" style="margin-top: -7px; margin-right: 73px; float: right;">
+							  <button type="button" name="btnIn_Aksung1" id="btnIn_Aksung1" value="1" class="btnComm_s blue_b" title="언어폭력">언어폭력</button>
+							  <button type="button" name="btnIn_Aksung2" id="btnIn_Aksung2" value="2" class="btnComm_s blue_b" title="성희롱" style="margin-left: 10px;">성희롱</button>
+							  <button type="button" name="btnIn_Aksung3" id="btnIn_Aksung3" value="3" class="btnComm_s blue_b" title="기타업무방해" style="margin-left: 10px;">기타업무방해</button>
 							</div>
 							<div class="inner01">
 							<h2><span class="tit_i">인입콜정보</span></h2>
@@ -1199,10 +1199,10 @@ function reClear(){
 						<!--//인입콜 정보-->
 						<!--아웃콜 정보-->
 						<div class="outCall_box01">
-							<div class="bottonButton" style="float: right; margin-top: -55px;">
-							  <button type="button" name="btnOut_Aksung1" id="btnOut_Aksung1" value="1" class="button" title="언어폭력">언어폭력</button>
-							  <button type="button" name="btnOut_Aksung2" id="btnOut_Aksung2" value="2" class="button" title="성희롱" style="margin-left: 10px;">성희롱</button>
-							  <button type="button" name="btnOut_Aksung3" id="btnOut_Aksung3" value="3" class="button" title="기타업무방해" style="margin-left: 10px;">기타업무방해</button>
+							<div class="bottonButton" style="margin-top: -7px; margin-right: 73px; float: right;">
+							  <button type="button" name="btnOut_Aksung1" id="btnOut_Aksung1" value="1" class="btnComm_s blue_h" title="언어폭력">언어폭력</button>
+							  <button type="button" name="btnOut_Aksung2" id="btnOut_Aksung2" value="2" class="btnComm_s blue_h" title="성희롱" style="margin-left: 10px;">성희롱</button>
+							  <button type="button" name="btnOut_Aksung3" id="btnOut_Aksung3" value="3" class="btnComm_s blue_h" title="기타업무방해" style="margin-left: 10px;">기타업무방해</button>
 							</div>
 							<div class="inner01">
 								<h2><span class="tit_i">아웃콜 정보</span></h2>
@@ -1485,7 +1485,7 @@ function reClear(){
 							<tr>
 							  	<th>유형</th>
 							  	<td>
-							  		<select class="selectBox" style="width: 175px; font-size: 14px;" id="blockd_type" title="유형">
+							  		<select class="selectBox" style="width: 91%; font-size: 14px;" id="blockd_type" title="유형">
 										<option value="all">전체</option>
 										<option value="1">언어폭력</option>
 										<option value="2">성희롱</option>

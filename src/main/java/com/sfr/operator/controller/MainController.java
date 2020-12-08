@@ -338,6 +338,9 @@ public class MainController {
 		}
 		vo.setBlockSize(5);
 		
+		String startDt = (String) paramMap.get("startDt");
+		paramMap.put("startDt", startDt.replace("&lrm;", ""));
+		
 		paramMap.put("endRowNum", vo.getEndRowNum());
 		paramMap.put("startRowNum", vo.getStartRowNum());
 		
