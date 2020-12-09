@@ -451,7 +451,7 @@ public class MainController {
 			result= "문의하신 "+name+" "+rank+" 전화번호는 "+telno+" 입니다";
 			
 		} catch (Exception e) {
-			result = "해당 전화번호가 없습니다 다시 문의해 주시기 바랍니다.";
+			result = "";
 		}
 		
 		System.out.println("check >>> " +result);
