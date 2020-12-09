@@ -734,10 +734,10 @@
 		                        	var pattern =/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]|[가-힣]/gi; // 정규식
 		                        	var arrTelno = item.telno.split(',');
 		            				var filtNum=arrTelno[0].replace(pattern, "");
-		            				
+		            				var bInter =filtNum.substr(3);
 		                            return{
-		                                label:(item.fullDeptNm+" "+item.nm),
-		                                value:(item.fullDeptNm+" "+item.nm),
+		                                label:(bInter+"|"+item.fullDeptNm+" "+item.nm),
+		                                value:(bInter+"|"+item.fullDeptNm+" "+item.nm),
 		                                hidVal: (item.nm+"|"+filtNum+"|"+item.rsponm+"|"+item.deptNm+"|"+item.fullDeptNm)
 		                            };
 		                        })
