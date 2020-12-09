@@ -46,4 +46,6 @@ public interface OperatorService {
 	int insertPrompt(Map paramMap) throws Exception;
 	
 	Map selectReqPrompt(Map paramMap) throws Exception;
+	
+	List<Map> selectDeptTelMain(Map paramMap) throws Exception;	// 전화번호 검색 자동완성 기능 추가 20.10.20
 }

@@ -2,39 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="intra.intra">
 
-
-	<!-- 검색 자동완성 리스트  -->
-	<select id="selectDeptTelTest" parameterType="map" resultType="egovMap">
-		SELECT
-			B.dept_nm,
-			A.email,
-<!-- 			'' AS facility_nm, -->
-			B.whl_dept_nm AS full_dept_nm,
-			A.srvno AS id,
-			C.cd_ins_nm as mildsc_nm,
-			A.mpno,
-			A.fulnm AS nm,
-			A.rank_nm AS rank,
-			A.rsponm AS rspofc_nm,
-			A.rspsblt_biznes_nm AS rspsblt_biznes,
-			A.telno
-		FROM
-			tbl_user_n A
-			<!-- LEFT JOIN 에서 변경 -->
-			INNER JOIN tbl_dept_n B ON A.dept_cd = B.dept_cd
-			INNER JOIN tbl_code C ON A.mdcd = c.cd_ins_id
-		WHERE 1=1
-		AND B.dept_nm IS NOT NULL
-		<foreach collection="usr_info" item="i" index="index">
-		AND ( A.fulnm LIKE '%' || #{i} || '%' 
-			  OR A.rank_nm LIKE '%' || #{i} || '%'
-			  OR C.cd_ins_nm LIKE '%' || #{i} || '%'
-			  OR A.telno LIKE '%' || #{i} || '%' )
-        </foreach>
-		AND ROWNUM <![CDATA[ <= ]]> #{searchCnt}
-		
-	</select>
-	
 	<!-- 군 코드 와 상위부서 코드로 하위부서 리스트 가져옴  -->
 	<select id="selectDeptList" parameterType="map" resultType="egovMap">
 		SELECT  *

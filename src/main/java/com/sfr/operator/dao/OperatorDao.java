@@ -196,4 +196,16 @@ public class OperatorDao {
 	public Map selectReqPrompt(Map paramMap) {
 		return (Map)sqlSession.selectOne("operator.operator.selectReqPrompt", paramMap);
 	}
+	
+	/**
+	 * 전화번호 검색 자동완성 기능 추가 
+	 * 생성일 : 20.10.20
+	 * 
+	 * @param 
+	 * telno
+	 * 
+	 * */
+	public List selectDeptTelMain(Map paramMap) {
+		return sqlSession.selectList("operator.operator.selectDeptTelMain", paramMap);
+	}
 }

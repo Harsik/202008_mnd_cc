@@ -526,4 +526,64 @@
 			AND telno=#{ANI}
 			AND rgst_dttm BETWEEN DATE_SUB( SYSDATETIME , INTERVAL '1:00' HOUR_SECOND) AND SYSDATETIME
 	</select>
+	
+	<!-- 검색 자동완성 리스트  -->
+	<select id="selectDeptTelMain" parameterType="map" resultType="egovMap">
+	    SELECT
+			*
+		FROM
+			(
+			SELECT
+				B.dept_nm,
+				A.email,
+				B.whl_dept_nm AS full_dept_nm,
+				A.srvno AS id,
+				DECODE(A.MDCD, 'A', '국방부', 'B', '육군', 'C', '해군', 'D', '공군') AS mildsc_nm,
+				A.mpno,
+				A.fulnm AS nm,
+				A.rank_nm AS rank,
+				DECODE (A.MDCD,'A',A.rsponm,A.rspsblt_biznes_nm) AS rsponm,
+				A.telno
+			FROM
+				tbl_user_n A
+				INNER JOIN tbl_dept_n B ON A.dept_cd = B.dept_cd
+			WHERE 1=1
+			AND B.dept_nm IS NOT NULL
+			<foreach collection="usr_info" item="i" index="index">
+			AND (    B.whl_dept_nm LIKE '%' || #{i} || '%' 
+				  OR A.fulnm LIKE '%' || #{i} || '%' 
+				  OR A.rank_nm LIKE '%' || #{i} || '%'
+				  OR A.telno LIKE '%' || #{i} || '%' 
+				  OR A.mpno LIKE '%' || #{i} || '%' 
+				  OR A.rsponm LIKE '%' || #{i} || '%' 
+				  OR A.rspsblt_biznes_nm LIKE '%' || #{i} || '%' 
+				 )
+	        </foreach>
+	        UNION ALL
+			SELECT
+				C.dept_nm,
+				'',
+				NVL(C.WHL_DEPT_NM, DECODE(A.MDCD, 'A', '국방부', 'B', '육군', 'C', '해군', 'D', '공군')) AS full_dept_nm,
+				'',
+				DECODE(A.MDCD, 'A', '국방부', 'B', '육군', 'C', '해군', 'D', '공군') AS mildsc_nm,
+				'',
+				A.INSTLA_NM,
+				'',
+				'시설물',
+				A.telno
+			FROM
+				tbl_facility_n A
+				LEFT JOIN tbl_dept_n C ON A.dept_cd = C.dept_cd
+			WHERE
+				1 = 1
+				<foreach collection="usr_info" item="i" index="index">
+				AND (
+						A.INSTLA_NM LIKE '%' || #{i} || '%'
+						OR A.TELNO LIKE '%' || #{i} || '%'
+					)
+	        	</foreach>
+		)
+		WHERE ROWNUM <![CDATA[ <= ]]> #{searchCnt}
+		ORDER BY telno,nm
+	</select>
 </mapper>

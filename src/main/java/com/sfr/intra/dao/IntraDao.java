@@ -17,18 +17,6 @@ public class IntraDao {
 	private SqlSession sqlSession;
 	
 	/**
-	 * 전화번호 검색 자동완성 기능 추가 
-	 * 생성일 : 20.10.20
-	 * 
-	 * @param 
-	 * telno
-	 * 
-	 * */
-	public List selectDeptTelTest(Map paramMap) {
-		return sqlSession.selectList("intra.intra.selectDeptTelTest", paramMap);
-	}
-	
-	/**
 	 * mildsc, hgrnkDeptCd 상위부서 코드로 1 depth 아래 하위부서 리스트를 가져옴
 	 * 
 	 * @param 

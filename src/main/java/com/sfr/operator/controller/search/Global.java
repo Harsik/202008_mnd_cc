@@ -24,6 +24,7 @@ import com.forcewin.mirserver.util.Collection;
 import com.forcewin.mirserver.util.Input;
 import com.forcewin.mirserver.util.Output;
 import com.sfr.intra.service.IntraService;
+import com.sfr.operator.service.OperatorService;
 
 import net.sf.json.JSONArray;
 
@@ -32,6 +33,9 @@ public class Global {
 
 	@Autowired
 	private IntraService intraService;
+	
+	@Autowired
+	private OperatorService operatorService;
 	
 	// 전화번호 검색 자동완성 기능 추가 20.10.20
 	@RequestMapping(value="/search2.do", method=RequestMethod.POST)
@@ -49,7 +53,7 @@ public class Global {
 		List<Map> list = new ArrayList<>();
 		
 		// searchServer 없어서 임의로 deptTable 에서 조회
-		list = intraService.selectDeptTelTest(paramMap);
+		list = operatorService.selectDeptTelMain(paramMap);
 
 		model.addObject("list",list);
 		
