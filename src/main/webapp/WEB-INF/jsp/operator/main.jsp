@@ -710,7 +710,6 @@
 			});
 		});
 		
-		/*
 		// 자동검색 주석 20.11.25
 		// 전화번호 검색 자동완성 기능 추가 20.10.20
 		$(function(){
@@ -732,10 +731,14 @@
 		                    response(
 
 		                        $.map(data, function(item){
+		                        	var pattern =/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]|[가-힣]/gi; // 정규식
+		                        	var arrTelno = item.telno.split(',');
+		            				var filtNum=arrTelno[0].replace(pattern, "");
+		            				
 		                            return{
 		                                label:(item.fullDeptNm+" "+item.nm),
 		                                value:(item.fullDeptNm+" "+item.nm),
-		                                hidVal: (item.deptCd+"|"+item.fullDeptNm+"|"+item.nm)
+		                                hidVal: (item.nm+"|"+filtNum+"|"+item.rsponm+"|"+item.deptNm+"|"+item.fullDeptNm)
 		                            };
 		                        })
 
@@ -746,16 +749,19 @@
 		        // 조회를 위한 최소글자수
 		        minLength:1,
 		        select: function(event, ui){
+		        	$("#outNm,#outTelno,#outFullDeptNm,#outDeptNm,#outMildsc").val("");
 		            ui.item.value="";
 		            var arItem=new Array(2);
 		            //만약 검색리스트에서 선택하였을때 선택한 데이터에 의한 이벤트 발생
-		            alert(JSON.stringify(ui));
 		            arItem=(ui.item.hidVal.toString()).split('|');
-		            $("#outDeptNm").val(arItem[1].trim());
+		            $("input[id=outNm]").val(arItem[0].trim());					
+					$("input[id=outTelno]").val(arItem[1].trim());					
+					$("input[id=outFullDeptNm]").val(arItem[2].trim());					
+					$("input[id=outDeptNm]").val(arItem[3].trim()); 					
+		        	$("input[id=outMildsc]").val(arItem[4].trim());
 		        }
 		    });
 		})
-		*/
 		
 		function search(pageNm) {
 		var special_pattern = /['~!@#$%^&*|\\\'\";:\/"]/gi;
@@ -1262,7 +1268,6 @@ function reClear(){
 						<input type="checkbox" name="range" rel="2" id="B" value="B" onclick="checkRange(2);">육군
 						<input type="checkbox" name="range" rel="2" id="C" value="C" onclick="checkRange(2);">해군/해병대
 						<input type="checkbox" name="range" rel="2" id="D" value="D" onclick="checkRange(2);">공군
-						<!-- 
 						<select id="searchCnt" name="" title="조건을 선택하세요" class="select-type" style="height: 25px; float: right;">
      						<option value="5">5개</option>
 					        <option value="10">10개</option>
@@ -1270,7 +1275,6 @@ function reClear(){
                             <option value="20">20개</option>
 						</select>
 						<span style="float: right;">검색 나열 개수</span>
-						 -->
 						<div class="search-box">
 						
 									<legend>통합검색</legend>
