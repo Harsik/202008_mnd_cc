@@ -418,8 +418,11 @@ function makeCall(p_phoneNum)
 	{
 		// 호전환일 경우
 		//fnLog("Request [fnSingleStepTransfer]");
-//		fnSingleStepTransfer( phonNum, "", $("#CALLNO").val());
-		var phonNum = "3013"; //민원인 안내멘트
+		/*
+		 * 민원인 안내멘트 큐 : 3013
+		 * 20.12.09 박준배 주무관 요청에 의해 안내멘트 잠시 보류
+		 */
+		//var phonNum = "3013";
 		fnSingleStepTransfer( phonNum, "", $("#CALLNO").val());
 	}
 	else if(calltype == "makecall")
