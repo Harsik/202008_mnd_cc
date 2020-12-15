@@ -26,7 +26,6 @@
 	var JsonArrayB = new Array();
 	var JsonArrayC = new Array();
 	var JsonArrayD = new Array();
-	var adminYn = window.sessionStorage.getItem("ADMIN_YN");
 	
 		$(document).ready(function(){
 			// 정렬 start
@@ -236,7 +235,7 @@
 					"blockStat"	 : $("#block_stat").val(),
 					"blockSearch"	 : $("#block_search").val(),
 					"blockSearchContent"	 : $("#cust_info_search").val(),
-					"adminYn"	 : adminYn,
+					"adminYn"	 : window.sessionStorage.getItem("ADMIN_YN"),
 					"usrId"		 : window.sessionStorage.getItem("USERID"),
 				},
 				success:function(data) {
@@ -329,7 +328,7 @@
             var actId = td.eq(15).val();		//결재자
             var rankNm = td.eq(16).val();		//계급
             
-            if(adminYn == "Y"){
+            if(window.sessionStorage.getItem("ADMIN_YN") == "Y"){
             	if(actType=="요청"){
                 	$("#btnAgree,#btnReject").css( "visibility", "visible" );
                 }else{
