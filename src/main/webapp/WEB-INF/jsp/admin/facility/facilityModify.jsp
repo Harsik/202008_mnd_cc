@@ -24,7 +24,7 @@
 			// 20.12.01 시설물 특수문자 제한
 			var special_pattern = /["':;&%#]/gi;
 			 
-			if( $("#facilityNm").val().length > 50 || special_pattern.test($("#facilityNm").val()) || $("#facilityNm").val().indexOf("--") ==1){
+			if( $("#facilityNm").val().length > 50 || special_pattern.test($("#facilityNm").val()) || $("#facilityNm").val().indexOf("--") != -1){
 				alert("문자 50자 이상 및 특수문자는 등록이 제한됩니다.\n다시 입력해 주시기 바랍니다.");
 				$("#facilityNm").focus();
 				return;
@@ -191,6 +191,7 @@
 				<!--시설물 등록 게시판-->				
 				<form name="frm" id="frm" method="post">
 					<input type="hidden" id="seq" name="seq" value='<c:out value="${paramMap.seq}"/>' />
+					<input type="hidden" id="fullDeptCd" name="fullDeptCd" value="" />
 					<input type="hidden" id="currentPage" name="currentPage" value='<c:out value="${paramMap.currentPage}"/>' />
 					<input type="hidden" id="recordCountPerPage" name="recordCountPerPage" value='<c:out value="${paramMap.recordCountPerPage}"/>' />
 					<input type="hidden" id="searchKey" name="searchKey" value='<c:out value="${paramMap.searchKey}"/>' />
