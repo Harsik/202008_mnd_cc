@@ -263,20 +263,7 @@
 
 	
 	<select id="selectoperatorList" parameterType="map" resultType="egovMap">
-		SELECT 	 call_type 
-	           , employee_id
-	           , ani 
-	           , abandon_time 
-	           , dialring_time
-	           , call_time 
-	           , target_dn 
-	           , event_starttime 
-		FROM ot_callstat
-		WHERE employee_id = #{id}
-		ORDER BY event_starttime DESC
-	</select>
-
-<select id="selectoperatorList70" parameterType="map" resultType="egovMap">
+		SELECT * FROM (
                 SELECT   call_type
                     , employee_id
                     , ani
@@ -286,10 +273,82 @@
                     , target_dn
                     , event_starttime
                 FROM ot_callstat
-                WHERE employee_id = #{id}
+                WHERE 1=1 
+                <if test='adminYn != null and adminYn.equals("Y")'>
+                	<if test="Usrgbcd != null and !Usrgbcd.equals('')">
+                	AND employee_id = #{Usrgbcd}
+                	</if>
+                	<if test="Usrgbcd == null or Usrgbcd.equals('')">
+                	AND employee_id != 0
+                	</if>
+                </if>
+                <if test='adminYn != null and adminYn.equals("N")'>
+                    AND employee_id = #{id}
+                </if>
+                <if test="Callgbcd != null and !Callgbcd.equals('all')">
+                    <if test="Callgbcd.equals('telno')">
+                    AND LENGTH(ani) <![CDATA[ <= ]]> 10
+                    </if>
+                    <if test="Callgbcd.equals('mpno')">
+                    AND LENGTH(ani) <![CDATA[ > ]]> 10
+                    </if>
+                </if>
+                <choose>
+					<when test="termType != null and termType eq 'time'">
+					    AND SUBSTR(event_starttime, 0,8) = TO_CHAR(sysdate,'YYYYMMDD')
+					    AND SUBSTR(event_starttime, 9,2) BETWEEN #{startDt} AND #{endDt}
+					</when>
+					<when test="termType != null and termType eq 'month'">AND SUBSTR(event_starttime, 0,6) BETWEEN #{startDt} AND #{endDt}</when>
+					<when test="termType != null and (termType eq 'week' or termType eq 'day')">AND SUBSTR(event_starttime, 0,8) BETWEEN #{startDt} AND #{endDt}</when>
+				</choose>
+                
                  ORDER BY event_starttime DESC
-</select>
-
+            ) WHERE ROWNUM <![CDATA[ <= ]]> 500
+	</select>
+	
+	<select id="selectoperatorList70" parameterType="map" resultType="egovMap">
+	    	SELECT * FROM (
+                SELECT   call_type
+                    , employee_id
+                    , ani
+                    , abandon_time
+                    , dialring_time
+                    , call_time
+                    , target_dn
+                    , event_starttime
+                FROM ot_callstat
+                WHERE 1=1 
+                <if test='adminYn != null and adminYn.equals("Y")'>
+                	<if test="Usrgbcd != null and !Usrgbcd.equals('')">
+                	AND employee_id = #{Usrgbcd}
+                	</if>
+                	<if test="Usrgbcd == null or Usrgbcd.equals('')">
+                	AND employee_id != 0
+                	</if>
+                </if>
+                <if test='adminYn != null and adminYn.equals("N")'>
+                    AND employee_id = #{id}
+                </if>
+                <if test="Callgbcd != null and !Callgbcd.equals('all')">
+                    <if test="Callgbcd.equals('telno')">
+                    AND LENGTH(ani) <![CDATA[ <= ]]> 10
+                    </if>
+                    <if test="Callgbcd.equals('mpno')">
+                    AND LENGTH(ani) <![CDATA[ > ]]> 10
+                    </if>
+                </if>
+                <choose>
+					<when test="termType != null and termType eq 'time'">
+					    AND SUBSTR(event_starttime, 0,8) = TO_CHAR(sysdate,'YYYYMMDD')
+					    AND SUBSTR(event_starttime, 9,2) BETWEEN #{startDt} AND #{endDt}
+					</when>
+					<when test="termType != null and termType eq 'month'">AND SUBSTR(event_starttime, 0,6) BETWEEN #{startDt} AND #{endDt}</when>
+					<when test="termType != null and (termType eq 'week' or termType eq 'day')">AND SUBSTR(event_starttime, 0,8) BETWEEN #{startDt} AND #{endDt}</when>
+				</choose>
+                
+                 ORDER BY event_starttime DESC
+            ) WHERE ROWNUM <![CDATA[ <= ]]> 500
+	</select>
 	
 	<!-- <select id="selectCtiList" parameterType="map" resultType="egovMap">
 		SELECT   EMPLOYEE_NAME 

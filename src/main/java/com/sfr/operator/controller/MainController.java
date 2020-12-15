@@ -146,34 +146,43 @@ public class MainController {
 	}
 	
 	
-	
+	/*
+	 * 상담이력 팝업 호출
+	 */
 	@RequestMapping("/operatorPopup.do")
 	public String operatorPopup1(@RequestParam Map paramMap, Model model, HttpServletRequest requset, @ModelAttribute("searchVO") PagerVO vo ) {
+
+		return "operator/operatorPopup.popup";   
+	}
+	
+	/*
+	 * 상담이력 ajax
+	 */
+	@RequestMapping(value="/selectPopupList.do", method=RequestMethod.POST)
+	public @ResponseBody ModelAndView selectPopupList(@RequestParam Map paramMap, HttpServletRequest requset, @ModelAttribute("searchVO") PagingVO vo ){
+		System.out.println("paramMap >> " + paramMap);
 		
+		ModelAndView model = new ModelAndView("jsonView");
 		
-		List<Map> list = new ArrayList<Map>();
+		List<Map> list = new ArrayList<>();
 		
 		try {
-		System.out.println("### :");
-		
-		String id = requset.getSession().getAttribute("user_id").toString();
-		System.out.println("######### :" +id);
-		//paramMap.put("id", "1019");
-		paramMap.put("id",  requset.getSession().getAttribute("user_id").toString());
-		
-		
-		if(requset.getRemoteAddr().equals("172.17.0.30")) {
-			list = operatorService.selectoperatorList(paramMap);
-		} else {
-			list = operatorService.selectoperatorList70(paramMap);
-		}
+			paramMap.put("id", requset.getSession().getAttribute("user_id").toString());
+			
+			if(requset.getRemoteAddr().equals("172.17.0.30")) {
+				list = operatorService.selectoperatorList(paramMap);
+			} else {
+				list = operatorService.selectoperatorList70(paramMap);
+			}
 		
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		model.addAttribute("list", list);
-		return "operator/operatorPopup.popup";   
+		
+		model.addObject("list", list);
+
+		return model;
 	}
 
 	
