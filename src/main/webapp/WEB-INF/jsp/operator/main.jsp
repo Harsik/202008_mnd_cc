@@ -1269,7 +1269,7 @@ function reClear(){
 						<input type="checkbox" name="range" rel="2" id="D" value="D" onclick="checkRange(2);">공군
 						<select id="searchCnt" name="" title="조건을 선택하세요" class="select-type" style="height: 25px; float: right;">
      						<option value="5">5개</option>
-					        <option value="10">10개</option>
+					        <option value="10" selected="selected">10개</option>
                             <option value="15">15개</option>
                             <option value="20">20개</option>
 						</select>

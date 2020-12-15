@@ -44,11 +44,9 @@ public class Global {
 		ModelAndView model = new ModelAndView("jsonView");
 		
 		String str = (String) paramMap.get("searchContent");
-        List<String> usr_info = Arrays.asList(str.split(" "));
 		
 		paramMap.put("searchContent", paramMap.get("searchContent"));
 		paramMap.put("searchCnt", paramMap.get("searchCnt"));
-		paramMap.put("usr_info", usr_info);
 		
 		List<Map> list = new ArrayList<>();
 		
