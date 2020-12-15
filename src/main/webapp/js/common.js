@@ -487,4 +487,74 @@ function datePicker(id)
 }
 
 
+/*
+ * 해당 일자가 속한 주의 시작일자를 구한다.
+ * @param : 'YYYYMMDD'
+ */
+function commWeekStartDay(pStrDate){
+    
+    var sDate = pStrDate.replace(/[-, :, \s]/g, "");
+    
+    var year = sDate.substr(0,4);
+    var month = sDate.substr(4,2);
+    var day = sDate.substr(6,2);
+    
+    var iDay = parseInt(new Date(year, month-1, day).getDay());
+    var sStartDate = new Date(year, parseInt(month)-1, parseInt(day) - iDay); //선택한 요일의 시작일을 구한다.
+    
+    var sStartYear = sStartDate.getFullYear();
+    var sStartMonth = parseInt(sStartDate.getMonth() + 1);
+    var sStartDay = sStartDate.getDate();
+    
+    var weekStartDay = '' + sStartYear + (sStartMonth < 10 ? '0' + sStartMonth : sStartMonth) + (sStartDay < 10 ? '0' + sStartDay : sStartDay);
+    
+    return weekStartDay;
+}
 
+
+/*
+ * 해당 일자가 속한 주의 종료일자를 구한다.
+ * @param : 'YYYYMMDD'
+ */
+function commWeekEndDay(pStrDate){
+    
+    var sDate = pStrDate.replace(/[-, :, \s]/g, "");
+    
+    var year = sDate.substr(0,4);
+    var month = sDate.substr(4,2);
+    var day = sDate.substr(6,2);
+    
+    var iDay = parseInt(new Date(year, month-1, day).getDay());
+    
+    var diffDay = 6 - iDay;
+    
+    
+    var sEndDate = new Date(year, parseInt(month)-1, parseInt(day) + diffDay); //선택한 요일의 종료일을 구한다.
+    
+    var sEndYear = sEndDate.getFullYear();
+    var sEndMonth = parseInt(sEndDate.getMonth() + 1);
+    var sEndDay = sEndDate.getDate();
+    
+    var weekEndDay = '' + sEndYear + (sEndMonth < 10 ? '0' + sEndMonth : sEndMonth) + (sEndDay < 10 ? '0' + sEndDay : sEndDay);
+
+    return weekEndDay;
+}
+
+/**
+ * Date 형식으로 변환하여 리턴
+ */
+function fnConvertDateFormat(dateData) {
+	var dateString = "";
+	
+	if (dateData != undefined && dateData != null) {
+		if (dateData.length >= 8) {
+			dateString = dateData.substr(0, 4) + "-" + dateData.substr(4, 2) + "-" + dateData.substr(6, 2);
+		}
+		
+		if (dateData.length == 14) {
+			dateString = dateString + " " + dateData.substr(8,2) + ":" + dateData.substr(10, 2) + ":" + dateData.substr(12, 2);
+		}
+	}
+	
+	return dateString;
+}
