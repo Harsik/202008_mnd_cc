@@ -456,7 +456,7 @@ public class MainController {
 			System.out.println("map >>>" + map);
 			name	= (String) map.get("fulnm");
 			rank = (String) map.get("rankNm");
-			telno = (String) map.get("telno");
+			telno = (String) map.get("promptTelno");
 			result= "문의하신 "+name+" "+rank+" 전화번호는 "+telno+" 입니다";
 			
 		} catch (Exception e) {
