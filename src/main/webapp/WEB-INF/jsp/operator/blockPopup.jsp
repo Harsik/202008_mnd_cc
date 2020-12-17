@@ -132,8 +132,12 @@
 	    $(document).ready(function(){
 	    	init();
 	    	
-	    	//저장버튼 클릭 이벤트
-	    	$("#saveBtn").bind("click", saveInfo);
+	    	//저장버튼 클릭 이벤트(중복클릭 방지)
+	    	var saveBtn = document.querySelector("#saveBtn");
+	    	saveBtn.addEventListener("click", function (e) {
+	    	    this.setAttribute("disabled", "disabled");
+	    	    saveInfo();
+	    	});
 	    
 	    });
 	    
