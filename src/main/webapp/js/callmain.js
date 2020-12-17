@@ -423,10 +423,9 @@ function makeCall(p_phoneNum)
 		//fnLog("Request [fnSingleStepTransfer]");
 		/*
 		 * 민원인 안내멘트 큐 : 3013
-		 * 20.12.09 박준배 주무관 요청에 의해 안내멘트 잠시 보류
+		 * 20.12.17 연결 할 번호를 UEI에 실어 보냄
 		 */
-		//var phonNum = "3013";
-		fnSingleStepTransfer( phonNum, "", $("#CALLNO").val());
+		fnSingleStepTransfer( "3013", "", phonNum);
 	}
 	else if(calltype == "makecall")
 	{
