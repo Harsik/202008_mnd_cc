@@ -409,9 +409,9 @@ function fnSetResult(result, callback) {
 //업로드  파일 사이즈 체크 
 function fileCheck( fileFormName , limitSize )
 {
-  // 사이즈체크
-  var maxSize  = 3 * 1024 * 1024    //30MB
-  var fileSize = 0;
+    // 사이즈체크
+    var maxSize  = 3 * 1024 * 1024    //30MB
+    var fileSize = 0;
 
 	// 브라우저 확인
 	var browser=navigator.appName;
@@ -429,11 +429,11 @@ function fileCheck( fileFormName , limitSize )
 
 	//alert("파일사이즈 : "+ fileSize/1000000 +"MB, 최대파일사이즈 : "+limitSize+"MB");
 	return (fileSize/1000000).toFixed(2);
-//      if(fileSize > maxSize)
-//      {
-//          alert("첨부파일 사이즈는 5MB 이내로 등록 가능합니다.    ");
-//          return;
-//      }
+//        if(fileSize > maxSize)
+//        {
+//            alert("첨부파일 사이즈는 5MB 이내로 등록 가능합니다.    ");
+//            return;
+//        }
 }
 
 //파일 확장자 체크
@@ -472,7 +472,7 @@ function datePicker(id)
 	$(function() {	    
 	    $(id).datepicker({
 	    	showOn: 'button',
-	    	buttonImage : "/images/icon_cal_drop.gif",
+	    	buttonImage : "/images/operator/icon_cal_drop.gif",
 	    	buttonImageOnly: true,
 	    	dateFormat : 'yy-mm-dd',
 	    	monthNamesShort : ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],

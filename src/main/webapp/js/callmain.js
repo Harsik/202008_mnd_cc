@@ -207,7 +207,7 @@ $(document).ready(function()
 // ready
 
 function setNotLogoutTimer(urlName){
-	setInterval(function(){goNotLogout(urlName)},600000); 
+	setInterval(function(){goNotLogout(urlName)},240000); 
 }
 
 function goNotLogout(urlName) { 
@@ -401,7 +401,7 @@ function makeCall(p_phoneNum)
 			fnConsult("CONSULT", phonNum, "", $("#CALLNO").val());
 			
 			//실제로 협의 연결시 값 true로 변경
-		//	g_transFlag = true;
+			g_transFlag = true;
 			
 			$("#popupMessageConfirmPopup").show();
 			$("#labTransferDialog").html("");
@@ -457,7 +457,7 @@ function curCallCheck(phoneNum){
  * @returns {String}
  */
 function phoneNumber(callnum){
-	var ext_no=$("#EXTNO").val();
+	var ext_no=$("EXTNO").val();
 	if(ext_no==callnum){
 		alert("현재 사용중인 전화기입니다.");
 		return;

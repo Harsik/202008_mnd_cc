@@ -1,9 +1,7 @@
 package com.sfr.operator.controller.search;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +22,6 @@ import com.forcewin.mirserver.util.Collection;
 import com.forcewin.mirserver.util.Input;
 import com.forcewin.mirserver.util.Output;
 import com.sfr.intra.service.IntraService;
-import com.sfr.operator.service.OperatorService;
 
 import net.sf.json.JSONArray;
 
@@ -34,30 +31,6 @@ public class Global {
 	@Autowired
 	private IntraService intraService;
 	
-	@Autowired
-	private OperatorService operatorService;
-	
-	// 전화번호 검색 자동완성 기능 추가 20.10.20
-	@RequestMapping(value="/search2.do", method=RequestMethod.POST)
-	public @ResponseBody ModelAndView selectDeptList(HttpServletRequest request, @RequestParam Map paramMap) throws Exception {
-		
-		ModelAndView model = new ModelAndView("jsonView");
-		
-		String str = (String) paramMap.get("searchContent");
-		
-		paramMap.put("searchContent", paramMap.get("searchContent"));
-		paramMap.put("searchCnt", paramMap.get("searchCnt"));
-		
-		List<Map> list = new ArrayList<>();
-		
-		// searchServer 없어서 임의로 deptTable 에서 조회
-		list = operatorService.selectDeptTelMain(paramMap);
-
-		model.addObject("list",list);
-		
-		return model;
-	}
-
 	@RequestMapping(value = "/search.do", method = RequestMethod.POST)
 	public @ResponseBody ModelAndView search(@RequestParam Map paramMap, ModelMap moelMap, HttpServletRequest requset,
 			@ModelAttribute("searchVO") PagingVO vo) {
@@ -102,7 +75,7 @@ public class Global {
 		if(tar_range.indexOf("tot") != -1){
 			tar_range = "";
 		}else{
-			tar_range = query+"<in>"+tar_range;
+			tar_range = String.valueOf(query) + "<in>" + tar_range;
 		}		
 		
 //		String arr_range = "all"; // zone(제목, 작성자....)
@@ -187,10 +160,10 @@ public class Global {
 		String temptarget = temptargetlist[0];
 
 		//System.out.println("쿼리 : "+ arr_range+query);
-		System.out.println(arr_range+query+tar_range);
+		System.out.println(String.valueOf(arr_range) + query + tar_range);
 		
 		collist = tempColllist[Integer.parseInt(target)];
-		input = connector.setParam(serverhost, searchport, arr_range+"("+query+")"+tar_range, qy, parser, collist, fields, filter, pagemax,
+		input = connector.setParam(serverhost, searchport, String.valueOf(arr_range) + "(" + query + ")" + tar_range, qy, parser, collist, fields, filter, pagemax, 
 				pagenum, "mildsc asc rsort asc rank asc "+sortfield, sortorder, user, incharset, outcharset);
 		output = connector.getJson(input);
 		code = jparser.getCode(output);
@@ -517,7 +490,7 @@ public class Global {
 		String targetname = targetnamelist[0];
 		String temptarget = temptargetlist[0];
 		collist = tempColllist[Integer.parseInt(target)];
-		input = connector.setParam(serverhost, searchport, arr_range+"("+query+")"+tar_range, qy, parser, collist, fields, filter, pagemax,
+		input = connector.setParam(serverhost, searchport, String.valueOf(arr_range) + "(" + query + ")" + tar_range, qy, parser, collist, fields, filter, pagemax, 
 				pagenum, "mildsc asc rsort asc rank asc "+sortfield, sortorder, user, incharset, outcharset);
 		output = connector.getJson(input);
 		code = jparser.getCode(output);
@@ -658,7 +631,7 @@ public class Global {
 
 			// 검색어 원상복귀
 			if (query_end != null) {
-				query = query_front + " " + query_end;
+				query = String.valueOf(query_front) + " " + query_end;
 			} else {
 				query = query.replace("*", "");
 			}

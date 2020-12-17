@@ -255,10 +255,10 @@
 	</select>
 
 	<select id="selectCtiUserInfo70" parameterType="map" resultType="egovMap">
-			SELECT   EMPLOYEE_NAME 
-			       , LOGIN_ID
-	       		FROM     MA_EMPLOYEE
-			WHERE    LOGIN_ID = #{id}
+		SELECT   EMPLOYEE_NAME 
+		       , LOGIN_ID
+		FROM     MA_EMPLOYEE
+		WHERE    LOGIN_ID = #{id}
 	</select>
 
 	

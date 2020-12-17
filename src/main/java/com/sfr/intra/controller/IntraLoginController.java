@@ -45,8 +45,8 @@ public class IntraLoginController {
 	
 	@RequestMapping("/login.do")
 	public String login() {
-		//return "intra/loginPro";
-		return "intra/login";
+		return "intra/loginPro";
+//		return "intra/login";
 	}
 	
 	@RequestMapping("/loginT.do")
@@ -395,7 +395,7 @@ public class IntraLoginController {
 					 * */
 				
 						SessionCheck.getInstance().doLogout(mildsc+loginId);
-					if((!SessionCheck.getInstance().isLogin(mildsc+loginId))){
+					if((!SessionCheck.getInstance().isLogin(mildsc+loginId)) || "true".equals(paramMap.get("loginFlag"))){
 						
 						SessionCheck.getInstance().doLogout(mildsc+loginId);
 						
@@ -517,7 +517,7 @@ public class IntraLoginController {
 				 * */
 			
 					SessionCheck.getInstance().doLogout(mildsc+loginId);
-				if((!SessionCheck.getInstance().isLogin(mildsc+loginId))){
+				if((!SessionCheck.getInstance().isLogin(mildsc+loginId)) || "true".equals(paramMap.get("loginFlag"))){
 					
 					SessionCheck.getInstance().doLogout(mildsc+loginId);
 					

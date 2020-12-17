@@ -268,11 +268,11 @@ function isReleased() {
 function ctiInit()
 {
 	try
-	{
+	{	
 		$("#EXTNO").val(localStorage.getItem("EXTNO"));
 		// cti id와 내선번호를 셋팅 후 서버 연결 시도
 		USERID = $("#CTIID").val();
-		EXT = $("#EXTNO").val(); 
+		EXT = $("#EXTNO").val();
 		// 20.12.01 관리자/교환원 구분
 		if(USERID == "2019"||USERID == "2002"||USERID == "1012"||USERID == "1009"){
 			window.sessionStorage.setItem("ADMIN_YN","Y");
@@ -287,7 +287,7 @@ function ctiInit()
 			openConn();                                           // WebSocket 연결
 		}
 		else
-		{ 
+		{
 			alert("아이디 또는 내선번호를 확인해 주세요!");
 		}
 	}
@@ -521,7 +521,7 @@ function fnGetEvent(data) {
 		textState = "보류";
 		g_holdCount++;
 		console.log(g_holdCount);
-		arState = new Array( "3", "3", "3", "2", "2", "3", "3", "3", "2", "2");
+		arState = new Array( "3", "3", "3", "1", "2", "3", "3", "3", "2", "2");
 		break;
 	case 'UNHOLD':        // 보류해제 a20170705
 		textState = "통화중";
@@ -530,9 +530,8 @@ function fnGetEvent(data) {
 	case 'READY':       // 대기 
 		//대기를 위한 초기화 
 		initInfo();
-		
 		g_readyFlag = false;
-		 
+	
 		//nowState = "Ready";
 		
 		//알카텔 전화으면 통화전(READY) 상태로 갔다가 후처리 상태됨.
@@ -563,7 +562,7 @@ function fnGetEvent(data) {
 		if (REASONCODE == '7') {
 			arState = new Array( "2", "2", "3", "3", "3", "3", "3", "2", "2", "2"); 
 		} else {
-			arState = new Array( "2", "2", "3", "3", "3", "3", "2", "2", "2", "2");
+			arState = new Array( "2", "2", "3", "3", "3", "3", "2", "1", "2", "2");
 		}
 		currStatus = jsonObj['STATUS_CD'];
 
@@ -600,8 +599,6 @@ function fnGetEvent(data) {
 			}
 		}
 
-		
-		
 		bCalling = true;
 		bReleased = false;
 		RECKEY = "";
@@ -659,26 +656,28 @@ function fnGetEvent(data) {
 		var tempCellno = "";
 		if(telNo.substring(0,2)=="01"){
 			//휴대폰
-			tempCellno=getPhoneNumFormat(telNo);
+		   tempCellno=getPhoneNumFormat(telNo);
 		}else{
-			tempTelno=getPhoneNumFormat(telNo);
-		}
-		
-		// DB 조회 느리서 sync
-		 
+		   tempTelno=getPhoneNumFormat(telNo);
+		}	
+
+                $("#tfDialogCustTelNo").html(getPhoneNumFormat(telNo));
+                $("#btnDialogAnswer").focus();
+                $("#dialogCallPopup").dialog("open");
+
 				$.ajax({   
 					url:"/operator/callUser.do",
 					type:"post",
 					dataType:'json',
-					async : true,
-					data:{"telno" :tempTelno , "mpno" :tempCellno},
+					async : false,
+					data:{"telno" :tempTelno, "mpno" :tempCellno},
 					success:function(data) {
 						if(!(data.map)){
 				 			mildscNm="";
 				 			rspofcNm="";
 				 			deptNm="";
-				 			custNm="미인가인";
-				 			result="미인가 데이터";
+				 			custNm="미등록인";
+				 			result="미등록 데이터";
 				 			console.log("data Null!");
 				 		}else{
 				 			
@@ -721,25 +720,20 @@ function fnGetEvent(data) {
 		if(queueDn=="3004"){
 			result+=" 음성인식 시도 ";
 		} 
-		
-		$("#tfDialogCustTelNo").html(getPhoneNumFormat(telNo));
+
+		//$("#tfDialogCustTelNo").html(getPhoneNumFormat(telNo));
 		$("#tfDialogCustNm").html(custNm);
 		$("#tfDialogDeptNm").html(deptNm);
-		$("#btnDialogAnswer").focus();
-		$("#dialogCallPopup").dialog("open");
+		//$("#btnDialogAnswer").focus();
+		//$("#dialogCallPopup").dialog("open");
 		$("#labInPopup").html(result);
 		
-		if ($("#dialogCallPopup").dialog("isOpen")) {
-			// true
-			//메인화면 셋팅
-			$("#nm").val(custNm); 			//성명
-			$("#fullDeptNm").val(rspofcNm);	//조직 
-			$("#deptNm").val(deptNm); 		//부서
-			$("#mildsc").val(mildscNm); 	//군
-		}
-		//번호는 상관없이 셋팅
+		//메인화면 셋팅
+		$("#nm").val(custNm); 			//성명
 		$("#tfTelno").val(telNo); 		//연락처
-		
+		$("#fullDeptNm").val(rspofcNm);	//조직 
+		$("#deptNm").val(deptNm); 		//부서
+		$("#mildsc").val(mildscNm); 	//군
 		
 		break;
 	case 'DIALING': // Outbound
@@ -902,8 +896,14 @@ function OnButtonProc(arButton, arState)
 			switch(arState[i])
 			{
 				case "1" : // display ( using img )
-					$("#readyText").html("대기중");
-					$("#"+ arButton[i]).css('background-image',"url(/images/operator/but_bg_click.png)");
+					var tmpBgNm="_red";
+					if(i==0){
+						$("#readyText").html("대기중");
+					}
+				        if(i==3){
+						tmpBgNm="";
+					}	
+					$("#"+ arButton[i]).css('background-image',"url(/images/operator/but_bg_click"+tmpBgNm+".png)");
 					$("#"+ arButton[i]).css('cursor','pointer');
 					var $softPhoneImg = $("#" + arButton[i]);
 				//	console.log("phonImg:"+ arButton[i]);
@@ -911,14 +911,14 @@ function OnButtonProc(arButton, arState)
 					$softPhoneImg.mouseover(function(e)
 					{
 						var $btnImg = $("#" + (this.id)); 
-						$btnImg.css('background-image',"url(/images/operator/but_bg_click.png)");
+						$btnImg.css('background-image',"url(/images/operator/but_bg_click"+tmpBgNm+".png)");
 					});
 					
 					// mouseout event
 					$softPhoneImg.mouseout(function(e)
 					{
 						var $btnImg = $("#" + (this.id)); 
-						$btnImg.css('background-image',"url(/images/operator/but_bg_click.png)");
+						$btnImg.css('background-image',"url(/images/operator/but_bg_click"+tmpBgNm+".png)");
 					});
 				
 					// mousedown event
@@ -932,7 +932,7 @@ function OnButtonProc(arButton, arState)
 					$softPhoneImg.mouseup(function(e)
 					{
 						var $btnImg = $("#" + (this.id)); 
-						$btnImg.css('background-image',"url(/images/operator/but_bg_click.png)");
+						$btnImg.css('background-image',"url(/images/operator/but_bg_click"+tmpBgNm+".png)");
 					});
 					
 					break;

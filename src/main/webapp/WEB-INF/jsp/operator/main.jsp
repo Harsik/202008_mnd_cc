@@ -717,7 +717,7 @@
 		            $.ajax({
 		                type:"post",
 		                async:true,
-		                url:"/search2.do",
+		                url:"/operator/search2.do",
 		                dataType: "json",
 		                data : {
 		                	"searchContent" : $("#query").val().trim(),

@@ -466,4 +466,25 @@ public class MainController {
 		System.out.println("check >>> " +result);
 		return result;   
 	}
+	
+	// 전화번호 검색 자동완성 기능 추가 20.10.20
+	@RequestMapping(value="/search2.do", method=RequestMethod.POST)
+	public @ResponseBody ModelAndView selectDeptList(HttpServletRequest request, @RequestParam Map paramMap) throws Exception {
+		
+		ModelAndView model = new ModelAndView("jsonView");
+		
+		String str = (String) paramMap.get("searchContent");
+		
+		paramMap.put("searchContent", paramMap.get("searchContent"));
+		paramMap.put("searchCnt", paramMap.get("searchCnt"));
+			
+		List<Map> list = new ArrayList<>();
+			
+		// searchServer 없어서 임의로 deptTable 에서 조회
+		list = operatorService.selectDeptTelMain(paramMap);
+
+		model.addObject("list",list);
+			
+		return model;
+	}
 }

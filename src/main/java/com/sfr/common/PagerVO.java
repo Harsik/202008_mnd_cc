@@ -51,14 +51,6 @@ public class PagerVO implements Serializable {
     private int currentPage = 1;
     
 
-	@Override
-	public String toString() {
-		return "PagerVO [pageIndex=" + pageIndex + ", pageSubIndex=" + pageSubIndex + ", pageUnit=" + pageUnit
-				+ ", pageSize=" + pageSize + ", subPageSize=" + subPageSize + ", firstIndex=" + firstIndex
-				+ ", lastIndex=" + lastIndex + ", recordCountPerPage=" + recordCountPerPage + ", currentPage="
-				+ currentPage + "]";
-	}
-
 	/**
 	 * pageIndex attribute 를 리턴한다.
 	 * @return the int
