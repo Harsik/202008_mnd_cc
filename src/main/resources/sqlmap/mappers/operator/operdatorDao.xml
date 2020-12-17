@@ -436,9 +436,8 @@
 	</insert>
 	
 	<select id="selectBlockList" parameterType="map" resultType="egovMap">
-		SELECT * FROM (
+		SELECT ROWNUM, A.* FROM (
 	    SELECT
-			rownum,
 			seq,
 			[type],
 			DECODE([type],1,'언어폭력',2,'성희롱',3,'기타업무방해') AS type_nm,
@@ -493,7 +492,8 @@
 		    AND rgst_id =#{usrId}
 		</if>
 		ORDER BY rgst_dttm DESC
-		) WHERE ROWNUM BETWEEN #{startRowNum} AND #{endRowNum}
+		) A
+		WHERE ROWNUM BETWEEN #{startRowNum} AND #{endRowNum}
 	</select>
 	
 	<select  id="getBlockUserCount" resultType="int" parameterType="map">
