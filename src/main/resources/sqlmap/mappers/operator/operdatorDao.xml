@@ -237,7 +237,7 @@
 		      		START WITH HGRNK_DEPT_CD = #{hgrnkDeptCd} AND MDCD = #{mildsc}   CONNECT BY PRIOR DEPT_CD = HGRNK_DEPT_CD
 			
 			 <if test='mdcd!="C"'>	
-				ORDER SIBLINGS BY SEQC
+				ORDER SIBLINGS BY DEPT_NM
 			  </if>
 			
 			<if test='mdcd=="C"'>	
