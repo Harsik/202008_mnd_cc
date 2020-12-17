@@ -45,13 +45,13 @@
 	    	$("#crt_id").html(usrId);
 	    	
 			if( type.substring(0, type.indexOf("_", 0)) == "btnIn"){
-	    		$("#cust_group").html(opener.$("#mildsc").val()); 			//부대
-	    		$("#cust_dept").html(opener.$("#deptNm").val()); 			//부서
-	    		$("#cust_position").html(opener.$("#fullDeptNm").val()); 	//직책
+	    		$("#cust_group").html(opener.$("#h_mildsc").val()); 		//부대
+	    		$("#cust_dept").html(opener.$("#h_deptNm").val()); 			//부서
+	    		$("#cust_position").html(opener.$("#h_fullDeptNm").val()); 	//직책
 	    	}else{
-	    		$("#cust_group").html(opener.$("#outMildsc").val()); 			//부대
-	    		$("#cust_dept").html(opener.$("#outDeptNm").val()); 			//부서
-	    		$("#cust_position").html(opener.$("#outFullDeptNm").val()); 	//직책
+	    		$("#cust_group").html(opener.$("#h_mildsc").val()); 		//부대
+	    		$("#cust_dept").html(opener.$("#h_deptNm").val()); 			//부서
+	    		$("#cust_position").html(opener.$("#h_fullDeptNm").val()); 	//직책
 	    	}
 	    }
 	    
@@ -117,6 +117,11 @@
 						},
 						success:function(data) {
 					        alert("요청되었습니다.");
+					        opener.$("#h_nm").val(""); 			//성명
+					        opener.$("#h_tfTelno").val(""); 	//연락처
+					        opener.$("#h_fullDeptNm").val("");	//조직 
+					        opener.$("#h_deptNm").val(""); 		//부서
+					        opener.$("#h_mildsc").val(""); 		//군
 					        window.close();
 						},error:function(request, status, error){  
 					    	console.log("[" + request.status + "] " + "서비스 오류가 발생하였습니다. 잠시후 다시 실행하십시오.");  

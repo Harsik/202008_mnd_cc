@@ -177,6 +177,10 @@
 		});// ready END
 		
 		function blockPopup(){
+			if(!bCalling){
+				alert("통화중 일때만 가능합니다.");
+			}
+			
 			var custTel = "";	// 번호
 			var custNm	= "";	// 이름
 			var custStat= "";	// 버튼 유형 : 1:언어폭력/2:성희롱/3:기타업무방해	
@@ -204,7 +208,14 @@
 			
 			if(callType=="btnIn_Aksung1" || callType=="btnIn_Aksung2" || callType=="btnIn_Aksung3"){ //IN
 				if(confirm(this.title + "에 대한 자동 음원 송출을 하시겠습니까?")){
-	 				fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
+					// 전화가 끊기면 text가 초기화 되기때문에 hidden 값에 넣어놓기
+					$("#h_nm").val($("#nm").val()); 				//성명
+					$("#h_tfTelno").val($("#tfTelno").val()); 		//연락처
+					$("#h_fullDeptNm").val($("#fullDeptNm").val());	//조직 
+					$("#h_deptNm").val($("#deptNm").val()); 		//부서
+					$("#h_mildsc").val($("#mildsc").val()); 		//군
+					
+					fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
 	 				window.sessionStorage.setItem("callType",""); 	// 초기화
 					block_popupEvent(custTel,custNm,custStat,callType);
 				}
@@ -213,6 +224,13 @@
 					alert("민원인 정보를 기입해주세요.");
 					return false;
 				}
+			
+				$("#h_nm").val($("#outNm").val()); 					//성명
+				$("#h_tfTelno").val($("#outTelno").val()); 			//연락처
+				$("#h_fullDeptNm").val($("#outFullDeptNm").val());	//조직 
+				$("#h_deptNm").val($("#outDeptNm").val()); 			//부서
+				$("#h_mildsc").val($("#outMildsc").val()); 			//군
+				
 				block_popupEvent(custTel,custNm,custStat,callType);
 			}
 		}
@@ -1189,6 +1207,11 @@ function reClear(){
 							<h2><span class="tit_i">인입콜정보</span></h2>
 									<!--인입콜 내용-->
 									<div class="inCall_cont01">
+										<input type="hidden" id="h_nm" value=""/>
+										<input type="hidden" id="h_tfTelno" value=""/>
+										<input type="hidden" id="h_fullDeptNm" value=""/>
+										<input type="hidden" id="h_deptNm" value=""/>
+										<input type="hidden" id="h_mildsc" value=""/>
 										<ul>
 											<li class="inCall_cont_le">성명</li>
 											<li class="inCall_cont_ri"><input type="text" class="w100p" id ="nm" name="nm"></li>
