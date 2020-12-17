@@ -179,6 +179,7 @@
 		function blockPopup(){
 			if(!bCalling){
 				alert("통화중 일때만 가능합니다.");
+				return false;
 			}
 			
 			var custTel = "";	// 번호

@@ -228,6 +228,9 @@ function goNotLogout(urlName) {
  */
 function initInfo()
 {
+		//메인 hidden값 초기화
+		$("#h_nm,#h_tfTelno,#h_fullDeptNm,#h_deptNm,#h_mildsc").val("");
+	
 		//메인화면 초기화
 		$("#nm").val(""); 			//성명
 		$("#tfTelno").val(""); 		//연락처
@@ -712,6 +715,23 @@ function dragElement(elmnt) {
  * 일시,전화번호,이름,계급
  */
 function insertTemp(phoneNum){
+	var nm = $("#outNm").val().trim();
+	
+	// phoneNum format
+	var pattern =/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]|[가-힣]/gi; // 정규식
+	var arrTelno = phoneNum.split(',');
+	var filtNum=arrTelno[0].replace(pattern, "");
+
+	var prompt_telno = "";
+	//한 글자씩 화면에 출력
+	for (var i = 0; i < phoneNum.length; i++) {
+		if(i==phoneNum.length-1){
+			prompt_telno += phoneNum.charAt(i);
+		}else{
+			prompt_telno += phoneNum.charAt(i)+",";
+		}
+	}
+
 	// 민원인 정보 찾기
 	$.ajax({   
 		url:"/operator/selectUser.do",
@@ -719,7 +739,7 @@ function insertTemp(phoneNum){
 		dataType:'json',
 		data:{
 			"telno":phoneNum,	//전화번호
-			"fulnm":$("#outNm").val().trim(),	//이름
+			"fulnm":nm,			//이름
 		},
 		success:function(data) {
 			var result = data.map;
@@ -731,9 +751,10 @@ function insertTemp(phoneNum){
 				dataType:"json",
 				async:true,
 				data:{
-					"fulnm"		:$("#outNm").val().trim(),		//이름
-					"telno" 	:$("#outTelno").val().trim(),	//전화번호
-					"rank_nm" 	:result.rank,					//계급
+					"fulnm"			:nm,				//이름
+					"telno" 		:phoneNum.trim(),	//전화번호
+					"rank_nm" 		:result.rank,		//계급
+					"prompt_telno" 	:prompt_telno,		//계급
 				},
 				success:function(data) {
 			        console.log(">>> prompt_table insert");
