@@ -152,11 +152,24 @@
 			
 			$("#btnAgree,#btnReject").css( "visibility", "hidden" );
 			
+			// 악성민원 탭 클릭 이벤트
+			$(".tab-link").eq(2).click(function(){
+				initBlockDetail();
+				SelectBlock("0");
+			});
+			
 			//악성민원 조회 이벤트
 			$("#btnSelectBlock").click(function(){
 				initBlockDetail();
 				SelectBlock("0");
 		  	});
+			
+			$("#cust_info_search").keyup(function (key) {
+				if(key.keyCode == 13){//키가 13이면 실행 (엔터는 13)
+					initBlockDetail();
+					SelectBlock("0");
+				}
+			});
 			
 			//반려,승인 버튼 클릭 이벤트
 			$("#btnReject, #btnAgree").bind("click", updateBlock );
