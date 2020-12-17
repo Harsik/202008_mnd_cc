@@ -563,27 +563,33 @@
 			                             ,	fulnm
 			                             ,	rank_nm
 			                             ,	telno
+			                             ,	prompt_telno
 			                             )
 			VALUES(
 									       SYSDATETIME
 										 , #{fulnm}
 										 , #{rank_nm}
 										 , #{telno}
+										 , #{prompt_telno}
 										)
 	</insert>
 	
 	<select id="selectReqPrompt" parameterType="map" resultType="egovMap">
-		SELECT
+		SELECT ROWNUM, A.* FROM (
+	    SELECT
 			SEQ,
 			RGST_DTTM,
 			FULNM,
 			RANK_NM,
-			TELNO
+			TELNO,
+			PROMPT_TELNO
 		FROM
 			TBL_PROMPT_N
 		WHERE 1=1
 			AND telno=#{ANI}
-			AND rgst_dttm BETWEEN DATE_SUB( SYSDATETIME , INTERVAL '1:00' HOUR_SECOND) AND SYSDATETIME
+			AND rgst_dttm BETWEEN DATE_SUB( SYSDATETIME , INTERVAL '30:00' HOUR_SECOND) AND SYSDATETIME
+		) A
+		WHERE ROWNUM = 1
 	</select>
 	
 	<!-- 검색 자동완성 리스트  -->
