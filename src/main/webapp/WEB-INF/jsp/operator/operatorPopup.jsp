@@ -239,6 +239,12 @@ $(document).ready(function(){
 	if(adminYn=="N"){
 		$("#UsrgbcdTh,#Usrgbcd").css( "visibility", "hidden" );
 	}
+	
+	$("#Usrgbcd").keyup(function (key) {
+		if(key.keyCode == 13){
+			fnSearch();
+		}
+	});
 });
 
 
