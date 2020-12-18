@@ -177,11 +177,6 @@
 		});// ready END
 		
 		function blockPopup(){
-			if(!bCalling){
-				alert("통화중 일때만 가능합니다.");
-				return false;
-			}
-			
 			var custTel = "";	// 번호
 			var custNm	= "";	// 이름
 			var custStat= "";	// 버튼 유형 : 1:언어폭력/2:성희롱/3:기타업무방해	
@@ -192,6 +187,10 @@
 			custStat= this.value;
 			
 			if(callType=="btnIn_Aksung1" || callType=="btnIn_Aksung2" || callType=="btnIn_Aksung3"){ //IN
+				if(!bCalling){
+					alert("통화중 일때만 가능합니다.");
+					return false;
+				}
 				custTel = $("#tfTelno").val();
 				custNm	= $("#nm").val();
 			}else{
@@ -216,9 +215,10 @@
 					$("#h_deptNm").val($("#deptNm").val()); 		//부서
 					$("#h_mildsc").val($("#mildsc").val()); 		//군
 					
+					block_popupEvent(custTel,custNm,custStat,callType);
+					
 					fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
 	 				window.sessionStorage.setItem("callType",""); 	// 초기화
-					block_popupEvent(custTel,custNm,custStat,callType);
 				}
 			}else{	//OUT
 				if($("#outNm").val()=="" || $("#outTelno").val()=="" || $("#outFullDeptNm").val()=="" || $("#outDeptNm").val()=="" || $("#outMildsc").val()==""){
