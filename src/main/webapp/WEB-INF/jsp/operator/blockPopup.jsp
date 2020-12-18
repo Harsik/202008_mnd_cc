@@ -129,7 +129,7 @@
 							"rgst_rsn"      :$("#block_content").html().trim(),	//등록사유
 							"rgst_id"       :usrId,							//등록자
 							"act_type"      :adminYn == "Y" ? "2" : "1",	//처리유형	1:등록요청/2:승인/3:반려 (관리자면 바로 승인)
-							"act_id"        :usrId,							//처리자
+							"act_id"        :adminYn == "Y" ? usrId : "",	//처리자
 							
 						},
 						success:function(data) {
@@ -141,11 +141,13 @@
 					        opener.$("#h_mildsc").val(""); 		//군
 					        window.close();
 						},error:function(request, status, error){  
-					    	console.log("[" + request.status + "] " + "서비스 오류가 발생하였습니다. 잠시후 다시 실행하십시오.");  
+					    	alert("[" + request.status + "] " + "서비스 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
 					    } 
 					});
 					
-				}
+				},error:function(request, status, error){  
+			    	alert("[" + request.status + "] " + "서비스 오류가 발생하였습니다. 관리자에게 문의바랍니다.");
+			    } 
 			});
 	    	
 	    	
