@@ -33,6 +33,9 @@
 	    var type = '${param.type}';
 	    var usrId = window.sessionStorage.getItem("USERID");
 	    var adminYn = window.sessionStorage.getItem("ADMIN_YN");
+	    var mildsc = opener.$("#h_mildsc").val(); 			//부대
+	    var deptNm = opener.$("#h_deptNm").val();			//부서
+	    var fullDeptNm = opener.$("#h_fullDeptNm").val();	//직책
 	    
 	    function init(){
 	    	$("#crt_dt").html(getDate()+" "+getTime());	// 등록일시
@@ -43,16 +46,9 @@
 	    	$("#cust_tel").html(tel);
 	    	$("#cust_type").val(stat);
 	    	$("#crt_id").html(usrId);
-	    	
-			if( type.substring(0, type.indexOf("_", 0)) == "btnIn"){
-	    		$("#cust_group").html(opener.$("#h_mildsc").val()); 		//부대
-	    		$("#cust_dept").html(opener.$("#h_deptNm").val()); 			//부서
-	    		$("#cust_position").html(opener.$("#h_fullDeptNm").val()); 	//직책
-	    	}else{
-	    		$("#cust_group").html(opener.$("#h_mildsc").val()); 		//부대
-	    		$("#cust_dept").html(opener.$("#h_deptNm").val()); 			//부서
-	    		$("#cust_position").html(opener.$("#h_fullDeptNm").val()); 	//직책
-	    	}
+	    	$("#cust_group").html(mildsc);
+    		$("#cust_dept").html(deptNm);
+    		$("#cust_position").html(fullDeptNm);
 	    }
 	    
 	    function getDateAdd(){
