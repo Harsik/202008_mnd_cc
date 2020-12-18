@@ -67,6 +67,12 @@
 	    }
 	    
 	    function saveInfo(){
+	    	var custMildsc = "";	//군별
+	    	var custMilNo = "";		//군번
+	    	var custDeptCd = "";	//부서코드
+	    	var custRank = "";		//계급
+	    	var custTelno = "";		//일반전화번호
+	    	var custMpno = "";		//휴대전화번호
 	    	
 	    	// 민원인 정보 찾기
 	    	$.ajax({   
@@ -80,7 +86,22 @@
 				},
 				success:function(data) {
 					console.log(data);
-					var result = data.map;
+					if(data.map){
+						var result = data.map;
+						custMildsc = result.mildsc;
+						custMilNo = result.milNo;
+						custDeptCd = result.deptCd;
+						custRank = result.rank;
+						custTelno = result.telno;
+						custMpno = result.mpno;
+					}else{
+						custMildsc = "";
+						custMilNo = "";
+						custDeptCd = "";
+						custRank = "";
+						custTelno = tel.replace(/-/gi, "").trim();
+						custMpno = tel.replace(/-/gi, "").trim();
+					}
 					
 					var blockDtArr = $("#block_dt").html().split(" ~ ");
 					var blockStartDt = blockDtArr[0].replace(/-/gi, "");
@@ -94,15 +115,15 @@
 						data:{
 							"fulnm"			:nm,							//이름
 							"type"			:$("#cust_type").val(),			//유형	1:언어폭력/2:성희롱/3:기타업무방해
-							"mdcd"			:result.mildsc,					//군별코드
-							"servno" 		:result.milNo,					//군번
-							"dept_cd" 		:result.deptCd,					//부서코드
+							"mdcd"			:custMildsc,					//군별코드
+							"servno" 		:custMilNo,						//군번
+							"dept_cd" 		:custDeptCd,					//부서코드
 							"dept_nm"		:$("#cust_dept").html().trim(),	//부서명
 							"full_dept_nm"	:$("#cust_group").html().trim(),//전체부서명
-							"rank_nm"       :result.rank,					//계급
+							"rank_nm"       :custRank,					//계급
 							"rsponm"       	:$("#cust_position").html().trim(),				//직책
-							"telno"         :result.telno,					//일반전화번호
-							"mpno"          :result.mpno,					//핸드폰
+							"telno"         :custTelno,					//일반전화번호
+							"mpno"          :custMpno,					//핸드폰
 							"strt_date"     :blockStartDt,					//차단시작일
 							"end_date"		:blockEdnDt,					//차단종료일
 							"rgst_rsn"      :$("#block_content").html().trim(),	//등록사유
