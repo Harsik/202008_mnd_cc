@@ -221,7 +221,7 @@
 	 				window.sessionStorage.setItem("callType",""); 	// 초기화
 				}
 			}else{	//OUT
-				if($("#outNm").val()=="" || $("#outTelno").val()=="" || $("#outFullDeptNm").val()=="" || $("#outDeptNm").val()=="" || $("#outMildsc").val()==""){
+				if($("#outNm").val()=="" || $("#outTelno").val()==""){
 					alert("민원인 정보를 기입해주세요.");
 					return false;
 				}
