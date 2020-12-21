@@ -129,7 +129,8 @@
 							"rgst_rsn"      :$("#block_content").html().trim(),	//등록사유
 							"rgst_id"       :usrId,							//등록자
 							"act_type"      :adminYn == "Y" ? "2" : "1",	//처리유형	1:등록요청/2:승인/3:반려 (관리자면 바로 승인)
-							"act_id"        :adminYn == "Y" ? usrId : "",	//처리자
+							"act_id"	    :adminYn == "Y" ? usrId : "",	//처리자
+							"act_dttm"      :adminYn == "Y" ? "SYSDATETIME" : "null",	//결제일
 							
 						},
 						success:function(data) {

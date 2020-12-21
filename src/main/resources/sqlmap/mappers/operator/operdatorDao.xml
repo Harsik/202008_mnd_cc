@@ -429,7 +429,7 @@
 										 , #{rgst_rsn}
 										 , #{rgst_id}
 										 , #{act_type}
-										 , SYSDATETIME
+										 , ${act_dttm}
 										 , #{act_id}
 										)
 			
@@ -457,7 +457,7 @@
 			rgst_rsn,
 			rgst_id,
 			DECODE(act_type,1,'요청',2,'승인',3,'반려') AS act_type,
-			act_dttm,
+			TO_CHAR(act_dttm, 'YYYY-MM-DD HH24:MI' ) AS act_dttm,
 			rtn_rsn,
 			act_id
 		FROM

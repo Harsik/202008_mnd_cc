@@ -323,6 +323,8 @@
 					str += "<input type='hidden' id='telno' value='"+ datas[i].telno +"'/>/";				//전화번호
 					str += "<input type='hidden' id='act_id' value='"+ datas[i].actId +"'/>/";				//결재자
 					str += "<input type='hidden' id='rank_nm' value='"+ datas[i].rankNm +"'/>/";			//계급
+					str += "<input type='hidden' id='mpno' value='"+ datas[i].mpno +"'/>/";					//휴대전화번호
+					str += "<input type='hidden' id='act_dttm' value='"+ datas[i].actDttm +"'/>/";			//결제일시
 					str += '</TR>';
 				});
 				
@@ -359,6 +361,8 @@
             var telno = td.eq(14).val();		//전화번호
             var actId = td.eq(15).val();		//결재자
             var rankNm = td.eq(16).val();		//계급
+            var mpno = td.eq(17).val();			//휴대전화번호
+            var actDttm = td.eq(18).val()=="undefined" ? "" : td.eq(18).val();	//결제일시
             
             if(window.sessionStorage.getItem("ADMIN_YN") == "Y"){
             	if(actType=="요청"){
@@ -385,6 +389,8 @@
 			$("#blockd_rgst_id").html(rgstId);
 			$("#blockd_act_id").html(actId);
 			$("#blockd_rtn_rsn").html(rtnRsn);
+			$("#blockd_mpno").html(mpno);
+			$("#blockd_act_dt").html(actDttm);
    	 	}); 
 		
 		function initBlockDetail(){
@@ -403,6 +409,8 @@
 			$("#blockd_rgst_id").html("");
 			$("#blockd_act_id").html("");
 			$("#blockd_rtn_rsn").html("");
+			$("#blockd_mpno").html("");
+			$("#blockd_act_dt").html("");
 		}
 		
 		function updateBlock(){
@@ -1500,17 +1508,19 @@ function reClear(){
 	               		</div>
 	               		<table style="width: 100%; border:1px solid #ccc;">
 	               			<colgroup>
+								<col width="15%">
 								<col width="10%">
-								<col width="30%">
 								<col width="10%">
-								<col width="25%">
 								<col width="10%">
-								<col width="25%">
+								<col width="10%">
+								<col width="35%">
+								<col width="10%">
+								<col width="35%">
 							</colgroup>
 							<tr>
 								<input type="hidden" id="blockd_seq" value="">
 							  	<th>등록일시</th>
-							  	<td id="blockd_rgst_dttm"></td>
+							  	<td id="blockd_rgst_dttm" colspan="3"></td>
 							  	<th>민원인</th>
 							  	<td id="blockd_cust_nm"></td>
 							  	<th>계급</th>
@@ -1518,13 +1528,21 @@ function reClear(){
 							</tr>
 							<tr>
 							  	<th>연락처</th>
-							  	<td id="blockd_telno"></td>
+							  	<td id="blockd_telno" colspan="3"></td>
 							  	<th>부대</th>
 							  	<td id="blockd_full_dept_nm" colspan="3"></td>
 							</tr>
 							<tr>
+								<th>휴대전화번호</th>
+								<td id="blockd_mpno" colspan="3"></td>
+								<th>부서</th>
+							  	<td id="blockd_dept_nm"></td>
+							  	<th>직책</th>
+							  	<td id="blockd_rsponm"></td>
+							</tr>
+							<tr>
 							  	<th>유형</th>
-							  	<td>
+							  	<td colspan="3">
 							  		<select class="selectBox" style="width: 91%; font-size: 14px;" id="blockd_type" title="유형">
 										<option value="all">전체</option>
 										<option value="1">언어폭력</option>
@@ -1532,31 +1550,29 @@ function reClear(){
 										<option value="3">기타업무방해</option>
 									</select>
 							  	</td>
-							  	<th>부서</th>
-							  	<td id="blockd_dept_nm"></td>
-							  	<th>직책</th>
-							  	<td id="blockd_rsponm"></td>
-							</tr>
-							<tr>
-							  	<th>차단일</th>
-							  	<td class="selectBox">
-								<input type="text" class="text_ol_half"  id="blockd_start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="width: 80px; height: 20px; line-height: 0px; font-size: 13px;"> ~ 
-								<input type="text" class="text_ol_half" id="blockd_end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" style="width: 80px; height: 20px; line-height: 0px; font-size: 13px;">
-								</td>
 							  	<th rowspan="2">차단사유</th>
 							  	<td id="blockd_rgst_rsn" colspan="3" rowspan="2"></td>
 							</tr>
 							<tr>
-							  	<th>등록자</th>
-							  	<td id="blockd_rgst_id"></td>
+							  	<th>차단일</th>
+							  	<td class="selectBox" colspan="3">
+								<input type="text" class="text_ol_half"  id="blockd_start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="width: 80px; height: 20px; line-height: 0px; font-size: 13px;"> ~ 
+								<input type="text" class="text_ol_half" id="blockd_end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" style="width: 80px; height: 20px; line-height: 0px; font-size: 13px;">
+								</td>
 							</tr>
 							<tr>
+								<th>결제일시</th>
+								<td id="blockd_act_dt" colspan="3"></td>
+								<th rowspan="2">반려사유</th>
+							  	<td colspan="3" rowspan="2">
+								   <textarea id="blockd_rtn_rsn" style="height:70px;" title="반려사유"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<th>등록자</th>
+							  	<td id="blockd_rgst_id"></td>
 							 	<th>결제자</th>
 							  	<td id="blockd_act_id"></td>
-							  	<th>반려사유</th>
-							  	<td colspan="3">
-								   <textarea id="blockd_rtn_rsn" style="height:35px;" title="반려사유"></textarea>
-								</td>
 							</tr>
 						</table>
 	               	</div>
