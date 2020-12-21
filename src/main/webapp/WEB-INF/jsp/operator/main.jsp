@@ -28,6 +28,18 @@
 	var JsonArrayD = new Array();
 	
 		$(document).ready(function(){
+			// 통화상태 감지 이벤트
+			$('#MainStatusNm').on('DOMSubtreeModified', function() {
+				var stat = $('#MainStatusNm').text();
+				console.log("change >>> "+ stat);
+				if(stat=="[통화중]"){
+					$(".bottonButton").hide();
+					$(".outCall_box01 .tit_i").html("아웃콜 정보");
+				}else{
+					$(".bottonButton").show();
+					$(".outCall_box01 .tit_i").html("사용자 정보");
+				}
+			});
 			// 정렬 start
 			$("th[name=sortbtn]").click(function(){
 // 				alert('test : '+$(this).attr("data"));
@@ -179,7 +191,7 @@
 		function blockPopup(){
 			var custTel = "";	// 번호
 			var custNm	= "";	// 이름
-			var custStat= "";	// 버튼 유형 : 1:언어폭력/2:성희롱/3:기타업무방해	
+			var custStat= "";	// 버튼 유형 : 1:언어폭력/2:성희롱/3:업무방해	
 			var callType= "";	// 콜 타입 : id값을 넘겨서 in/out 판단
 			var trnsCall= "";	// 전달큐
 			
@@ -248,7 +260,19 @@
 				+ top + ",left=" + left +"";
 
 			var newWindow = window.open(paramURL, "악성민원", option);
-			newWindow.focus();	
+			newWindow.focus();
+			
+			// 팝업창 열려 있는지 확인
+// 		    if(windowObjHistorySearch == null) {
+// 		    	console.log("1");
+// 		        windowObjHistorySearch = window.open(paramURL, "악성민원", option);
+// 		    } else {
+// 		        if(windowObjHistorySearch.closed) {
+// 		        	console.log("2");
+// 		            windowObjHistorySearch = window.open(paramURL, "악성민원", option);
+// 		        }
+// 		    }
+// 		    windowObjHistorySearch.focus();
 			
 		}
 		
@@ -311,8 +335,8 @@
 					str += '<td>'+datas[i].rgstDttm+'</td>'; 	//등록일시
 					str += '<td>'+datas[i].rgstId+'</td>';		//교환원
 					str += '<td>'+datas[i].rgstRsn+'</td>';		//차단사유
-					str += '<input type="hidden" id="type" value='+datas[i].type+'>';		//유형 - 1:언어폭력, 2:성희롱, 3:기타업무방해
-					str += '<td>'+datas[i].typeNm+'</td>';		//유형 - 1:언어폭력, 2:성희롱, 3:기타업무방해
+					str += '<input type="hidden" id="type" value='+datas[i].type+'>';		//유형 - 1:언어폭력, 2:성희롱, 3:업무방해
+					str += '<td>'+datas[i].typeNm+'</td>';		//유형 - 1:언어폭력, 2:성희롱, 3:업무방해
 					str += '<td>'+datas[i].actType+'</td>';		//처리결과
 					str += '<td>'+datas[i].strtDate+" ~ "+datas[i].endDate+'</td>';		//차단일
 					str += '<td>'+datas[i].fulnm+'</td>';		//민원인
@@ -346,7 +370,7 @@
             var rgstDt = td.eq(2).text(); 		//등록일시
             var rgstId = td.eq(3).text();		//교환원
             var rgstRsn = td.eq(4).text();		//차단사유
-            var type = td.eq(5).val();			//유형 - 1:언어폭력, 2:성희롱, 3:기타업무방해
+            var type = td.eq(5).val();			//유형 - 1:언어폭력, 2:성희롱, 3:업무방해
             var actType = td.eq(7).text();		//처리결과
             
             var rgstDttm = td.eq(8).text().split(" ~ ");;	//차단기간
@@ -1207,10 +1231,10 @@ function reClear(){
 					<li class="Call_box_left">
 					<!--인입콜 정보-->
 						<div class="inCall_box01">
-							<div class="topButton" style="margin-top: -7px; margin-right: 73px; float: right;">
+							<div class="topButton" style="margin-top: -7px; margin-right: 85px; float: right;">
 							  <button type="button" name="btnIn_Aksung1" id="btnIn_Aksung1" value="1" class="btnComm_s blue_b" title="언어폭력">언어폭력</button>
 							  <button type="button" name="btnIn_Aksung2" id="btnIn_Aksung2" value="2" class="btnComm_s blue_b" title="성희롱" style="margin-left: 10px;">성희롱</button>
-							  <button type="button" name="btnIn_Aksung3" id="btnIn_Aksung3" value="3" class="btnComm_s blue_b" title="기타업무방해" style="margin-left: 10px;">기타업무방해</button>
+							  <button type="button" name="btnIn_Aksung3" id="btnIn_Aksung3" value="3" class="btnComm_s blue_b" title="업무방해" style="margin-left: 10px;">업무방해</button>
 							</div>
 							<div class="inner01">
 							<h2><span class="tit_i">인입콜정보</span></h2>
@@ -1249,10 +1273,10 @@ function reClear(){
 						<!--//인입콜 정보-->
 						<!--아웃콜 정보-->
 						<div class="outCall_box01">
-							<div class="bottonButton" style="margin-top: -7px; margin-right: 73px; float: right;">
+							<div class="bottonButton" style="margin-top: -7px; margin-right: 85px; float: right;">
 							  <button type="button" name="btnOut_Aksung1" id="btnOut_Aksung1" value="1" class="btnComm_s blue_h" title="언어폭력">언어폭력</button>
 							  <button type="button" name="btnOut_Aksung2" id="btnOut_Aksung2" value="2" class="btnComm_s blue_h" title="성희롱" style="margin-left: 10px;">성희롱</button>
-							  <button type="button" name="btnOut_Aksung3" id="btnOut_Aksung3" value="3" class="btnComm_s blue_h" title="기타업무방해" style="margin-left: 10px;">기타업무방해</button>
+							  <button type="button" name="btnOut_Aksung3" id="btnOut_Aksung3" value="3" class="btnComm_s blue_h" title="업무방해" style="margin-left: 10px;">업무방해</button>
 							</div>
 							<div class="inner01">
 								<h2><span class="tit_i">아웃콜 정보</span></h2>
@@ -1308,10 +1332,10 @@ function reClear(){
 					<div id="tab-4" class="tab-content01 current">
 						<!--검색-->
 						<input type="checkbox" name="range" rel="1" value="all" onclick="checkRange(1);" checked="checked">전체
-						<input type="checkbox" name="range" rel="2" id="A" value="A" onclick="checkRange(2);">국방부/합참
-						<input type="checkbox" name="range" rel="2" id="B" value="B" onclick="checkRange(2);">육군
-						<input type="checkbox" name="range" rel="2" id="C" value="C" onclick="checkRange(2);">해군/해병대
-						<input type="checkbox" name="range" rel="2" id="D" value="D" onclick="checkRange(2);">공군
+						<input type="checkbox" name="range" rel="2" id="A" value="A" onclick="checkRange(2);" style="margin-left: 5px;">국방부/합참
+						<input type="checkbox" name="range" rel="2" id="B" value="B" onclick="checkRange(2);" style="margin-left: 5px;">육군
+						<input type="checkbox" name="range" rel="2" id="C" value="C" onclick="checkRange(2);" style="margin-left: 5px;">해군/해병대
+						<input type="checkbox" name="range" rel="2" id="D" value="D" onclick="checkRange(2);" style="margin-left: 5px;">공군
 						<select id="searchCnt" name="" title="조건을 선택하세요" class="select-type" style="height: 25px; float: right;">
      						<option value="5">5개</option>
 					        <option value="10" selected="selected">10개</option>
@@ -1443,7 +1467,7 @@ function reClear(){
 										<option value="all">전체</option>
 										<option value="1">언어폭력</option>
 										<option value="2">성희롱</option>
-										<option value="3">기타업무방해</option>
+										<option value="3">업무방해</option>
 									</select>
 								</td>
 								<th scope="row" style="width: 5px; padding-left: 10px;">처리결과</th>
@@ -1547,7 +1571,7 @@ function reClear(){
 										<option value="all">전체</option>
 										<option value="1">언어폭력</option>
 										<option value="2">성희롱</option>
-										<option value="3">기타업무방해</option>
+										<option value="3">업무방해</option>
 									</select>
 							  	</td>
 							  	<th rowspan="2">차단사유</th>

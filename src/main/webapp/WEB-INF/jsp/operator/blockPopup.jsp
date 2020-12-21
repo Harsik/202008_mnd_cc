@@ -114,7 +114,7 @@
 						async:true,
 						data:{
 							"fulnm"			:nm,							//이름
-							"type"			:$("#cust_type").val(),			//유형	1:언어폭력/2:성희롱/3:기타업무방해
+							"type"			:$("#cust_type").val(),			//유형	1:언어폭력/2:성희롱/3:업무방해
 							"mdcd"			:custMildsc,					//군별코드
 							"servno" 		:custMilNo,						//군번
 							"dept_cd" 		:custDeptCd,					//부서코드
@@ -155,6 +155,11 @@
 	    }
 	    
 	    $(document).ready(function(){
+	    	if(type=="btnIn_Aksung1" || type=="btnIn_Aksung2" || type=="btnIn_Aksung3" ){
+	    		opener.fnProcButton("softphone_8");
+	    		console.log("이석버튼 클릭");
+	    	}
+	    	
 	    	init();
 	    	
 	    	//저장버튼 클릭 이벤트(중복클릭 방지)
@@ -198,7 +203,7 @@
 							<select id ="cust_type" title="유형">
 								<option value="1">언어폭력</option>
 								<option value="2">성희롱</option>
-								<option value="3">기타업무방해</option>
+								<option value="3">업무방해</option>
 							</select>
 						</td>
 					   <th>부서</th>
