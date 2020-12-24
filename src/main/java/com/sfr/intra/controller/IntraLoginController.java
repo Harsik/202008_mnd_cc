@@ -55,6 +55,12 @@ public class IntraLoginController {
 		//return "intra/login";
 	}
 	
+	@RequestMapping(value="/loginU.do")
+	public @ResponseBody ModelAndView loginProcU(String uid,ModelMap model, HttpSession session, HttpServletRequest request,HttpServletResponse response,@RequestParam Map paramMap) throws Exception {
+		
+		return new ModelAndView("redirect:/ssoksign/index.jsp");
+	}
+	
 	@RequestMapping(value="/loginProc.do", method={RequestMethod.POST})
 	public @ResponseBody Map loginProc(ModelMap model, HttpServletRequest request, @RequestParam Map paramMap) throws Exception {
 		
