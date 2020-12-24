@@ -1,5 +1,6 @@
 package com.sfr.operator.controller;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,9 +169,19 @@ public class MainController {
 		
 		try {
 			paramMap.put("id", requset.getSession().getAttribute("user_id").toString());
+			System.out.println("여기");
+			String ipAddress=requset.getRemoteAddr();
+			System.out.println("request.getRemoteAddr1			  >> "+ipAddress);
+			if(ipAddress.equalsIgnoreCase("0:0:0:0:0:0:0:1")){
+				InetAddress inetAddress = InetAddress.getLocalHost();
+				ipAddress = inetAddress.getHostAddress();
+			}
+			System.out.println("request.getRemoteAddr2			  >> "+ipAddress);
 			
-			if(requset.getRemoteAddr().equals("172.17.0.30")) {
+			if(ipAddress.equals("172.17.0.30")) { //60대대
 				list = operatorService.selectoperatorList(paramMap);
+			} else if(ipAddress.equals("172.17.10.30")){ //70대대
+				list = operatorService.selectoperatorList70(paramMap);
 			} else {
 				list = operatorService.selectoperatorList70(paramMap);
 			}
