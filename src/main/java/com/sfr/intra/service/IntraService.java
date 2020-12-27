@@ -9,6 +9,8 @@ public interface IntraService {
 	
 	Map intraLogin(Map paramMap) throws Exception;
 	
+	Map intraLoginU(Map paramMap) throws Exception;
+	
 	List<Map> selectBoardList(Map paramMap) throws Exception;
 
 	List<Map> selectBoardListAjax(Map paramMap) throws Exception;

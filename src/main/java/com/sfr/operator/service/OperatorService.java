@@ -21,13 +21,13 @@ public interface OperatorService {
 
 	int getDeptCount(Map paramMap) throws Exception;
 
-	Map selectCtiUserInfo(Map paramMap) throws Exception;
-
 	List<Map> selectCtiList(Map paramMap) throws Exception;
 
 	List<Map> selectoperatorList(Map paramMap) throws Exception;
 	
 	List<Map> selectoperatorList70(Map paramMap) throws Exception;
+
+	Map selectCtiUserInfo(Map paramMap) throws Exception;
 
 	Map selectCtiUserInfo70(Map paramMap) throws Exception;
 	

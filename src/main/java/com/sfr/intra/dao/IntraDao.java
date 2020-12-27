@@ -207,6 +207,10 @@ public class IntraDao {
 		return (Map)sqlSession.selectOne("intra.intra.intraLogin", paramMap);
 	}
 	
+	public Map intraLoginU(Map paramMap) {
+		return (Map)sqlSession.selectOne("intra.intra.intraLoginU", paramMap);
+	}
+	
 	/**
 	 * mildsc, deptCd  하위부서 tree 가져옴
 	 * 

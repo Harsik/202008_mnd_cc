@@ -57,15 +57,19 @@ public class LoginController {
 	@RequestMapping(value="/loginProc.do", method={RequestMethod.POST})
 	public @ResponseBody Map loginProc(ModelMap model, HttpServletRequest request, @RequestParam Map paramMap) throws Exception{
 		
-		
 		String id = StringUtils.nullCheck(paramMap.get("id"), "");
 		String pw = StringUtils.nullCheck(paramMap.get("pw"), "");
 		Map loginMap = new HashMap<>();
 		
-		if(request.getRemoteAddr().equals("172.17.0.30")) {
-		   loginMap = operatorService.selectCtiUserInfo(paramMap);
-		} else {
+		System.out.println(" >>>>> /loginProc.do  >>> id : " + id);
+
+		
+		if(request.getRemoteAddr().equals("79.1.30.2")) { // 70대대
 			loginMap = operatorService.selectCtiUserInfo70(paramMap);
+			System.out.println(" >>>>> /loginProc.do  >>> 70 ip : " + request.getRemoteAddr());
+		} else {
+			loginMap = operatorService.selectCtiUserInfo(paramMap); // 60대대, 국방망 등등
+			System.out.println(" >>>>> /loginProc.do  >>> else ip : " + request.getRemoteAddr());
 		}
 		
 		Map rtnMap = new HashMap();
@@ -92,6 +96,7 @@ public class LoginController {
 					logMap.put("userCd", "1"); 						// 0=슈퍼관리자, 1=교환원, 2=일반사용자, 3=일반관리자
 					logMap.put("regIp", request.getRemoteAddr());
 					adminService.connlog(logMap);
+					System.out.println(" >>>>> /loginProc.do  >>> user_id : " + session.getAttribute("user_id"));
 				} else {
 					
 					rtnMap.put("code", "-2");
@@ -100,22 +105,15 @@ public class LoginController {
 							+") 되어 있습니다. \n다시 로그인 하시겠습니까?");
 				}
 		}else{
-			System.out.println("###로그");
-			
-			
 			rtnMap.put("code", "-1");
 			rtnMap.put("msg", "등록되지 않은 아이디입니다. 아이디를 다시 확인하세요.");
 		}
-		
-		
 		//return new ModelAndView("redirect:/operator/main.do");
 		return rtnMap;
 	}
 	
-	
 	/*@RequestMapping(value="/loginProc.do", method={RequestMethod.POST})
 	public ModelAndView loginProc(ModelMap model, HttpServletRequest reqest, @RequestParam Map paramMap) throws Exception{
-		
 		
 		String id = StringUtils.nullCheck(paramMap.get("id"), "");
 		String pw = StringUtils.nullCheck(paramMap.get("pw"), "");
@@ -124,10 +122,7 @@ public class LoginController {
 		session.setAttribute("user_id", id);
 		session.setAttribute("user_name", id);
 		
-		
 		EgovMap eMap = loginService.selectUserInfo(commandMap);
-		
-		
 
 		if( eMap != null ){
 			if(eMap.size() > 0){
@@ -152,10 +147,7 @@ public class LoginController {
 			return PageMove.alertAndBack(model, "로그인정보 없음");
 		}
 		return null;
-		
-		
 		return new ModelAndView("redirect:/operator/main.do");
-		
 	}*/
 	
 	@RequestMapping(value="/ivrCallUser.do")

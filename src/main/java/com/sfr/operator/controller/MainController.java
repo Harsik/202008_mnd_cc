@@ -161,7 +161,7 @@ public class MainController {
 	 */
 	@RequestMapping(value="/selectPopupList.do", method=RequestMethod.POST)
 	public @ResponseBody ModelAndView selectPopupList(@RequestParam Map paramMap, HttpServletRequest requset, @ModelAttribute("searchVO") PagingVO vo ){
-		System.out.println("paramMap >> " + paramMap);
+		System.out.println("MainController Popup paramMap >> " + paramMap);
 		
 		ModelAndView model = new ModelAndView("jsonView");
 		
@@ -169,21 +169,13 @@ public class MainController {
 		
 		try {
 			paramMap.put("id", requset.getSession().getAttribute("user_id").toString());
-			System.out.println("여기");
-			String ipAddress=requset.getRemoteAddr();
-			System.out.println("request.getRemoteAddr1			  >> "+ipAddress);
-			if(ipAddress.equalsIgnoreCase("0:0:0:0:0:0:0:1")){
-				InetAddress inetAddress = InetAddress.getLocalHost();
-				ipAddress = inetAddress.getHostAddress();
-			}
-			System.out.println("request.getRemoteAddr2			  >> "+ipAddress);
 			
-			if(ipAddress.equals("172.17.0.30")) { //60대대
-				list = operatorService.selectoperatorList(paramMap);
-			} else if(ipAddress.equals("172.17.10.30")){ //70대대
+			if(requset.getRemoteAddr().equals("79.1.30.2")) { // 70대대
+				list = operatorService.selectoperatorList70(paramMap);
+			} else if(requset.getRemoteAddr().equals("1.1.51.33")) { // 70대대 (국방망PC. 테스트로 70대대 조회하도록 설정함)
 				list = operatorService.selectoperatorList70(paramMap);
 			} else {
-				list = operatorService.selectoperatorList70(paramMap);
+				list = operatorService.selectoperatorList(paramMap); // 60대대, 국방망 등등
 			}
 		
 		} catch (Exception e) {

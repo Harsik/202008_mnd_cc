@@ -1232,9 +1232,9 @@ function reClear(){
 					<!--인입콜 정보-->
 						<div class="inCall_box01">
 							<div class="topButton" style="margin-top: -7px; margin-right: 85px; float: right;">
-							  <button type="button" name="btnIn_Aksung1" id="btnIn_Aksung1" value="1" class="btnComm_s blue_b" title="언어폭력">언어폭력</button>
-							  <button type="button" name="btnIn_Aksung2" id="btnIn_Aksung2" value="2" class="btnComm_s blue_b" title="성희롱" style="margin-left: 10px;">성희롱</button>
-							  <button type="button" name="btnIn_Aksung3" id="btnIn_Aksung3" value="3" class="btnComm_s blue_b" title="업무방해" style="margin-left: 10px;">업무방해</button>
+							  <button type="button" name="btnIn_Aksung1" id="btnIn_Aksung1" value="1" class="btnComm_s blue_h" title="언어폭력">언어폭력</button>
+							  <button type="button" name="btnIn_Aksung2" id="btnIn_Aksung2" value="2" class="btnComm_s blue_h" title="성희롱" style="margin-left: 10px;">성희롱</button>
+							  <button type="button" name="btnIn_Aksung3" id="btnIn_Aksung3" value="3" class="btnComm_s blue_h" title="업무방해" style="margin-left: 10px;">업무방해</button>
 							</div>
 							<div class="inner01">
 							<h2><span class="tit_i">인입콜정보</span></h2>
@@ -1309,7 +1309,7 @@ function reClear(){
 										</ul> -->
 										<ul>
 											<li class="f_right mt15">
-												<button type="button" class="btnComm_s blue" title="연결" id="btnTransfer" />연결</button>
+												<button type="button" class="btnComm_s blue" title="연결" id="btnTransfer" />&nbsp;연&nbsp;&nbsp;결&nbsp;</button>
 												<button type="button" class="btnComm_s red" title="호전환"  id="btnConsult" />호전환</button>
 											</li>
 										</ul>	
@@ -1337,10 +1337,12 @@ function reClear(){
 						<input type="checkbox" name="range" rel="2" id="C" value="C" onclick="checkRange(2);" style="margin-left: 5px;">해군/해병대
 						<input type="checkbox" name="range" rel="2" id="D" value="D" onclick="checkRange(2);" style="margin-left: 5px;">공군
 						<select id="searchCnt" name="" title="조건을 선택하세요" class="select-type" style="height: 25px; float: right;">
+					        <option value="0" selected="selected">미사용</option>
      						<option value="5">5개</option>
-					        <option value="10" selected="selected">10개</option>
+					        <option value="10">10개</option>
                             <option value="15">15개</option>
                             <option value="20">20개</option>
+                            <option value="10000">10000개</option>
 						</select>
 						<span style="float: right;">검색 나열 개수</span>
 						<div class="search-box">
