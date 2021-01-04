@@ -1504,7 +1504,7 @@ function reClear(){
 									<input type="text" class="text_ol" id="cust_info_search" style=" font-size: 13px; margin-left: 5px; line-height: 0px; font-family: 'Nanum Gothic';" alt="검색어" title="검색어">
 								</td>
 								<td>
-									<button type="button" id="btnSelectBlock"  class="btnComm gray" style="padding: 0px; width: 40px; line-height: 20px; font-size: 13px; margin-left: 50px;">조회</button>
+									<button type="button" id="btnSelectBlock"  class="btnComm_aksung" style="margin-left: 50px;">조회</button>
 								</td>
 							</tr>
 						</table>
@@ -1541,8 +1541,8 @@ function reClear(){
 	               	</div>
 	               	<div id="detailBolck" class="tbl_type_board" style="margin-bottom: 0px;">
 	               		<div style="float: right; margin-bottom: 10px;">
-	               			<button class="btnComm gray" id="btnReject" style="padding: 0px; width: 40px; line-height: 20px; font-size: 13px; margin-left: 10px;">반려</button>
-	               			<button class="btnComm gray" id="btnAgree" style="padding: 0px; width: 40px; line-height: 20px; font-size: 13px; margin-left: 10px;">승인</button>
+	               			<button class="btnComm_aksung" id="btnReject" style="margin-left: 10px;">반려</button>
+	               			<button class="btnComm_aksung" id="btnAgree" style="margin-left: 10px;">승인</button>
 	               		</div>
 	               		<table style="width: 100%; border:1px solid #ccc;">
 	               			<colgroup>
