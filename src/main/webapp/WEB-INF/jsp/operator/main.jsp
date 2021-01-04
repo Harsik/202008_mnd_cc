@@ -773,41 +773,43 @@
 			});
 		});
 		
-		// 자동검색 주석 20.11.25
 		// 전화번호 검색 자동완성 기능 추가 20.10.20
+		// 미사용일때는 ajax안돌도록 변경 21.01.04
 		$(function(){
 		    $("#query").autocomplete({
 		        source : function( request, response) {
-		            $.ajax({
-		                type:"post",
-		                async:true,
-		                url:"/operator/search2.do",
-		                dataType: "json",
-		                data : {
-		                	"searchContent" : $("#query").val().trim(),
-		                	"searchCnt" : $("#searchCnt").val()
-		                	},
-		                success: function(data){
-		                	data = data.list;
-		                	console.log(data);
-		                    //서버에서 json 데이터 response 후 목록에 뿌려주기 위함
-		                    response(
-
-		                        $.map(data, function(item){
-		                        	var pattern =/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]|[가-힣]/gi; // 정규식
-		                        	var arrTelno = item.telno.split(',');
-		            				var filtNum=arrTelno[0].replace(pattern, "");
-		            				var bInter =filtNum.substr(3);
-		                            return{
-		                                label:(bInter+"|"+item.fullDeptNm+" "+item.nm),
-		                                value:(bInter+"|"+item.fullDeptNm+" "+item.nm),
-		                                hidVal: (item.nm+"|"+filtNum+"|"+item.rsponm+"|"+item.deptNm+"|"+item.fullDeptNm)
-		                            };
-		                        })
-
-		                    );
-		                }
-		            });
+		        	if($("#searchCnt").val() != 0){
+			            $.ajax({
+			                type:"post",
+			                async:true,
+			                url:"/operator/search2.do",
+			                dataType: "json",
+			                data : {
+			                	"searchContent" : $("#query").val().trim(),
+			                	"searchCnt" : $("#searchCnt").val()
+			                	},
+			                success: function(data){
+			                	data = data.list;
+			                	console.log(data);
+			                    //서버에서 json 데이터 response 후 목록에 뿌려주기 위함
+			                    response(
+	
+			                        $.map(data, function(item){
+			                        	var pattern =/[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]|[가-힣]/gi; // 정규식
+			                        	var arrTelno = item.telno.split(',');
+			            				var filtNum=arrTelno[0].replace(pattern, "");
+			            				var bInter =filtNum.substr(3);
+			                            return{
+			                                label:(bInter+"|"+item.fullDeptNm+" "+item.nm),
+			                                value:(bInter+"|"+item.fullDeptNm+" "+item.nm),
+			                                hidVal: (item.nm+"|"+filtNum+"|"+item.rsponm+"|"+item.deptNm+"|"+item.fullDeptNm)
+			                            };
+			                        })
+	
+			                    );
+			                }
+			            });
+		       		}
 		        },
 		        // 조회를 위한 최소글자수
 		        minLength:1,
