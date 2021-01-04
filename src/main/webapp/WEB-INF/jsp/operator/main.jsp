@@ -1356,7 +1356,7 @@ function reClear(){
                             <option value="20">20개</option>
                             <option value="10000">10000개</option>
 						</select>
-						<span style="float: right;">검색 나열 개수</span>
+						<span style="float: right; margin-right: 15px;">검색 나열 개수</span>
 						<div class="search-box">
 						
 									<legend>통합검색</legend>
