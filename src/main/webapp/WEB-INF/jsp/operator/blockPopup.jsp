@@ -67,6 +67,13 @@
 	    }
 	    
 	    function saveInfo(){
+	    	// 차단사유 공백체크
+			if($("#block_content").val().trim()==""){
+				alert("차단사유를 입력해주세요.");
+				$("#block_content").focus();
+				return false;
+			}
+	    	
 	    	var custMildsc = "";	//군별
 	    	var custMilNo = "";		//군번
 	    	var custDeptCd = "";	//부서코드

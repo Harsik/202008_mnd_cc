@@ -442,12 +442,22 @@
 			var clickNm = this.textContent;
 			var actType = "";
 			var selectPage = $(".pagination").children().children(2).text();
+			
+			// 결재자의견 공백체크 (반려/승인 둘 다 체크)
+			if($("#blockd_rtn_rsn").val().trim()==""){
+				alert("결재자의견를 입력해주세요.");
+				$("#blockd_rtn_rsn").focus();
+				return false;
+			}
+			
 			if(clickId == "btnReject"){ //반려
+				/*
 				if($("#blockd_rtn_rsn").val().trim()==""){
 					alert("결재자의견를 입력해주세요.");
 					$("#blockd_rtn_rsn").focus();
 					return false;
 				}
+				*/
 				actType = "3";
 			}else{	//승인
 				actType = "2";
