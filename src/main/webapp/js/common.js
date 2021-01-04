@@ -122,7 +122,7 @@ function gfn_popup(strURL,strW,strH,strWinName){
 	px= winX + (sw - pwidth)/2;
 	py= winY +(sh - pheight)/2;
 		
-	var option = "scrollbars=yes,menubar=no,resizable=no,width="+pwidth+"px,height="+pheight+"px, top="+py+",left="+px;
+	var option = "scrollbars=yes,menubar=no,resizable=yes,width="+pwidth+"px,height="+pheight+"px, top="+py+",left="+px;
 	var nw = window.open(strURL,pName,option);
 	nw.focus();
 }

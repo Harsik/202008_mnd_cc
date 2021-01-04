@@ -271,6 +271,7 @@
                     , dialring_time
                     , call_time
                     , target_dn
+                    , uei
                     , event_starttime
                 FROM ot_callstat
                 WHERE 1=1 
@@ -315,6 +316,7 @@
                     , dialring_time
                     , call_time
                     , target_dn
+                    , uei
                     , event_starttime
                 FROM ot_callstat
                 WHERE 1=1 

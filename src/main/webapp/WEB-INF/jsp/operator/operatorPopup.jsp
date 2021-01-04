@@ -17,9 +17,9 @@
 	line-height: 0px;
 	font-size: 13px;
 }
-#search select {width: 70px;height: 17px;}
-#search th {padding: 0px 0px 0px 7px;}
-#search button {padding: 0px; width: 40px; line-height: 20px; font-size: 13px;}
+#search select {width: 80px;height: 20px;}
+#search th {padding: 0px 5px 0px 30px;}
+.popCnt button {padding: 0px; width: 40px; line-height: 20px; font-size: 13px; margin-bottom: 6px;}
 
 </style>
 
@@ -180,11 +180,28 @@ function createTable(data){
 			str += '<td>아웃바운드</td>';
 		}else if(datas[i].callType ==33){
 			str += '<td>내선통화</td>';
+		}else if(datas[i].callType ==15){ // 21.01.04 악성민원/안내 추가
+			if(datas[i].targetDn==3010){
+				str += '<td>악성민원(언어폭력)</td>';
+			}else if(datas[i].targetDn==3011){
+				str += '<td>악성민원(성희롱)</td>';
+			}else if(datas[i].targetDn==3012){
+				str += '<td>악성민원(업무방해)</td>';
+			}else if(datas[i].targetDn==3013){
+				str += '<td>연결(아웃바운드)</td>';
+			}
 		}
 		str += '<td>'+fnConvertDateFormat(datas[i].eventStarttime)+'</td>';
-		str += '<td>'+(datas[i].ani==undefined?"":datas[i].ani)+'</td>';
+		str += '<td>'+(datas[i].ani==undefined?"":telnoFormat(datas[i].ani))+'</td>';
 		str += '<td>'+(datas[i].callTime==undefined?"":datas[i].callTime)+'초</td>';
-		str += '<td>'+(datas[i].targetDn==undefined?"":datas[i].targetDn)+'</td>';
+		if(datas[i].callType ==15){
+			str += '<td>'+(datas[i].uei==undefined?"":telnoFormat(datas[i].uei))+'</td>';
+		}else{
+			str += '<td>'+(datas[i].targetDn==undefined?"":telnoFormat(datas[i].targetDn))+'</td>';
+		}
+		if(adminYn=="Y"){
+			str += '<td>'+(datas[i].employeeId==undefined?"":datas[i].employeeId)+'</td>';
+		}
 		str += '</TR>';
 		});
 	}else{
@@ -195,6 +212,28 @@ function createTable(data){
 	
 	$(".tbl_type_board tbody").append(str); 
 	
+}
+
+function telnoFormat(num){
+	var formatNum = '';
+
+    if(num.length>11){
+        formatNum = num;
+    }else if(num.length==11){
+    	formatNum = num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    }else if(num.length==8){
+        formatNum = num.replace(/(\d{4})(\d{4})/, '$1-$2');
+    }else if(num.length==7){
+        formatNum = num.replace(/(\d{3})(\d{4})/, '$1-$2');
+    }else{
+        if(num.indexOf('02')==0){
+        	formatNum = num.replace(/(\d{2})(\d{4})(\d{4})/, '$1-$2-$3');
+        }else{
+            formatNum = num.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+        }
+    }
+
+    return formatNum;
 }
 
 function divTimeSelBox(){
@@ -238,6 +277,9 @@ $(document).ready(function(){
 	
 	if(adminYn=="N"){
 		$("#UsrgbcdTh,#Usrgbcd").css( "visibility", "hidden" );
+	}else{
+		$(".tbl_type_board colgroup").append('<col width="15%">');
+		$(".tbl_type_board tr").append('<th scope="col">상담사ID</th>');
 	}
 	
 	$("#Usrgbcd").keyup(function (key) {
@@ -259,6 +301,10 @@ $(document).ready(function(){
     <!--contents_area-->
     <div class="popCnt">
     	<!-- 검색 -->
+    	<div style="float: right;">
+    		<button title="조회" class="btnComm gray" id="btnSearch" type="button">조회</button>
+    		<button title="초기화" class="btnComm gray" id="btnInit" type="button">초기화</button>
+    	</div>
     	<div id="search">
     		<table>
     			<tr>
@@ -296,11 +342,6 @@ $(document).ready(function(){
     						<option value="mpno">핸드폰</option>
     					</select>
     				</td>   	
-    				
-    				<td style="padding: 0px 0px 1px 0px; width: 14%;">
-    					<button title="조회" class="btnComm gray" id="btnSearch" type="button">조회</button>
-    					<button title="초기화" class="btnComm gray" id="btnInit" type="button">초기화</button>
-    				</td>
     			</tr>
     		</table>
     	</div>
@@ -310,14 +351,14 @@ $(document).ready(function(){
 				<caption>상담이력 게시판</caption>
 				<colgroup>
 				<col width="20%">
-				<col width="25%">
+				<col width="30%">
 				<col width="25%">
 				<col width="15%">
-				<col width="15%">
+				<col width="20%">
 				</colgroup>
 				<thead>
 					<tr>
-						<th scope="col">인아웃바운드구분</th>
+						<th scope="col">구분</th>
 						<th scope="col">시간</th>
 						<th scope="col">전화번호</th>
 						<th scope="col">통화시간</th>

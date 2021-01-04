@@ -59,7 +59,7 @@ $(document).ready(function () {
 
 	//상담이력
 	function popup_operator(){ //경로, 가로, 세로, 아이디
-		gfn_popup("/operator/operatorPopup.do", "700", "460", "noticepopup");
+		gfn_popup("/operator/operatorPopup.do", "800", "460", "noticepopup");
 	};
 /* 
 	function popup_call(){ //경로, 가로, 세로, 아이디
