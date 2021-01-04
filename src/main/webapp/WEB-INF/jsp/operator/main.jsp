@@ -1475,7 +1475,7 @@ function reClear(){
 								<td class="selectBox" style="width: 230px;" colspan="2">
 								<input type="text" class="text_ol_half"  id="start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="border: 1px solid rgb(205, 205, 205); border-image: none; width: 80px; height: 20px; line-height: 0px; font-size: 13px;"> ~ <input style="border: 1px solid rgb(205, 205, 205); border-image: none; width: 80px; height: 20px; line-height: 0px; font-size: 13px;" type="text" class="text_ol_half" id="end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" >
 								</td>
-								<th scope="row" style="text-align: left;">유형</th>
+								<th scope="row" style="font-size: 14px; text-align: left;">유형</th>
 								<td>
 									<select class="selectBox" style="width:100px; font-size: 13px" id="block_type" title="유형">
 										<option value="all">전체</option>
@@ -1484,7 +1484,7 @@ function reClear(){
 										<option value="3">업무방해</option>
 									</select>
 								</td>
-								<th scope="row" style="width: 5px; padding-left: 10px;">처리결과</th>
+								<th scope="row" style="font-size: 14px; width: 5px; padding-left: 10px;">처리결과</th>
 								<td>
 									<select class="selectBox" id="block_stat" title="처리결과" style="margin-right: 10px;">
 										<option value="all">전체</option>
