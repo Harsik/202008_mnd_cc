@@ -343,12 +343,12 @@
 					str += "<input type='hidden' id='rsponm' value='"+ datas[i].rsponm +"'/>/";				//직책
 					str += "<input type='hidden' id='full_dept_nm' value='"+ datas[i].fullDeptNm +"'/>/";	//부대
 					str += "<input type='hidden' id='dept_nm' value='"+ datas[i].deptNm +"'/>/";			//부서
-					str += "<input type='hidden' id='rtn_rsn' value='"+ datas[i].rtnRsn +"'/>/";			//반려사유
+					str += "<input type='hidden' id='rtn_rsn' value='"+ datas[i].rtnRsn +"'/>/";			//결재자의견
 					str += "<input type='hidden' id='telno' value='"+ datas[i].telno +"'/>/";				//전화번호
 					str += "<input type='hidden' id='act_id' value='"+ datas[i].actId +"'/>/";				//결재자
 					str += "<input type='hidden' id='rank_nm' value='"+ datas[i].rankNm +"'/>/";			//계급
 					str += "<input type='hidden' id='mpno' value='"+ datas[i].mpno +"'/>/";					//휴대전화번호
-					str += "<input type='hidden' id='act_dttm' value='"+ datas[i].actDttm +"'/>/";			//결제일시
+					str += "<input type='hidden' id='act_dttm' value='"+ datas[i].actDttm +"'/>/";			//결재일시
 					str += '</TR>';
 				});
 				
@@ -381,12 +381,12 @@
             var rsponm = td.eq(10).val();		//직책
             var fullDeptNm = td.eq(11).val();	//부대
             var deptNm = td.eq(12).val();		//부서
-            var rtnRsn = td.eq(13).val() == "undefined" ? "" : td.eq(13).val();	//반려사유
+            var rtnRsn = td.eq(13).val() == "undefined" ? "" : td.eq(13).val();	//결재자의견
             var telno = td.eq(14).val();		//전화번호
             var actId = td.eq(15).val();		//결재자
             var rankNm = td.eq(16).val();		//계급
             var mpno = td.eq(17).val();			//휴대전화번호
-            var actDttm = td.eq(18).val()=="undefined" ? "" : td.eq(18).val();	//결제일시
+            var actDttm = td.eq(18).val()=="undefined" ? "" : td.eq(18).val();	//결재일시
             
             if(window.sessionStorage.getItem("ADMIN_YN") == "Y"){
             	if(actType=="요청"){
@@ -444,7 +444,7 @@
 			var selectPage = $(".pagination").children().children(2).text();
 			if(clickId == "btnReject"){ //반려
 				if($("#blockd_rtn_rsn").val().trim()==""){
-					alert("반려사유를 입력해주세요.");
+					alert("결재자의견를 입력해주세요.");
 					$("#blockd_rtn_rsn").focus();
 					return false;
 				}
@@ -467,7 +467,7 @@
 						"blockdType" : $("#blockd_type").val(),	//민원유형
 						"blockdStartDt" : $("#blockd_start_dt").val().replace(/-/gi, ""), 	//차단 시작일
 						"blockdEndDt" : $("#blockd_end_dt").val().replace(/-/gi, ""), 		//차단 종료일
-						"blockdRtnRsn" : $("#blockd_rtn_rsn").val().trim(),	//반려사유
+						"blockdRtnRsn" : $("#blockd_rtn_rsn").val().trim(),	//결재자의견
 					},
 					success:function(data) {
 						if(data=="200"){
@@ -1540,7 +1540,7 @@ function reClear(){
 								<col width="10%">
 								<col width="10%">
 								<col width="10%">
-								<col width="10%">
+								<col width="15%">
 								<col width="35%">
 								<col width="10%">
 								<col width="35%">
@@ -1589,17 +1589,17 @@ function reClear(){
 								</td>
 							</tr>
 							<tr>
-								<th>결제일시</th>
+								<th>결재일시</th>
 								<td id="blockd_act_dt" colspan="3"></td>
-								<th rowspan="2">반려사유</th>
+								<th rowspan="2">결재자의견</th>
 							  	<td colspan="3" rowspan="2">
-								   <textarea id="blockd_rtn_rsn" style="height:70px;" title="반려사유"></textarea>
+								   <textarea id="blockd_rtn_rsn" style="height:70px;" title="결재자의견"></textarea>
 								</td>
 							</tr>
 							<tr>
 								<th>등록자</th>
 							  	<td id="blockd_rgst_id"></td>
-							 	<th>결제자</th>
+							 	<th>결재자</th>
 							  	<td id="blockd_act_id"></td>
 							</tr>
 						</table>
