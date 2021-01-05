@@ -53,15 +53,17 @@
 	    
 	    function getDateAdd(){
 	    	var nowDate = new Date();
-	    	var FormatDate = nowDate.toLocaleDateString( nowDate.setDate(nowDate.getDate() + 7) );
-	    	var arrDate = FormatDate.split(" ");
-	    	
-	    	var y = arrDate[0].replace(/년/g, "");
-	    	var m = arrDate[1].replace(/월/g, "");
-	    	var d = arrDate[2].replace(/일/g, "");
-	    	
-	    	if(m.length == 3) m = "0" + m;
-	    	if(d.length == 3) d = "0" + d;
+
+			nowDate.setDate(nowDate.getDate() + 7);
+				
+			var y = nowDate.getFullYear();
+			var m = nowDate.getMonth() + 1;
+			var d = nowDate.getDate();
+				
+			if(m < 10)
+				m = "0"+m;
+			if(d < 10)
+				d = "0"+d;
 	    	
 	    	return y + "-" + m + "-" + d;
 	    }
