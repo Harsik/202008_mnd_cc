@@ -106,6 +106,8 @@ function check(){
 
 </head>
 <body>
+<div class="login"><img src="../images/intra/login.jpg"></div>
+<%--
     <div id="container">
         <div class="loginWrap">
             <div id="header">
@@ -160,6 +162,6 @@ function check(){
 	<object id="AxKCASE"  classid="CLSID:70C53AC1-10FB-40e2-9D46-C611501E4017"
 codebase="./Axsungkyul(3.5.3.1).cab#Version=3,5,3,1" width= Document.body.clientWidth height= Document.body.clientHeight>
 </object>
- 
+--%>
 </body>
 </html>
