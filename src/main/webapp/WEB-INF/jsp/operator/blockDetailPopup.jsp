@@ -67,7 +67,7 @@
 	    		
 	    		if(actType=="2"){
 	    			$("#btnCancle").css( "visibility", "visible" );
-	    		}else if(actType=="4"||actType=="5"){
+	    		}else if(actType=="3"||actType=="4"||actType=="5"){
 	    			$("#blockd_start_dt,#blockd_end_dt").datepicker('option', 'disabled', true);
 	    			$("#blockd_rtn_rsn").prop("disabled", true);
 	    		}
