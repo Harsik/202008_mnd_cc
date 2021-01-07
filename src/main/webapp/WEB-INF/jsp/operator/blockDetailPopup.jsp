@@ -151,6 +151,7 @@
 						if(data=="200"){
 							alert(clickNm+"되었습니다.");
 							opener.SelectBlock(selectPage);
+							window.close();
 						}else{
 							alert(clickNm+"실패.");
 						}
