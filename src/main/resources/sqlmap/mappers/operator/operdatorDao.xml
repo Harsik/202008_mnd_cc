@@ -442,7 +442,6 @@
 	    SELECT
 			seq,
 			[type],
-			DECODE([type],1,'언어폭력',2,'성희롱',3,'기타업무방해') AS type_nm,
 			fulnm,
 			mdcd,
 			servno,
@@ -458,7 +457,7 @@
 			TO_CHAR(rgst_dttm, 'YYYY-MM-DD HH24:MI' ) AS rgst_dttm,
 			rgst_rsn,
 			rgst_id,
-			DECODE(act_type,1,'요청',2,'승인',3,'반려') AS act_type,
+			act_type,
 			TO_CHAR(act_dttm, 'YYYY-MM-DD HH24:MI' ) AS act_dttm,
 			rtn_rsn,
 			act_id
@@ -477,11 +476,11 @@
 				    AND fulnm LIKE '%' || #{blockSearchContent} || '%'
 				</if>
 				<if test="blockSearch.equals('cust_tel')">
-				    AND (REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR TELNO like '%' || #{blockSearchContent} || '%' )
+				    AND (REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR REPLACE(MPNO, '-', '') like '%' || #{blockSearchContent} || '%' )
 				</if>
 			</if>
 			<if test="blockSearch.equals('all')">
-			AND ((REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR TELNO like '%' || #{blockSearchContent} || '%' ) OR fulnm LIKE '%' || #{blockSearchContent} || '%')
+			AND ((REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR REPLACE(MPNO, '-', '') like '%' || #{blockSearchContent} || '%' ) OR fulnm LIKE '%' || #{blockSearchContent} || '%')
 			</if>
 		</if>
 		<if test="dateType.equals('crt_dt')">
@@ -493,9 +492,38 @@
 		<if test='adminYn.equals("N")'>
 		    AND rgst_id =#{usrId}
 		</if>
+		<if test='adminYn.equals("Y")'>
+		    AND act_type != 5
+		</if>
 		ORDER BY rgst_dttm DESC
 		) A
 		WHERE ROWNUM BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<select id="selectBlockDetail" parameterType="map" resultType="egovMap">
+	    SELECT
+			seq,
+			[type],
+			fulnm,
+			dept_nm,
+			full_dept_nm,
+			rank_nm,
+			rsponm,
+			telno,
+			mpno,
+			TO_DATE(strt_date, 'yyyyMMdd') AS strt_date,
+			TO_DATE(end_date, 'yyyyMMdd') AS end_date,
+			TO_CHAR(rgst_dttm, 'YYYY-MM-DD HH24:MI' ) AS rgst_dttm,
+			rgst_rsn,
+			rgst_id,
+			act_type,
+			TO_CHAR(act_dttm, 'YYYY-MM-DD HH24:MI' ) AS act_dttm,
+			rtn_rsn,
+			act_id
+		FROM
+			tbl_block_user
+		WHERE
+			seq = #{seq}
 	</select>
 	
 	<select  id="getBlockUserCount" resultType="int" parameterType="map">
@@ -514,11 +542,11 @@
 				    AND fulnm LIKE '%' || #{blockSearchContent} || '%'
 				</if>
 				<if test="blockSearch.equals('cust_tel')">
-				    AND (REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR TELNO like '%' || #{blockSearchContent} || '%' )
+				    AND (REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR REPLACE(MPNO, '-', '') like '%' || #{blockSearchContent} || '%' )
 				</if>
 			</if>
 			<if test="blockSearch.equals('all')">
-			AND ((REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR TELNO like '%' || #{blockSearchContent} || '%' ) OR fulnm LIKE '%' || #{blockSearchContent} || '%')
+			AND ((REPLACE(TELNO,'-','') like '%' || #{blockSearchContent} || '%' OR REPLACE(MPNO, '-', '') like '%' || #{blockSearchContent} || '%' ) OR fulnm LIKE '%' || #{blockSearchContent} || '%')
 			</if>
 		</if>
 		<if test="dateType.equals('crt_dt')">
@@ -536,15 +564,25 @@
 		UPDATE
 			TBL_BLOCK_USER
 		SET
-			[type] = #{blockdType},
-			<if test="!blockdRtnRsn.equals('') and blockdRtnRsn != null">
-			rtn_rsn = #{blockdRtnRsn},
+			<if test="!actType.equals('') and actType != null">
+			act_type = #{actType}
 			</if>
-			strt_date = #{blockdStartDt},
-			end_date = #{blockdEndDt},
-			act_type = #{actType},
-			act_dttm = SYSDATETIME,
-			act_id = #{actId}
+			<if test="!blockdType.equals('') and blockdType != null">
+			,[type] = #{blockdType}
+			</if>
+			<if test="!rgstRsn.equals('') and rgstRsn != null">
+			,rgst_rsn = #{rgstRsn}
+			</if>
+			<if test="!rgstDttm.equals('') and rgstDttm != null">
+			,rgst_dttm = ${rgstDttm}
+			</if>
+			<if test="!actId.equals('') and actId != null">
+			,rtn_rsn = #{blockdRtnRsn}
+			,strt_date = #{blockdStartDt}
+			,end_date = #{blockdEndDt}
+			,act_dttm = SYSDATETIME
+			,act_id = #{actId}
+			</if>
 		WHERE 1=1
 			AND seq = #{seq}
 	</update>

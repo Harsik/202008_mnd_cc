@@ -303,6 +303,20 @@ public class MainController {
 		return "operator/blockPopup.popup";   
 	}
 	
+	@RequestMapping("/blockDetailPopup.do")
+	public String blockDetailPopup(@RequestParam Map paramMap, Model model, HttpServletRequest requset) throws Exception {
+		System.out.println(" >>>> 악성민원 상세 팝업");
+		System.out.println(paramMap);
+		
+		Map map =  operatorService.selectBlockDetail(paramMap);
+		
+		model.addAttribute("data",map);
+		
+		System.out.println(" >>> selectBlockDetail " + map);
+		
+		return "operator/blockDetailPopup.popup";   
+	}
+	
 	@RequestMapping(value="/selectUser.do", method={RequestMethod.POST})
 	public @ResponseBody ModelAndView selectUser(@RequestParam Map paramMap, Model model, HttpServletRequest requset ) throws Exception {
 		
@@ -342,13 +356,13 @@ public class MainController {
 	public @ResponseBody ModelAndView selectBlockList(@RequestParam Map paramMap, HttpServletRequest requset, @ModelAttribute("searchVO") PagingVO vo ) throws Exception{
 		System.out.println("paramMap >> " + paramMap);
 		
-		vo.setPageSize(5); // 한 페이지에 보일 게시글 수
+		vo.setPageSize(18); // 한 페이지에 보일 게시글 수
 		vo.setPageNo(1); // 현재 페이지 번호
 		
 		if(vo.getSetPageNum() != 0){
 			vo.setPageNo(vo.getSetPageNum());
 		}
-		vo.setBlockSize(5);
+		vo.setBlockSize(18);
 		
 		String startDt = (String) paramMap.get("startDt");
 		paramMap.put("startDt", startDt.replace("&lrm;", ""));

@@ -37,6 +37,8 @@ public interface OperatorService {
 
 	List selectBlockList(Map paramMap) throws Exception;
 	
+	Map selectBlockDetail(Map paramMap) throws Exception;
+	
 	int getBlockUserCount(Map paramMap) throws Exception;
 	
 	int updateBlock(Map paramMap) throws Exception;

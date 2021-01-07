@@ -162,29 +162,21 @@
 			datePicker("#blockd_start_dt");
 			datePicker("#blockd_end_dt");
 			
-			$("#btnAgree,#btnReject").css( "visibility", "hidden" );
-			
 			// 악성민원 탭 클릭 이벤트
 			$(".tab-link").eq(2).click(function(){
-				initBlockDetail();
 				SelectBlock("0");
 			});
 			
 			//악성민원 조회 이벤트
 			$("#btnSelectBlock").click(function(){
-				initBlockDetail();
 				SelectBlock("0");
 		  	});
 			
 			$("#cust_info_search").keyup(function (key) {
 				if(key.keyCode == 13){//키가 13이면 실행 (엔터는 13)
-					initBlockDetail();
 					SelectBlock("0");
 				}
 			});
-			
-			//반려,승인 버튼 클릭 이벤트
-			$("#btnReject, #btnAgree").bind("click", updateBlock );
 			
 		});// ready END
 		
@@ -290,7 +282,7 @@
 					"blockType"	 : $("#block_type").val(),
 					"blockStat"	 : $("#block_stat").val(),
 					"blockSearch"	 : $("#block_search").val(),
-					"blockSearchContent"	 : $("#cust_info_search").val(),
+					"blockSearchContent"	 : $("#cust_info_search").val().replace(/-/gi, ""),
 					"adminYn"	 : window.sessionStorage.getItem("ADMIN_YN"),
 					"usrId"		 : window.sessionStorage.getItem("USERID"),
 				},
@@ -330,25 +322,37 @@
 				$.each(datas , function(i){
 					var tel = datas[i].telno.replace(/ /gi, "");
 					str += "<TR id='blockTr'>";
-					str += '<td>'+datas[i].rownum+'</td>'; 		//번호
 					str += '<input type="hidden" id="seq" value='+datas[i].seq+'>'; //PK
+					str += '<td>'+datas[i].rownum+'</td>'; 		//번호
 					str += '<td>'+datas[i].rgstDttm+'</td>'; 	//등록일시
 					str += '<td>'+datas[i].rgstId+'</td>';		//교환원
-					str += '<td>'+datas[i].rgstRsn+'</td>';		//차단사유
-					str += '<input type="hidden" id="type" value='+datas[i].type+'>';		//유형 - 1:언어폭력, 2:성희롱, 3:업무방해
-					str += '<td>'+datas[i].typeNm+'</td>';		//유형 - 1:언어폭력, 2:성희롱, 3:업무방해
-					str += '<td>'+datas[i].actType+'</td>';		//처리결과
+					if(datas[i].rgstRsn.length > 19){
+						str += '<td>'+datas[i].rgstRsn.substr(0,19)+'...</td>';	//차단사유
+					}else{
+						str += '<td>'+datas[i].rgstRsn+'</td>';
+					}
+					if(datas[i].type == "1"){ 					//유형 - 1:언어폭력, 2:성희롱, 3:업무방해
+						str += '<td>언어폭력</td>';
+					}else if(datas[i].type == "2"){
+						str += '<td>성희롱</td>';
+					}else if(datas[i].type == "3"){
+						str += '<td>업무방해</td>';
+					}
+					
+					if(datas[i].actType == "1"){
+						str += '<td>요청</td>';
+					}else if(datas[i].actType == "2"){
+						str += '<td>승인</td>';
+					}else if(datas[i].actType == "3"){
+						str += '<td>반려</td>';
+					}else if(datas[i].actType == "4"){
+						str += '<td>해제</td>';
+					}else if(datas[i].actType == "5"){
+						str += '<td>삭제</td>';
+					}
 					str += '<td>'+datas[i].strtDate+" ~ "+datas[i].endDate+'</td>';		//차단일
+					str += '<td>'+telnoFormat(datas[i].mpno)+'</td>';		//휴대전화 번호
 					str += '<td>'+datas[i].fulnm+'</td>';		//민원인
-					str += "<input type='hidden' id='rsponm' value='"+ datas[i].rsponm +"'/>/";				//직책
-					str += "<input type='hidden' id='full_dept_nm' value='"+ datas[i].fullDeptNm +"'/>/";	//부대
-					str += "<input type='hidden' id='dept_nm' value='"+ datas[i].deptNm +"'/>/";			//부서
-					str += "<input type='hidden' id='rtn_rsn' value='"+ datas[i].rtnRsn +"'/>/";			//결재자의견
-					str += "<input type='hidden' id='telno' value='"+ datas[i].telno +"'/>/";				//전화번호
-					str += "<input type='hidden' id='act_id' value='"+ datas[i].actId +"'/>/";				//결재자
-					str += "<input type='hidden' id='rank_nm' value='"+ datas[i].rankNm +"'/>/";			//계급
-					str += "<input type='hidden' id='mpno' value='"+ datas[i].mpno +"'/>/";					//휴대전화번호
-					str += "<input type='hidden' id='act_dttm' value='"+ datas[i].actDttm +"'/>/";			//결재일시
 					str += '</TR>';
 				});
 				
@@ -359,141 +363,34 @@
 			}
 		}
 		
-		$(document).on( "click","#blockTr", function() {
-			
+		// 악성민원 리스트 클릭시 상세 팝업 호출 이벤트
+		$(document).on( "dblclick","#blockTr", function() {
 			$("#content_block tbody tr").css("background-color", "white" );
 			$( this ).css( "background-color", "#f4f4f4" );
 			var tr = $(this);
 			var td = tr.children();
 			
-			var seq = td.eq(1).val();			//PK
-            var rgstDt = td.eq(2).text(); 		//등록일시
-            var rgstId = td.eq(3).text();		//교환원
-            var rgstRsn = td.eq(4).text();		//차단사유
-            var type = td.eq(5).val();			//유형 - 1:언어폭력, 2:성희롱, 3:업무방해
-            var actType = td.eq(7).text();		//처리결과
-            
-            var rgstDttm = td.eq(8).text().split(" ~ ");;	//차단기간
-            var startDt = rgstDttm[0];			//차단시작날짜
-            var endDt = rgstDttm[1];			//차단끝날짜
-            
-            var custNm = td.eq(9).text();		//민원인
-            var rsponm = td.eq(10).val();		//직책
-            var fullDeptNm = td.eq(11).val();	//부대
-            var deptNm = td.eq(12).val();		//부서
-            var rtnRsn = td.eq(13).val() == "undefined" ? "" : td.eq(13).val();	//결재자의견
-            var telno = td.eq(14).val();		//전화번호
-            var actId = td.eq(15).val();		//결재자
-            var rankNm = td.eq(16).val();		//계급
-            var mpno = td.eq(17).val();			//휴대전화번호
-            var actDttm = td.eq(18).val()=="undefined" ? "" : td.eq(18).val();	//결재일시
-            
-            if(window.sessionStorage.getItem("ADMIN_YN") == "Y"){
-            	if(actType=="요청"){
-                	$("#btnAgree,#btnReject").css( "visibility", "visible" );
-                }else{
-                	$("#btnAgree,#btnReject").css( "visibility", "hidden" );
-                }
-            }else{
-            	$("#btnAgree,#btnReject").css( "visibility", "hidden" );
-            }
+			var seq = td.eq(0).val();			//PK
 			
-	        $("#blockd_seq").val(seq);					
-	        $("#blockd_rgst_dttm").html(rgstDt);		
-			$("#blockd_cust_nm").html(custNm);		
-			$("#blockd_rsponm").html(rsponm);		
-			$("#blockd_rank").html(rankNm);		
-			$("#blockd_telno").html(telno);			
-			$("#blockd_full_dept_nm").html(fullDeptNm);
-			$("#blockd_type").val(type);
-			$("#blockd_dept_nm").html(deptNm);
-			$("#blockd_start_dt").val(startDt);
-			$("#blockd_end_dt").val(endDt);
-			$("#blockd_rgst_rsn").html(rgstRsn);
-			$("#blockd_rgst_id").html(rgstId);
-			$("#blockd_act_id").html(actId);
-			$("#blockd_rtn_rsn").html(rtnRsn);
-			$("#blockd_mpno").html(mpno);
-			$("#blockd_act_dt").html(actDttm);
-   	 	}); 
+			blockDetail_popupEvent(seq);
+		});
 		
-		function initBlockDetail(){
-			$("#blockd_seq").val("");					
-	        $("#blockd_rgst_dttm").html("");		
-			$("#blockd_cust_nm").html("");		
-			$("#blockd_rsponm").html("");
-			$("#blockd_rank").html("");	
-			$("#blockd_telno").html("");			
-			$("#blockd_full_dept_nm").html("");
-			$("#blockd_type").val("all");
-			$("#blockd_dept_nm").html("");
-			$("#blockd_start_dt").val(getDate());
-			$("#blockd_end_dt").val(getDate());
-			$("#blockd_rgst_rsn").html("");
-			$("#blockd_rgst_id").html("");
-			$("#blockd_act_id").html("");
-			$("#blockd_rtn_rsn").html("");
-			$("#blockd_mpno").html("");
-			$("#blockd_act_dt").html("");
+		// 악성민원 상세 팝업
+		function blockDetail_popupEvent(seq){
+			var width = 1200;
+			var height = 400;
+			var left = Math.ceil((window.screen.width - width)/2);
+			var top = Math.ceil((window.screen.height - height)/2);
+			
+			var paramURL = getContextPath() + "/operator/blockDetailPopup.do?seq="+seq;
+			var option = "width=" + width + ", height=" + height
+				+ ", toolbar=no, directories=no, scrollbars=auto, location=no, resizable=no, status=no,menubar=no, top="
+				+ top + ",left=" + left +"";
+
+			var newWindow = window.open(paramURL, "악성민원상세", option);
+			newWindow.focus();
 		}
 		
-		function updateBlock(){
-			var clickId = this.id;
-			var clickNm = this.textContent;
-			var actType = "";
-			var selectPage = $(".pagination").children().children(2).text();
-			
-			// 결재자의견 공백체크 (반려/승인 둘 다 체크)
-			if($("#blockd_rtn_rsn").val().trim()==""){
-				alert("결재자의견를 입력해주세요.");
-				$("#blockd_rtn_rsn").focus();
-				return false;
-			}
-			
-			if(clickId == "btnReject"){ //반려
-				/*
-				if($("#blockd_rtn_rsn").val().trim()==""){
-					alert("결재자의견를 입력해주세요.");
-					$("#blockd_rtn_rsn").focus();
-					return false;
-				}
-				*/
-				actType = "3";
-			}else{	//승인
-				actType = "2";
-			}
-			
-			if(confirm(clickNm+"하시겠습니까?")) {
-				
-				$.ajax({   
-					url:"/operator/updateBlock.do",
-					dataType:'json',
-					type:"post",
-					async:true,
-					data:{
-						"seq" : $("#blockd_seq").val(),		//PK
-						"actType" : actType,				//처리유형
-						"actId" : window.sessionStorage.getItem("USERID"),				//처리자
-						"blockdType" : $("#blockd_type").val(),	//민원유형
-						"blockdStartDt" : $("#blockd_start_dt").val().replace(/-/gi, ""), 	//차단 시작일
-						"blockdEndDt" : $("#blockd_end_dt").val().replace(/-/gi, ""), 		//차단 종료일
-						"blockdRtnRsn" : $("#blockd_rtn_rsn").val().trim(),	//결재자의견
-					},
-					success:function(data) {
-						if(data=="200"){
-							alert(clickNm+"요청 되었습니다.");
-							SelectBlock(selectPage);
-						}else{
-							alert(clickNm+"요청 실패.");
-						}
-					},error:function(request, status, error){  
-				    	console.log("[" + request.status + "] " + "서비스 오류가 발생하였습니다. 잠시후 다시 실행하십시오.");  
-				    }
-				});
-				
-			}
-			
-		}
 		//Block End
 		
 		function createTree(mildsc){
@@ -1459,7 +1356,7 @@ function reClear(){
 					<style>
 					#tab-block .selectBox {height: 20px; font-size: 13px}
 					#search-block th {text-align: left; padding-right: 5px;}
-					#content_block,#detailBolck th {text-align: center;}
+					#content_block th {text-align: center;}
 					
 					</style>
 					<div id="tab-block" class="tab-content01">
@@ -1491,6 +1388,8 @@ function reClear(){
 										<option value="1">요청</option>
 										<option value="2">승인</option>
 										<option value="3">반려</option>
+										<option value="4">해제</option>
+										<option value="5">삭제</option>
 									</select>
 								</td>
 								<td>
@@ -1504,7 +1403,7 @@ function reClear(){
 									<input type="text" class="text_ol" id="cust_info_search" style=" font-size: 13px; margin-left: 5px; line-height: 0px; font-family: 'Nanum Gothic';" alt="검색어" title="검색어">
 								</td>
 								<td>
-									<button type="button" id="btnSelectBlock"  class="btnComm_aksung" style="margin-left: 50px;">조회</button>
+									<button type="button" id="btnSelectBlock"  class="btnComm_aksung" style="margin-left: 175px;">조회</button>
 								</td>
 							</tr>
 						</table>
@@ -1514,13 +1413,14 @@ function reClear(){
 						<table>
 							<colgroup>
 								<col width="5%">
-								<col width="17%">
+								<col width="15%">
 								<col width="5%">
 								<col width="22%">
-								<col width="11%">
+								<col width="7%">
 								<col width="5%">
 								<col width="20%">
-								<col width="10%">
+								<col width="13%">
+								<col width="13%">
 							</colgroup>
 							<thead>
 								<tr>
@@ -1531,6 +1431,7 @@ function reClear(){
 									<th>유형</th>
 									<th>처리결과</th>
 									<th>차단일</th>
+									<th>연락처</th>
 									<th>민원인</th>
 								</tr>
 							</thead>
@@ -1538,81 +1439,6 @@ function reClear(){
 							</tbody>
 						 </table>
 						 <div id="block_paging" style="margin-top: 5px;"></div>
-	               	</div>
-	               	<div id="detailBolck" class="tbl_type_board" style="margin-bottom: 0px;">
-	               		<div style="float: right; margin-bottom: 10px;">
-	               			<button class="btnComm_aksung" id="btnReject" style="margin-left: 10px;">반려</button>
-	               			<button class="btnComm_aksung" id="btnAgree" style="margin-left: 10px;">승인</button>
-	               		</div>
-	               		<table style="width: 100%; border:1px solid #ccc;">
-	               			<colgroup>
-								<col width="15%">
-								<col width="10%">
-								<col width="10%">
-								<col width="10%">
-								<col width="15%">
-								<col width="35%">
-								<col width="10%">
-								<col width="35%">
-							</colgroup>
-							<tr>
-								<input type="hidden" id="blockd_seq" value="">
-							  	<th>등록일시</th>
-							  	<td id="blockd_rgst_dttm" colspan="3"></td>
-							  	<th>민원인</th>
-							  	<td id="blockd_cust_nm"></td>
-							  	<th>계급</th>
-							  	<td id="blockd_rank"></td>
-							</tr>
-							<tr>
-							  	<th>연락처</th>
-							  	<td id="blockd_telno" colspan="3"></td>
-							  	<th>부대</th>
-							  	<td id="blockd_full_dept_nm" colspan="3"></td>
-							</tr>
-							<tr>
-								<th>휴대전화번호</th>
-								<td id="blockd_mpno" colspan="3"></td>
-								<th>부서</th>
-							  	<td id="blockd_dept_nm"></td>
-							  	<th>직책</th>
-							  	<td id="blockd_rsponm"></td>
-							</tr>
-							<tr>
-							  	<th>유형</th>
-							  	<td colspan="3">
-							  		<select class="selectBox" style="width: 91%; font-size: 14px;" id="blockd_type" title="유형">
-										<option value="all">전체</option>
-										<option value="1">언어폭력</option>
-										<option value="2">성희롱</option>
-										<option value="3">업무방해</option>
-									</select>
-							  	</td>
-							  	<th rowspan="2">차단사유</th>
-							  	<td id="blockd_rgst_rsn" colspan="3" rowspan="2"></td>
-							</tr>
-							<tr>
-							  	<th>차단일</th>
-							  	<td class="selectBox" colspan="3">
-								<input type="text" class="text_ol_half"  id="blockd_start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="width: 80px; height: 20px; line-height: 0px; font-size: 13px;"> ~ 
-								<input type="text" class="text_ol_half" id="blockd_end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" style="width: 80px; height: 20px; line-height: 0px; font-size: 13px;">
-								</td>
-							</tr>
-							<tr>
-								<th>결재일시</th>
-								<td id="blockd_act_dt" colspan="3"></td>
-								<th rowspan="2">결재자의견</th>
-							  	<td colspan="3" rowspan="2">
-								   <textarea id="blockd_rtn_rsn" style="height:70px;" title="결재자의견"></textarea>
-								</td>
-							</tr>
-							<tr>
-								<th>등록자</th>
-							  	<td id="blockd_rgst_id"></td>
-							 	<th>결재자</th>
-							  	<td id="blockd_act_id"></td>
-							</tr>
-						</table>
 	               	</div>
             	</div>
 				</div>
