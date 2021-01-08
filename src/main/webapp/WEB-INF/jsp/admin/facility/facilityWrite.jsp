@@ -271,7 +271,7 @@
 				
 				<!--시설물 등록 게시판-->
 				<form name="frm" id="frm" method="post">
-				<input type="hidden" id="fullDeptCd" name="fullDeptCd" value="" />
+				<input type="hidden" id="searchCd" name="searchCd" value="" />
 				
 				<!--라디오버튼-->
 				<div class="ra_box mt40">

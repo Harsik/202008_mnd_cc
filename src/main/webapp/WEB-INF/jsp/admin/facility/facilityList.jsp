@@ -15,32 +15,38 @@
 		function onListPage(page) {
 			var frm = document.form1;
 			frm.currentPage.value = page;
-			frm.fullDeptCd.value = deptCodeSearch();
+			frm.searchCd.value = deptCodeSearch();
 			frm.action = "/admin/main.do";
 			frm.submit();
 		};
 		
 		function deptCodeSearch(){
+			var admin = '${sessionScope.auth}';
+			
 			var DeptCd = "";
-			var fullDeptCdArr = [];
-			var cnt = $('select[name=deptCd]').length;
+			if(admin==0){
 			
-			fullDeptCdArr.push($("#mildsc").val());
-			
-			for(var i=0; i<cnt; i++){
-				if($('select[name=deptCd]').eq(i).val()!=""){
-					fullDeptCdArr.push($('select[name=deptCd]').eq(i).val());
+				var fullDeptCdArr = [];
+				var cnt = $('select[name=deptCd]').length;
+				
+				fullDeptCdArr.push($("#mildsc").val());
+				
+				for(var i=0; i<cnt; i++){
+					if($('select[name=deptCd]').eq(i).val()!=""){
+						fullDeptCdArr.push($('select[name=deptCd]').eq(i).val());
+					}
 				}
+				console.log(fullDeptCdArr);
+				
+				$.each(fullDeptCdArr, function(id, value){
+					if(id==0){
+						DeptCd += value;
+					}else{
+						DeptCd += "^"+value;
+					}
+		        });
+			
 			}
-			console.log(fullDeptCdArr);
-			
-			$.each(fullDeptCdArr, function(id, value){
-				if(id==0){
-					DeptCd += value;
-				}else{
-					DeptCd += "^"+value;
-				}
-	        });
 			console.log("DeptCd >> "+DeptCd);
 			
 			return DeptCd;
@@ -107,6 +113,7 @@
 		function fnFacModi(seq) {
 			var frm = document.form1;
 			frm.seq.value = seq;
+			frm.searchCd.value = deptCodeSearch();
 			frm.action = "/admin/facilityModify.do";
 			frm.submit();
 		};
@@ -142,6 +149,7 @@
 		
 		$(document).on("click", "#btnCsv", function() {
 			var frm = document.form1;
+			frm.searchCd.value = deptCodeSearch();
 			frm.action = "/csv/csvDownload.do";
 			frm.submit();
 		});
@@ -253,13 +261,15 @@
 				<!--//title-->
 				<!--검색-->
 				<form method="post" action="#" class="search-box_ad" id="form1" name="form1">
+				<input type="hidden" id="searchCd" name="searchCd" value='' />
 				<input type="hidden" id="seq" name="seq" value='' />
-				<input type="hidden" id="fullDeptCd" name="fullDeptCd" value="${paramMap.fullDeptCd}" />
 				<input type="hidden" id="currentPage" name="currentPage" value='<c:out value="${paginationInfo.currentPageNo}"/>' />
 				<input type="hidden" id="recordCountPerPage" name="recordCountPerPage" value='<c:out value="${paginationInfo.recordCountPerPage}"/>' />
 						<fieldset>
 							<legend>검색</legend>
-									<div style="float:left;">
+							<!-- 검색 추가 -->
+								<c:if test='${sessionScope.auth=="0"}'>
+								<div style="float:left;">
 									<select name="mildsc" id="mildsc" onchange="setTopComboBox(this);" title="조건을 선택하세요" class="select-type w250">
 										<option value="all" ${mildsc.equals('all')?'selected':'' }>선택하세요</option>
 										<option value="A" ${mildsc.equals('A')?'selected':'' }>국방부</option>
@@ -282,6 +292,8 @@
 									</c:forEach>
 									</c:if>
 								</div>
+								</c:if>
+								<!-- 검색 end -->
 								<select name="searchKey" id="searchKey" title="조건을 선택하세요" class="select-type">
 									<option value="0" ${paramMap.searchKey.equals('0')?'selected':'' }>선택하세요</option>
 									<option value="1" ${paramMap.searchKey.equals('1')?'selected':'' }>시설물명</option>

@@ -485,7 +485,7 @@
 					AND A.RGST_ID = #{regId}
 				</if>
 				
-				<if test = "fullDeptCd != null and !fullDeptCd.equals('all') and !fullDeptCd.equals('')">
+				<if test = "searchCd != null and !searchCd.equals('all') and !searchCd.equals('')">
 				    <if test="mildsc != null and !mildsc.equals('')">
 					AND A.MDCD = #{mildsc}
 					</if>	
@@ -540,7 +540,7 @@
 			AND A.RGST_ID = #{regId}
 		</if>
 		
-		<if test = "fullDeptCd != null and !fullDeptCd.equals('all')">
+		<if test = "searchCd != null and !searchCd.equals('all') and !searchCd.equals('')">
 		    <if test="mildsc != null and !mildsc.equals('')">
 			AND A.MDCD = #{mildsc}
 			</if>	

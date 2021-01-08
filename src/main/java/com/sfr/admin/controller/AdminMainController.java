@@ -70,14 +70,6 @@ public class AdminMainController {
 		return "admin/user/userList.admin";
 	}
 	
-	
-	
-	
-	
-
-	
-	
-	
 	/**
 	 * 일반관리자 메인
 	 * @return
@@ -85,11 +77,13 @@ public class AdminMainController {
 	@RequestMapping("/main.do")
 	public String main(@RequestParam Map paramMap, ModelMap model, HttpServletRequest requset, @ModelAttribute("searchVO") PagerVO vo ) throws Exception {
 		System.out.println("paramMap >>> "+paramMap);
+		
 		if(!paramMap.isEmpty()) {
-			String mildsc = paramMap.get("mildsc").toString();
 			String[] deptCdArray = null;
-			deptCdArray = 	paramMap.get("fullDeptCd").toString().split("\\^");
-
+			deptCdArray = 	paramMap.get("searchCd").toString().split("\\^");
+			
+			String mildsc = deptCdArray[0];
+			
 			List subDeptList = new ArrayList();
 			List supDeptNmList = new ArrayList();
 			// 1. 현재 사용자의 최상위 부서 코드에 맞는 하위부서 목록 호출
@@ -100,8 +94,8 @@ public class AdminMainController {
 			if(mildsc.equals("1290451")) {
 				mdcdFlg = "Y";	//합참
 			}	
-			paramMap.put("mdcdFlg", mdcdFlg);	
-				
+			paramMap.put("mdcdFlg", mdcdFlg);
+			
 			List deptTopList = new ArrayList();
 			if(mdcdFlg.equals("Y")) {
 				paramMap.put("mildsc", "A");
