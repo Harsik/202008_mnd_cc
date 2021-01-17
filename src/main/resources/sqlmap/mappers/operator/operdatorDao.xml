@@ -558,6 +558,9 @@
 		<if test='adminYn.equals("N")'>
 		    AND rgst_id =#{usrId}
 		</if>
+		<if test='adminYn.equals("Y")'>
+		    AND act_type != 5
+		</if>
 	</select>
 	
 	<update id="updateBlock" parameterType="map" >

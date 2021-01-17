@@ -356,13 +356,13 @@ public class MainController {
 	public @ResponseBody ModelAndView selectBlockList(@RequestParam Map paramMap, HttpServletRequest requset, @ModelAttribute("searchVO") PagingVO vo ) throws Exception{
 		System.out.println("paramMap >> " + paramMap);
 		
-		vo.setPageSize(18); // 한 페이지에 보일 게시글 수
+		vo.setPageSize(13); // 한 페이지에 보일 게시글 수
 		vo.setPageNo(1); // 현재 페이지 번호
 		
 		if(vo.getSetPageNum() != 0){
 			vo.setPageNo(vo.getSetPageNum());
 		}
-		vo.setBlockSize(18);
+		vo.setBlockSize(13);
 		
 		String startDt = (String) paramMap.get("startDt");
 		paramMap.put("startDt", startDt.replace("&lrm;", ""));

@@ -256,24 +256,22 @@ h4.sta_tit{font-size:18px;color:#333;font-weight:700;}
 .Call_box ul li.Call_box_right{float:right;width:60%;}
 .Center_box{width:100%;height:450px;}
 
-/* .inCall_box01{width:100%;height:260px;padding:30px 10px 10px 30px;background-color:#4688d6;margin-bottom:30px;} */
-.inCall_box01{width:100%;height:260px;padding:70px 10px 50px 30px;background-color:#4688d6;margin-bottom:57px;}
+.inCall_box01{width:100%;height:260px;padding:30px 10px 10px 30px;background-color:#4688d6;margin-bottom:30px;}
 .inCall_box01 .inner01{width:75%;margin:0 auto;height:150px;}
 .inCall_box01 ul li.Call_box_right{float:right;}
 .inCall_box01 ul li.inCall_box_tit{width:100%;height:50px;/*background:url(../images/operator/m_input.png) no-repeat 0px 20px;*/}
 .inCall_box01 span.tit_i{font-size:25px;color:#fff;font-weight:700;letter-spacing:-2px;}
-.inCall_cont01{padding-top:40px;/*padding-top:20px;*/width:100%;height:115px;}
+.inCall_cont01{padding-top:20px;width:100%;height:115px;}
 .inCall_cont01 ul li{float:left;padding:0 0 3px 5px;}
 .inCall_cont01 ul li.inCall_cont_le{padding-left:0px;font-size:16px;color:#fff;width:20%;padding-top:3px;}
 .inCall_cont01 ul li.inCall_cont_ri{padding-left:0px;font-size:16px;color:#fff;width:80%;padding-top:3px;}
 
-/* .outCall_box01{width:100%;height:280px;padding:30px 10px 10px 30px;background-color:#64cad9;} */
-.outCall_box01{width:100%;height:280px;padding:70px 10px 50px 30px;background-color:#64cad9;}
+.outCall_box01{width:100%;height:280px;padding:30px 10px 10px 30px;background-color:#64cad9;}
 .outCall_box01 .inner01{width:75%;margin:0 auto;height:150px;}
 .outCall_box01 ul li{float:left;}
 .outCall_box01 ul li.outCall_box_tit{width:100%;height:150px;/*background:url(../images/operator/m_output.png) no-repeat 0px 25px;*/}
 .outCall_box01 span.tit_i{font-size:25px;color:#fff;font-weight:700;letter-spacing:-2px;}
-.outCall_cont01{/*padding-top:20px;*/padding-top:40px;width:100%;height:115px;}
+.outCall_cont01{padding-top:20px;width:100%;height:115px;}
 .outCall_cont01 ul li{float:left;padding:0 0 3px 5px;}
 .outCall_cont01 ul li.outCall_cont_le{padding-left:0px;font-size:16px;color:#fff;width:20%;padding-top:3px;}
 .outCall_cont01 ul li.outCall_cont_ri{padding-left:0px;font-size:16px;color:#fff;width:80%;padding-top:3px;}
@@ -294,15 +292,15 @@ h4.sta_tit{font-size:18px;color:#333;font-weight:700;}
 .footer{width: 100%;padding: 30px 0 30px;bottom:0;background: #5d6467;text-align:align;color: #b3b8ba;font-size: 15px;line-height: 18px;}
 /*board*/
 .board_type{border-top:2px solid #515151;}
-.board_typeBox{overflow:auto;height:670 px;/*height:397px;*/}
+.board_typeBox{overflow:auto;height:397px;}
 .tbl_type_board,.tbl_type_board th,.tbl_type_board td{border:0;}  
 .tbl_type_board{width:100%;table-layout:fixed;margin-left: auto;margin-right: auto;letter-spacing:-0.5px;border-collapse:collapse; margin-bottom:30px;}  
 .tbl_type_board caption{display:none}
-.tbl_type_board th{height:36px;border-bottom:1px solid #7b7b7b;border-right:1px solid #7b7b7b;background:#8e8e8e;font-size:14px;color:#fff;padding:0px 8px;text-align:center;}
+.tbl_type_board th{height:36px;border-bottom:1px solid #7b7b7b;border-right:1px solid #7b7b7b;background:#8e8e8e;font-size:15px;color:#fff;padding:0px 8px;text-align:center;}
 .tbl_type_board th:last-child{border-right:0px;}
 .tbl_type_board th.center{text-align:center;}
 .tbl_type_board th.p_th{background-color:#eee;color:#666;border-bottom:1px solid #ccc;border-right:1px solid #ccc;font-size:15px;}
-.tbl_type_board td{height:36px; border-bottom:1px solid #ccc;border-right:1px solid #ccc;font-size:14px;line-height:15px;vertical-align:middle;word-break:break-all; text-align:center; letter-spacing:-0.8px; box-sizing:border-box;}
+.tbl_type_board td{height:36px; border-bottom:1px solid #ccc;border-right:1px solid #ccc;font-size:15px;line-height:15px;vertical-align:middle;word-break:break-all; text-align:center; letter-spacing:-0.8px; box-sizing:border-box;}
 .tbl_type_board td:last-child{border-right:0px;}
 .tbl_type_board td a:hover{color:#0866af;text-decoration:underline;}
 .tbl_type_board td.c_left{text-align:left;padding-left:10px;width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
