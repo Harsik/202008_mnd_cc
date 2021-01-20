@@ -18,7 +18,7 @@
 	<!-- 각군 일배치 -->
 	<bean id="sfrCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
 		<property name="jobDetail" ref="sfrJob" />
-		<property name="cronExpression" value="0 30 4 * * ?" /> 
+		<property name="cronExpression" value="0 0 4 * * ?" /> 
 	</bean>
 	<!-- 즐겨찾기 삭제 1년 -->
 	<bean id="sfrCronTrigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
