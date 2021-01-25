@@ -342,9 +342,16 @@ public class FacilityController {
 		
 		FileOutputStream outputStream = null;
 		
+		try {
+			
+		
+		
 		//save & load location
 		//String filePath = System.getProperty("java.io.tmpdir") + file.getOriginalFilename();
-		String filePath = "/app/src/webapps/sfr_prj.war/tmp/" + file.getOriginalFilename();
+//		String filePath = "/app/src/webapps/sfr_prj.war/tmp/" + file.getOriginalFilename();
+		
+		// 21.01.25 경로 확인 --> app에 jboss만 들어가있음. 경로 바뀜
+		String filePath = "/data/src/sfr_prj.war/tmp/" + file.getOriginalFilename();
 		
 		//System.out.println("666====Excel to DB Insert===="+filePath);
 		//save
@@ -353,16 +360,16 @@ public class FacilityController {
 			
 		//load
         FileInputStream fis = new FileInputStream(new File(filePath));
-
+		
         //System.out.println("777====Excel to DB Insert====");
         
         XSSFWorkbook workbook = new XSSFWorkbook(fis);
         XSSFSheet sheet = workbook.getSheetAt(0);
 
         //System.out.println("888====Excel to DB Insert====");
-
+        
         Iterator<Row> rowIterator = sheet.iterator();
-
+        
         HashMap<String,String> map = new HashMap<String,String>();
         
         while (rowIterator.hasNext())
@@ -427,7 +434,10 @@ public class FacilityController {
             }
         }
         fis.close();
-		
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
         paramMap.put("deptCd", fullDeptCd.substring(fullDeptCd.lastIndexOf("^")+1));
 		paramMap.put("regId", session.getAttribute("user_id").toString());
 		paramMap.put("regMildsc", session.getAttribute("mildsc").toString());
