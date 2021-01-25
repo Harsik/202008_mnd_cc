@@ -927,6 +927,13 @@
 				$(".tbl_bottom").html(htmlStr);
 		}
 		
+		// 21.01.25 클릭한 값에 대해서 엔터누르면 연결되는 기능 구현
+		$(document).on("keyup","#searchTr", function() {
+			if (event.keyCode === 13) {
+				$("#btnTransfer").trigger("click");
+		    }
+		});
+		
 		$(document).on( "click","#searchTr", function() {
 		
 			var tr = $(this);
