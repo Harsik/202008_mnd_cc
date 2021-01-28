@@ -80,6 +80,7 @@
 	</select>
 	
 	<!-- 군 코드 와 전화번호로  부서 번호 가져옴  -->
+	<!-- 사용안함 -->
 	<select id="selectDeptTel" parameterType="map" resultType="egovMap">
 		
 		SELECT MILDSC, DEPT_CD, DEPT_NM, ORDER_NO, DEPT_ABRVWD, DEPT_ABRVWD2, Full_DEPT_NM, HGRNK_DEPT_CD, TELNO 
@@ -89,7 +90,9 @@
 		AND ROWNUM = 1
 		
 	</select>
+	
 	<!-- 군 코드 와 부서 코드로 부서에 소속된 user 리스트 가져옴  -->
+	<!-- 사용안함 -->
 	 <select id="selectDeptUserList" parameterType="map" resultType="egovMap">
 		
 		SELECT ID
@@ -661,11 +664,11 @@
 		SELECT SUM(c.cnt) FROM
 		(  
 			     SELECT COUNT(*) cnt
-				FROM TBL_QNABOARD  a JOIN tbl_user b ON a.reg_id = b.mil_no 
+				FROM TBL_QNABOARD  a JOIN tbl_user_n b ON a.reg_id = b.srvno 
 				WHERE 1=1 
 	 	UNION ALL
 				SELECT COUNT(*) cnt
-				FROM TBL_QNABOARD  a JOIN tbl_mngr b ON  b.mngr_id=a.reg_id 
+				FROM TBL_QNABOARD  a JOIN tbl_mngr_n b ON b.id=a.reg_id 
 				WHERE 1=1 
 		) c
 		
@@ -687,10 +690,10 @@
 								a.cnt,
 								a.reg_dt,
 								a.reg_id,
-								b.nm,
+								b.fulnm AS nm,
 								a.reg_mildsc
 							FROM
-								TBL_QNABOARD  a JOIN tbl_user b ON a.reg_id = b.mil_no AND a.reg_mildsc = b.mildsc
+								TBL_QNABOARD  a JOIN tbl_user_n b ON a.reg_id = b.srvno AND a.reg_mildsc = b.mdcd
 					 UNION 
 			        SELECT
 									a.seq,
@@ -702,10 +705,10 @@
 									a.cnt,
 									a.reg_dt,
 									a.reg_id,
-									b.mngr_id,
+									b.id,
 									a.reg_mildsc
 							FROM
-								TBL_QNABOARD  a JOIN tbl_mngr b ON  b.mngr_id=a.reg_id 
+								TBL_QNABOARD  a JOIN tbl_mngr_n b ON  b.id=a.reg_id 
 							) T1
 						) A
 				WHERE 1=1
@@ -971,22 +974,22 @@
   <select id="selectBkmkSubGroupList" parameterType="map" resultType="egovMap">
         SELECT   A.SEQ
                  , B.ID AS BOOKMARK_USER_ID
-                 , B.NM AS BOOKMARK_USER_NM
+                 , B.FULNM AS BOOKMARK_USER_NM
                  , B.TELNO AS BOOKMARK_USER_TELNO
                  , B.MPNO AS BOOKMARK_USER_MPNO
-                 , B.RANK AS BOOKMARK_USER_RANK
-                 , B.RSPOFC_NM AS BOOKMARK_USER_RSPOFC_NM
-                 , B.RSPSBLT_BIZNES AS BOOKMARK_USER_RSPSBLT_BIZNES
-                 , (SELECT A.cd_ins_nm FROM tbl_code A WHERE cd='100' AND B.MILDSC = A.cd_ins_id) AS MILDSC_NM
+                 , B.RANK_NM AS BOOKMARK_USER_RANK
+                 , B.RSPONM AS BOOKMARK_USER_RSPOFC_NM
+                 , B.RSPSBLT_BIZNES_NM AS BOOKMARK_USER_RSPSBLT_BIZNES
+                 , (SELECT A.cd_ins_nm FROM tbl_code A WHERE cd='100' AND B.MDCD = A.cd_ins_id) AS MILDSC_NM
                  , A.rgst_mdcd as MILDSC
                  , C.DEPT_NM AS BOOKMARK_DEPT_NM
-                 , C.FULL_DEPT_NM AS BOOKMARK_FULL_DEPT_NM
+                 , C.WHL_DEPT_NM AS BOOKMARK_FULL_DEPT_NM
                  , C.TELNO AS BOOKMARK_DEPT_TENO 
                  , DECODE(D.GROUP_NM, NULL, '', D.GROUP_NM) AS GROUP_NM
                  , DECODE(D.GROUP_NM, NULL, '2 ', '1') AS GROUP_NUM
         FROM TBL_BOOKMARK_USER_n A 
-        LEFT JOIN TBL_USER B ON A.bkmk_mdcd = B.MILDSC AND A.bkmk_dept_cd = B.DEPT_CD AND A.bkmk_id = B.ID
-        LEFT JOIN TBL_DEPT C ON A.bkmk_mdcd = C.MILDSC AND A.bkmk_dept_cd = C.DEPT_CD
+        LEFT JOIN TBL_USER_N B ON A.bkmk_mdcd = B.MDCD AND A.bkmk_dept_cd = B.DEPT_CD AND A.bkmk_id = B.ID
+        LEFT JOIN TBL_DEPT_N C ON A.bkmk_mdcd = C.MDCD AND A.bkmk_dept_cd = C.DEPT_CD
         LEFT JOIN TBL_BOOKMARK_GROUP D ON A.GROUP_ID = D.SEQ
         WHERE 1=1
         AND A.rgst_mdcd = #{mildsc}
