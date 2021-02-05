@@ -981,15 +981,15 @@
                  , B.RSPONM AS BOOKMARK_USER_RSPOFC_NM
                  , B.RSPSBLT_BIZNES_NM AS BOOKMARK_USER_RSPSBLT_BIZNES
                  , (SELECT A.cd_ins_nm FROM tbl_code A WHERE cd='100' AND B.MDCD = A.cd_ins_id) AS MILDSC_NM
-                 , A.rgst_mdcd as MILDSC
+                 , A.bkmk_mdcd as MILDSC
                  , C.DEPT_NM AS BOOKMARK_DEPT_NM
                  , C.WHL_DEPT_NM AS BOOKMARK_FULL_DEPT_NM
                  , C.TELNO AS BOOKMARK_DEPT_TENO 
                  , DECODE(D.GROUP_NM, NULL, '', D.GROUP_NM) AS GROUP_NM
                  , DECODE(D.GROUP_NM, NULL, '2 ', '1') AS GROUP_NUM
         FROM TBL_BOOKMARK_USER_n A 
-        LEFT JOIN TBL_USER_N B ON A.bkmk_mdcd = B.MDCD AND A.bkmk_dept_cd = B.DEPT_CD AND A.bkmk_id = B.ID
-        LEFT JOIN TBL_DEPT_N C ON A.bkmk_mdcd = C.MDCD AND A.bkmk_dept_cd = C.DEPT_CD
+        LEFT JOIN TBL_USER_N B ON A.bkmk_mdcd = B.MDCD AND A.bkmk_id = B.ID
+        LEFT JOIN TBL_DEPT_N C ON B.dept_cd = C.DEPT_CD
         LEFT JOIN TBL_BOOKMARK_GROUP D ON A.GROUP_ID = D.SEQ
         WHERE 1=1
         AND A.rgst_mdcd = #{mildsc}
