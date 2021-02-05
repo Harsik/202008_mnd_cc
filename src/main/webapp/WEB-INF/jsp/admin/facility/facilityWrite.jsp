@@ -30,7 +30,7 @@
 		
 		
 		function fnFacAdd() {
-
+			
 			var flag =  $('[name=excelFlag]:checked').val();
 			
 			if(flag=='false'){
@@ -135,6 +135,25 @@
 				}
 			}
 			
+		}
+		
+		function checkFile(f){
+
+			// files 로 해당 파일 정보 얻기.
+			var file = f.files;
+
+			// file[0].name 은 파일명 입니다.
+			// 정규식으로 확장자 체크
+			if(!/\.(xls|xlsx)$/i.test(file[0].name)) alert('파일형식은 xls, xlsx만 가능합니다.\n\n현재 파일 : ' + file[0].name);
+
+			// 체크를 통과했다면 종료.
+			else return;
+
+			// 체크에 걸리면 선택된  내용 취소 처리를 해야함.
+			// 파일선택 폼의 내용은 스크립트로 컨트롤 할 수 없습니다.
+			// 그래서 그냥 새로 폼을 새로 써주는 방식으로 초기화 합니다.
+			// 이렇게 하면 간단 !?
+			f.outerHTML = f.outerHTML;
 		}
 		
 		function fnCancel() {
@@ -338,9 +357,11 @@
 				<div class="tbl_bottom" id="div2" name="div2" style="display:none">
 					<div class="t_left">
 					  <button type="button" name="" id="" class="btnComm_b blue_b mr5" title="등록" onclick="location.href='templeteDownload.do'">양식 다운로드</button><br><br>
-					  <input type="file" name="file" id="file"  title="찾아보기" class="w400">
+					  <input type="file" name="file" id="file" onchange="checkFile(this)" accept=".xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" title="찾아보기" class="w400">
 					</div>
+					<p style="color: red; font-size: 14px; display: inline-block;">* 파일형식은 xls, xlsx 만 가능합니다</p>
 				</div>
+				
 				<!--//btn_area-->
 				</form>
 				

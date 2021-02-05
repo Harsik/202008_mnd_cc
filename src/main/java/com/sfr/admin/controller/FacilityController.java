@@ -14,8 +14,9 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -363,8 +364,9 @@ public class FacilityController {
 		
         //System.out.println("777====Excel to DB Insert====");
         
-        XSSFWorkbook workbook = new XSSFWorkbook(fis);
-        XSSFSheet sheet = workbook.getSheetAt(0);
+        // 21.02.05 기존 XSSF로 xlsx파일만 가능했던 부분 xls도 가능하게 변경
+        Workbook workbook = WorkbookFactory.create(fis);
+        Sheet sheet = workbook.getSheetAt(0);
 
         //System.out.println("888====Excel to DB Insert====");
         
