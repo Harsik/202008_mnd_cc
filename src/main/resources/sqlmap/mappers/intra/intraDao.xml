@@ -511,6 +511,35 @@
 		) WHERE ROWNUM =1
 	</select>
 	
+	<!-- 통합SSO -->
+	<select id="intraLoginP" parameterType="map" resultType="egovMap">
+		/* intraLoginP */
+		SELECT * FROM (
+		SELECT
+			DECODE(orignl_mdcd,'1','A','5','B','6','C','7','D') AS mildsc,
+			user_id as id,
+			user_nm AS nm,
+			orgnz_cd AS dept_cd,
+			srvno AS mil_no,
+			duty_nm AS rspsblt_biznes,
+			rnkcd_nm AS RANK,
+			duty_nm AS rspofc_nm,
+			'군)' || mil_ofcrm_telno || ',일)' || gnrl_ofcrm_telno AS telno,
+			'' AS mpno,
+			email_addr AS email,
+			'' AS opnpbl_yn,
+			'' AS state
+		FROM
+			mous0009_ifc0009
+		WHERE
+			1 = 1
+			AND orignl_mdcd = '1'
+			AND REPLACE(srvno,'-','') = #{user_id}
+			AND data_del_yn = 'N'
+			ORDER BY dims_data_crt_dhms DESC
+		) WHERE ROWNUM =1
+	</select>
+	
 	<!-- 일반사용자 로그인  -->
 	<select id="intraLogin" parameterType="map" resultType="egovMap">
 			SELECT			a.mdcd AS mildsc
