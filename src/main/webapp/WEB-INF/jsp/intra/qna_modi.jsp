@@ -163,8 +163,8 @@
 						</colgroup>
 
 						<tr>
-							<th>이름</th>
-							<td><span>${list.nm }</span>
+							<th>소속 / 이름</th>
+							<td>${list.whlDeptNm} / ${list.nm }</td>
 								<input type="hidden" id="detailseq" name="detailseq" value="">
 								<input type="hidden" id="detailparentcd" name="detailparentcd" value="">
 							</td>

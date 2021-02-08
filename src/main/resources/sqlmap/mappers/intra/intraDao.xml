@@ -691,9 +691,11 @@
 								a.reg_dt,
 								a.reg_id,
 								b.fulnm AS nm,
-								a.reg_mildsc
+								a.reg_mildsc,
+								c.whl_dept_nm
 							FROM
 								TBL_QNABOARD  a JOIN tbl_user_n b ON a.reg_id = b.srvno AND a.reg_mildsc = b.mdcd
+								JOIN tbl_dept_n c ON b.dept_cd = c.dept_cd
 					 UNION 
 			        SELECT
 									a.seq,
@@ -706,9 +708,11 @@
 									a.reg_dt,
 									a.reg_id,
 									b.id,
-									a.reg_mildsc
+									a.reg_mildsc,
+									c.whl_dept_nm
 							FROM
 								TBL_QNABOARD  a JOIN tbl_mngr_n b ON  b.id=a.reg_id 
+								JOIN tbl_dept_n c ON b.dept_cd = c.dept_cd
 							) T1
 						) A
 				WHERE 1=1
