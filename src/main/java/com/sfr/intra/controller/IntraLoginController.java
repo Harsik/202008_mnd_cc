@@ -141,6 +141,28 @@ public class IntraLoginController {
 		return rtnMap;
 	}
 	
+	@RequestMapping(value="/loginPAjax.do")
+	public @ResponseBody Map loginPAjax(ModelMap model, HttpServletRequest request,@RequestParam Map paramMap) throws Exception{
+		System.out.println("loginP paramMap >>> " + paramMap);
+		System.out.println("loginP paramMap >>> " + paramMap.get("user_id"));
+		
+		String id = (String) paramMap.get("user_id");
+		
+		Map loginMap = intraService.intraLoginP(paramMap);
+		Map rtnMap = new HashMap();
+		System.out.println("loginP loginMap >>> "+loginMap);
+		System.out.println("loginP loginMap >>> "+loginMap.get("id"));
+		if(loginMap != null) {
+			rtnMap.put("code","0");
+			rtnMap.put("user_id", loginMap.get("id"));
+		}else {
+			rtnMap.put("code", "-1");
+			rtnMap.put("msg", "등록되지 않은 아이디입니다. 아이디를 다시 확인하세요.");
+		}
+		
+		return rtnMap;
+	}
+	
 	@RequestMapping(value="/loginProc.do", method={RequestMethod.POST})
 	public @ResponseBody Map loginProc(ModelMap model, HttpServletRequest request, @RequestParam Map paramMap) throws Exception {
 		

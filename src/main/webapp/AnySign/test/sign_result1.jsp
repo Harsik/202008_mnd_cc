@@ -82,8 +82,11 @@
 		else
 		{
 			aPlain = verifier.getVerifiedMsg_Text();
+			System.out.println(aPlain);
 			aCertificate = verifier.getSignerCertificate().getCertPem().replaceAll ("\n", "");
+			System.out.println(aCertificate);
 			aSubjectRDN = verifier.getSignerCertificate().getSubject();
+			System.out.println(aSubjectRDN);
 			
 			byte[] buf = verifier.getVerifiedMsg();
 			String tmp = "";
@@ -94,6 +97,8 @@
 				if (tmp.length() == 1) tmp = "0" + tmp;
 				aPlainHex += tmp;
 			}
+			
+			
 		}
 
 	}
@@ -113,6 +118,56 @@
 	<li>서명 원문(Hex): <%=aPlainHex%>
 	<li>서명 인증서 주체: <%=aSubjectRDN%>
 	<li>서명 인증서: <div><textarea cols="100" rows="10"><%=aCertificate%></textarea></div>
+	<script type="text/javascript"	src="../../js/jquery-1.7.1.min.js"></script>  
+	<script>
+	var resultCode = "<%=aErrCode%>";
+		$(document).ready(function(){
+			if(resultCode == "0") {
+				console.log("PKI 인증 성공");
+				var rdn = "<%=aSubjectRDN%>";
+// 				rdn = "cn=박준배(012914)"
+				var str = rdn.split(",")[0];
+				var mySubString = str.substring(
+				    str.lastIndexOf("(") + 1, 
+				    str.lastIndexOf(")")
+				);
+				var id = mySubString;
+				console.log(mySubString);
+				$.ajax({   
+					url:"/intra/loginPAjax.do",
+					type:"post",
+					dataType:'json',
+					data:{
+						"user_id" : id
+					},
+					success:function(data) {
+						if(data.code == '0'){
+							$.ajax({   
+								url:"/intra/loginUAjax.do",
+								type:"post",
+								dataType:'json',
+								data:{
+									"id" : "m"+data.user_id
+								},
+								success:function(data) {
+									if(data.code == '0'){
+										location.href = "/intra/main.do";
+									}else {
+										alert(data.msg);
+									}
+								}
+							}); 
+						}else {
+							alert(data.msg);
+						}
+					}
+				}); 
+			}else{
+				alert("PKI SERVER ERROR");
+			}
+			 
+		});
+	</script>
 </ul>
 </body>
 </html>

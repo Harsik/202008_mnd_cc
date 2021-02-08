@@ -16,11 +16,12 @@
 <title>index</title>
 	<link rel="stylesheet" href="./css/purple_index_style.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="./css/join.css" type="text/css" media="all" />
-	<script type="text/javascript"	src="./js/jquery-3.3.1.js"></script>  
+	<script type="text/javascript"	src="./js/jquery-3.3.1.js"></script>
 	<script>
 	var id = "<%=session.getAttribute("uid")%>";
 		$(document).ready(function(){
-			 $.ajax({   
+			if(id != ""){
+				$.ajax({   
 					url:"/intra/loginUAjax.do",
 					type:"post",
 					dataType:'json',
@@ -37,6 +38,11 @@
 						}
 					}
 				}); 
+			}else{
+				//PKI
+				location.href = "/intra/main.do";
+			}
+			 
 		});
 	</script>
 </head>

@@ -26,6 +26,11 @@ public class IntraServiceImpl implements IntraService{
 		return intraDao.intraLoginU(paramMap);
 	}
 	
+	@Override
+	public Map intraLoginP(Map paramMap) throws Exception{
+		return intraDao.intraLoginP(paramMap);
+	}
+	
 	/*
 	 * 
 	 * 게시판 리스트
