@@ -44,52 +44,46 @@ public class SfrScheduler extends QuartzJobBean {
 			Properties prop = new Properties();
         	prop.load(getClass().getClassLoader().getResourceAsStream("properties/sfr.properties"));
         	
-        	//String url = "jdbc:cubrid:172.17.0.30:33000:sfr_dev2:::";
-    		//String username="dba";
-    		//String password="soul0901";
-			
-			
 			Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
 			
-			//conn = DriverManager.getConnection(url,username,password);
 			conn = DriverManager.getConnection(prop.getProperty("jdbc.url"), 
 												prop.getProperty("jdbc.username"), 
 												prop.getProperty("jdbc.password"));
 
 			conn.setAutoCommit(false);
 			
-			log.debug("-------------BATCH START------------	: "+sdfNow.format(System.currentTimeMillis()));
-			log.debug("----------------------------------- start: "+sdfNow.format(System.currentTimeMillis()));
+			log.error("-------------BATCH START------------	: "+sdfNow.format(System.currentTimeMillis()));
+			log.error("----------------------------------- start: "+sdfNow.format(System.currentTimeMillis()));
 			
 			//테이블 백업
 			tableBackup(conn, stmt, rs, thisDay);
 			
-			
-			log.debug("----------------------------------- backup end: "+sdfNow.format(System.currentTimeMillis()));
-			
+			log.error("----------------------------------- backup end: "+sdfNow.format(System.currentTimeMillis()));
+
 			//해군 병 삭제
 			ifUserDeleteC(conn, stmt, rs);
+
+			log.error("----------------------------------- 해군 병 삭제 end: "+sdfNow.format(System.currentTimeMillis()));
 			
 			//(국방부:A)
 			ifATableToTable(conn, stmt, rs, "A", thisDay);
 			
-			log.debug("----------------------------------- A end: "+sdfNow.format(System.currentTimeMillis()));
-			
+			log.error("----------------------------------- A end: "+sdfNow.format(System.currentTimeMillis()));
+
 			//(육군:B)
 			ifTableToTable(conn, stmt, rs, "B", thisDay);
 			
-			log.debug("----------------------------------- B end: "+sdfNow.format(System.currentTimeMillis()));
+			log.error("----------------------------------- B end: "+sdfNow.format(System.currentTimeMillis()));
 			
 			//(해군:C)
 			ifTableToTable(conn, stmt, rs, "C", thisDay);
 
-			log.debug("----------------------------------- C end: "+sdfNow.format(System.currentTimeMillis()));
+			log.error("----------------------------------- C end: "+sdfNow.format(System.currentTimeMillis()));
 			
 			//(공군:D)
 			ifTableToTable(conn, stmt, rs, "D", thisDay);
 			
-			log.debug("----------------------------------- D end: "+sdfNow.format(System.currentTimeMillis()));
-			
+			log.error("----------------------------------- D end: "+sdfNow.format(System.currentTimeMillis()));
 			
 			//최상위 코드 #으로 초기화
 			hrgnkSetting(conn, stmt, rs, "A", "1290000");
@@ -104,13 +98,11 @@ public class SfrScheduler extends QuartzJobBean {
 			
 			hrgnkSettingC(conn, stmt, rs, "C", "6000000000");
 			
+			log.error("FULL DEPT NM UPDATE : A start");
 			
-			
-			log.debug("FULL DEPT NM UPDATE : A start");
-			
-			stmt = conn.prepareStatement("UPDATE tbl_dept_n a, " 
+			stmt = conn.prepareStatement("UPDATE TBL_DEPT_N a, " 
 							+ " (SELECT SYS_CONNECT_BY_PATH(dept_nm, ' ') AS WHL_DEPT_NM, dept_cd "
-							+ "    FROM tbl_dept_n start WITH HGRNK_DEPT_CD=? AND MDCD=? "
+							+ "    FROM TBL_DEPT_N start WITH HGRNK_DEPT_CD=? AND MDCD=? "
 							+ "                    connect by PRIOR dept_cd=HGRNK_DEPT_CD) b "
 							+ " SET a.WHL_DEPT_NM = b.WHL_DEPT_NM "
 							+ " WHERE 1=1  "
@@ -121,14 +113,13 @@ public class SfrScheduler extends QuartzJobBean {
 			
 			stmt.executeUpdate();
 			conn.commit();
-			log.debug("FULL DEPT NM UPDATE : A end");
-			
+			log.error("FULL DEPT NM UPDATE : A end");
 
-			log.debug("FULL DEPT NM UPDATE : B start");
+			log.error("FULL DEPT NM UPDATE : B start");
 
-			stmt = conn.prepareStatement("UPDATE tbl_dept_n a, " 
+			stmt = conn.prepareStatement("UPDATE TBL_DEPT_N a, " 
 							+ " (SELECT SYS_CONNECT_BY_PATH(dept_nm, ' ') AS WHL_DEPT_NM, dept_cd "
-							+ "   FROM tbl_dept_n start WITH HGRNK_DEPT_CD=? AND MDCD=? "
+							+ "   FROM TBL_DEPT_N start WITH HGRNK_DEPT_CD=? AND MDCD=? "
 							+ "                   connect by PRIOR dept_cd=HGRNK_DEPT_CD) b "
 							+ " SET a.WHL_DEPT_NM = b.WHL_DEPT_NM "
 							+ " WHERE 1=1  "
@@ -139,14 +130,13 @@ public class SfrScheduler extends QuartzJobBean {
 			
 			stmt.executeUpdate();
 			conn.commit();
-			log.debug("FULL DEPT NM UPDATE : B end");
+			log.error("FULL DEPT NM UPDATE : B end");
 			
-			
-			log.debug("FULL DEPT NM UPDATE : C start");
+			log.error("FULL DEPT NM UPDATE : C start");
 
-			stmt = conn.prepareStatement("UPDATE tbl_dept_n a, " 
+			stmt = conn.prepareStatement("UPDATE TBL_DEPT_N a, " 
 							+ " (SELECT SYS_CONNECT_BY_PATH(dept_nm, ' ') AS WHL_DEPT_NM, dept_cd "
-							+ "   FROM tbl_dept_n start WITH HGRNK_DEPT_CD=? AND MDCD=? "
+							+ "   FROM TBL_DEPT_N start WITH HGRNK_DEPT_CD=? AND MDCD=? "
 							+ "                   connect by PRIOR dept_cd=HGRNK_DEPT_CD) b "
 							+ " SET a.WHL_DEPT_NM = b.WHL_DEPT_NM "
 							+ " WHERE 1=1  "
@@ -157,14 +147,13 @@ public class SfrScheduler extends QuartzJobBean {
 			
 			stmt.executeUpdate();
 			conn.commit();
-			log.debug("FULL DEPT NM UPDATE : C end");
+			log.error("FULL DEPT NM UPDATE : C end");
 			
-			
-			log.debug("FULL DEPT NM UPDATE : D start");
+			log.error("FULL DEPT NM UPDATE : D start");
 
-			stmt = conn.prepareStatement("UPDATE tbl_dept_n a, " 
+			stmt = conn.prepareStatement("UPDATE TBL_DEPT_N a, " 
 							+ " (SELECT SYS_CONNECT_BY_PATH(dept_nm, ' ') AS WHL_DEPT_NM, dept_cd "
-							+ "   FROM tbl_dept_n start WITH HGRNK_DEPT_CD=? AND MDCD=? "
+							+ "   FROM TBL_DEPT_N start WITH HGRNK_DEPT_CD=? AND MDCD=? "
 							+ "                   connect by PRIOR dept_cd=HGRNK_DEPT_CD) b "
 							+ " SET a.WHL_DEPT_NM = b.WHL_DEPT_NM "
 							+ " WHERE 1=1  "
@@ -175,10 +164,9 @@ public class SfrScheduler extends QuartzJobBean {
 			
 			stmt.executeUpdate();
 			conn.commit();
-			log.debug("FULL DEPT NM UPDATE : D end");
-			
-			
-			log.debug("-------------BATCH END------------	: "+sdfNow.format(System.currentTimeMillis()));
+			log.error("FULL DEPT NM UPDATE : D end");
+
+			log.error("-------------BATCH END------------	: "+sdfNow.format(System.currentTimeMillis()));
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -199,30 +187,25 @@ public class SfrScheduler extends QuartzJobBean {
 		}
 	}
 	
-	
 	public void ifUserDeleteC(Connection conn, PreparedStatement stmt, ResultSet rs) throws Exception {
 
 		try {
 
-			log.debug("USER 해군 병 삭제  start :	");
+			log.error("USER 해군 병 삭제  start :	");
 
-			// log.debug(selectSql);
 			stmt = conn.prepareStatement("DELETE FROM tbl_user_if_n WHERE MDCD ='C' AND RANK_NM LIKE '%병%'");
 
 			stmt.executeUpdate();
 
 			conn.commit();
 			
-			log.debug("USER 해군 병 삭제  end :	");
+			log.error("USER 해군 병 삭제  end :	");
 			
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 
 	}
-	
-	
-	
 
 	public void ifTableToTable(
 									Connection conn,	
@@ -231,13 +214,11 @@ public class SfrScheduler extends QuartzJobBean {
 									String mildsc,
 									String thisDay) throws Exception{
 		
-		
 		try{
 			
-			log.debug("USER 인터페이스 테이블 확인 (B=육군, C=해군, D=공군) :	"+mildsc);
+			log.error("USER 인터페이스 테이블 확인 (B=육군, C=해군, D=공군) :	"+mildsc);
 			
-			//log.debug(selectSql);
-			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_IF_N WHERE MDCD=? AND RGST_DATE=?");
+			stmt = conn.prepareStatement("SELECT COUNT(*) FROM tbl_user_if_n WHERE MDCD=? AND RGST_DATE=?");
 			
 			stmt.setString(1, mildsc);
 			stmt.setString(2, thisDay);
@@ -247,8 +228,7 @@ public class SfrScheduler extends QuartzJobBean {
 			int ifCnt = rs.getInt(1);
 			if(ifCnt>0){
 				
-				log.debug("USER 테이블 DELETE :	"+mildsc);
-				//log.debug(deleteSql);
+				log.error("USER 테이블 DELETE :	"+mildsc);
 
 				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_N WHERE MDCD=?");
 				stmt.setString(1, mildsc);
@@ -258,7 +238,7 @@ public class SfrScheduler extends QuartzJobBean {
 				int uCnt = (uTot/5000)+1;
 				
 				for(int i=0; i<uCnt; i++ ){
-					//log.debug("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + uTot);
+					log.error("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + uTot);
 					stmt = conn.prepareStatement("DELETE FROM TBL_USER_N WHERE MDCD=? LIMIT 5000");
 					
 					stmt.setString(1, mildsc);
@@ -266,9 +246,7 @@ public class SfrScheduler extends QuartzJobBean {
 				}	
 				// USER 테이블 DELETE 종료
 				
-				
-				log.debug("USER 테이블 INSERT :	"+mildsc);
-				//log.debug(insertSql);
+				log.error("USER 테이블 INSERT :	"+mildsc);
 				
 				String queryString ="INSERT INTO TBL_USER_N  (  " + 
 									"  SEQ, RGST_DATE, MDCD, ID, ECRYPTPW " + 
@@ -279,12 +257,12 @@ public class SfrScheduler extends QuartzJobBean {
 									"  SEQ, RGST_DATE, MDCD, ID, ECRYPTPW " + 
 									", FULNM, DEPT_CD, SRVNO, RSPSBLT_BIZNES_NM, RANK_NM " + 
 									", RSPONM, EMAIL, TELNO, MPNO, OPNPBL_YN, USER_EXSTNC_EXNEX " + 
-									"FROM TBL_USER_IF_N " +
+									"FROM tbl_user_if_n " +
 									"WHERE MDCD=? AND RGST_DATE=? " + 
 									"AND ROWNUM > ? AND ROWNUM < ? ";
 				
 				for(int i=0; i < ifCnt; i+=5000) {
-					//log.debug("USER 테이블 INSERT  분할중 :	"+ (i+1) + "~" + (i+5000) + "/" + ifCnt);
+					log.error("USER 테이블 INSERT  분할중 :	"+ (i+1) + "~" + (i+5000) + "/" + ifCnt);
 					
 					stmt = conn.prepareStatement(queryString);
 					
@@ -298,9 +276,9 @@ public class SfrScheduler extends QuartzJobBean {
 					
 				
 				/* 인터페이스 삭제 주석
-				log.debug("USER 인터페이스 테이블 DELETE :	"+mildsc);
+				log.error("USER 인터페이스 테이블 DELETE :	"+mildsc);
 
-				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_IF_N WHERE MDCD=?");
+				stmt = conn.prepareStatement("SELECT COUNT(*) FROM tbl_user_if_n WHERE MDCD=?");
 				stmt.setString(1, mildsc);
 				rs = stmt.executeQuery();
 				rs.next();
@@ -308,8 +286,8 @@ public class SfrScheduler extends QuartzJobBean {
 				int iCnt = (iTot/5000)+1;
 
 				for(int i=0; i<iCnt; i++ ){
-					log.debug("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
-					stmt = conn.prepareStatement("DELETE FROM TBL_USER_IF_N WHERE MDCD=? LIMIT 5000");
+					log.error("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
+					stmt = conn.prepareStatement("DELETE FROM tbl_user_if_n WHERE MDCD=? LIMIT 5000");
 					stmt.setString(1, mildsc);
 					stmt.executeUpdate();	
 				}	
@@ -317,16 +295,13 @@ public class SfrScheduler extends QuartzJobBean {
 				*/
 				
 			}else{
-				log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				log.debug(thisDay+"	   USER  인터페이스 테이블 데이터 없음	:	"+mildsc);
+				log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				log.error(thisDay+"	   USER  인터페이스 테이블 데이터 없음	:	"+mildsc);
 				throw new Exception();
 			}
 			
+			log.error("DEPT 인터페이스 테이블 확인 (B=육군, C=해군, D=공군) :	"+mildsc);
 			
-			
-			log.debug("DEPT 인터페이스 테이블 확인 (B=육군, C=해군, D=공군) :	"+mildsc);
-			
-			//log.debug(selectSql);
 			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_IF_N WHERE MDCD=? AND RGST_DATE=?");
 			
 			stmt.setString(1, mildsc);
@@ -338,8 +313,7 @@ public class SfrScheduler extends QuartzJobBean {
 			if(difCnt>0){
 				
 				
-				log.debug("DEPT 테이블 DELETE :	"+mildsc);
-				//log.debug(deleteSql);
+				log.error("DEPT 테이블 DELETE :	"+mildsc);
 
 				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_N WHERE MDCD=?");
 				stmt.setString(1, mildsc);
@@ -349,7 +323,7 @@ public class SfrScheduler extends QuartzJobBean {
 				int dCnt = (dTot/5000)+1;
 
 				for(int i=0; i<dCnt; i++ ){
-					//log.debug("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + dTot);
+					log.error("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + dTot);
 					stmt = conn.prepareStatement("DELETE FROM TBL_DEPT_N WHERE MDCD=? LIMIT 5000");
 					
 					stmt.setString(1, mildsc);
@@ -357,8 +331,7 @@ public class SfrScheduler extends QuartzJobBean {
 				}	
 				
 				
-				log.debug("DEPT 테이블 INSERT :	"+mildsc);
-				//log.debug(insertSql);
+				log.error("DEPT 테이블 INSERT :	"+mildsc);
 				
 				String queryString ="INSERT INTO TBL_DEPT_N  (  " + 
 									"  SEQ, RGST_DATE, MDCD, DEPT_CD " + 
@@ -378,10 +351,9 @@ public class SfrScheduler extends QuartzJobBean {
 									"AND ROWNUM > ? AND ROWNUM < ? " ;
 					
 				for(int i=0; i < difCnt; i+=5000) {
-					//log.debug("DEPT 테이블 INSERT  분할중 :	"+ (i+1) + "~" + (i+5000) + "/" + difCnt);
+					log.error("DEPT 테이블 INSERT  분할중 :	"+ (i+1) + "~" + (i+5000) + "/" + difCnt);
 
 					stmt = conn.prepareStatement(queryString);
-					
 					
 					stmt.setString(1, mildsc);
 					stmt.setString(2, thisDay);
@@ -391,9 +363,8 @@ public class SfrScheduler extends QuartzJobBean {
 				}
 				conn.commit();
 				
-				
 				/* 인터페이스 삭제 주석
-				log.debug("DEPT 인터페이스 테이블 DELETE :	"+mildsc);
+				log.error("DEPT 인터페이스 테이블 DELETE :	"+mildsc);
 
 				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_IF_N WHERE MDCD=?");
 				stmt.setString(1, mildsc);
@@ -403,7 +374,7 @@ public class SfrScheduler extends QuartzJobBean {
 				int iCnt = (iTot/5000)+1;
 
 				for(int i=0; i<iCnt; i++ ){
-					log.debug("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
+					log.error("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
 					stmt = conn.prepareStatement("DELETE FROM TBL_DEPT_IF_N WHERE MDCD=? LIMIT 5000");
 					stmt.setString(1, mildsc);
 					stmt.executeUpdate();		
@@ -412,25 +383,21 @@ public class SfrScheduler extends QuartzJobBean {
 				*/
 				
 			}else{
-				log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				log.debug(thisDay+"	   DEPT  인터페이스 테이블 데이터 없음	:	"+mildsc);
+				log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				log.error(thisDay+"	   DEPT  인터페이스 테이블 데이터 없음	:	"+mildsc);
 				throw new Exception();
 			}
 						
 			
 		}catch(Exception e){
 			conn.rollback();
-			log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			log.debug(thisDay+"	   Exception	:	"+mildsc);
+			log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			log.error(thisDay+"	   Exception	:	"+mildsc);
 			
 			e.printStackTrace();
-			log.debug(e.getMessage());
+			log.error(e.getMessage());
 		}
 	}
-	
-	
-	
-
 	
 	/* 국방부 테이블 IF 테이블 따로 처리*/
 	public void ifATableToTable(
@@ -440,51 +407,41 @@ public class SfrScheduler extends QuartzJobBean {
 									String mildsc,
 									String thisDay) throws Exception{
 		
-		
 		try{
 			
-			log.debug("USER 인터페이스 테이블 확인 (A=국방부) :	"+mildsc);
+			log.error("USER 인터페이스 테이블 확인 (A=국방부) :	"+mildsc);
 			
-			stmt = conn.prepareStatement("update tbl_dept_a_if_n set seq = '999999' where seq is null");
+			stmt = conn.prepareStatement("update TBL_DEPT_A_IF_N set seq = '999999' where seq is null");
 			stmt.executeUpdate();	
 
 			conn.commit();
 			
-			stmt = conn.prepareStatement("update tbl_user_a_if_n set seq = '999999' where seq is null");
+			stmt = conn.prepareStatement("update TBL_USER_A_IF_N set seq = '999999' where seq is null");
 			stmt.executeUpdate();	
 
 			conn.commit();
 			
-			//log.debug(selectSql);
 			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_A_IF_N");
 			
-			//stmt.setString(1, mildsc);
-			//stmt.setString(2, thisDay);
 			rs = stmt.executeQuery();
 			rs.next();
 			
 			if(rs.getInt(1)>0){
 				
-				log.debug("USER 테이블 DELETE  (A=국방부) :	"+mildsc);
-				//log.debug(deleteSql);
+				log.error("USER 테이블 DELETE  (A=국방부) :	"+mildsc);
 				
 				stmt = conn.prepareStatement("DELETE FROM TBL_USER_N WHERE MDCD=?");
 				
 				stmt.setString(1, mildsc);
 				stmt.executeUpdate();	
 				
-				
-				log.debug("USER 테이블 INSERT  (A=국방부) :	"+mildsc);
-				//log.debug(insertSql);
-				
+				log.error("USER 테이블 INSERT  (A=국방부) :	"+mildsc);
+
 				stmt = conn.prepareStatement("INSERT INTO TBL_USER_N "
+						+ " (SEQ, RGST_DATE, MDCD, ID, ECRYPTPW, FULNM, DEPT_CD, SRVNO,"
+						+ " RSPSBLT_BIZNES_NM, RANK_NM, RSPONM, TELNO, MPNO, EMAIL, OPNPBL_YN, USER_EXSTNC_EXNEX) "
 						+ " (SELECT SEQ, ?, ?, ID, ECRYPTPW, FULNM, DEPT_CD, SRVNO	"
-						+ ", RSPSBLT_BIZNES_NM " 
-						+ ", RANK_NM "
-						+ ", RSPONM " 
-						+ ", TELNO, MPNO "
-						+ ", EMAIL "
-						+ ", OPNPBL_YN, USER_EXSTNC_EXNEX "
+						+ ", RSPSBLT_BIZNES_NM, RANK_NM, RSPONM, TELNO, MPNO, EMAIL, OPNPBL_YN, USER_EXSTNC_EXNEX "
 						+ " FROM TBL_USER_A_IF_N) ");
 				
 				stmt.setString(1, thisDay);
@@ -493,9 +450,8 @@ public class SfrScheduler extends QuartzJobBean {
 				stmt.executeUpdate();
 				conn.commit();			
 
-				
 				/* 인터페이스 삭제 주석
-				log.debug("USER 인터페이스 테이블 DELETE (A=국방부) :	"+mildsc);
+				log.error("USER 인터페이스 테이블 DELETE (A=국방부) :	"+mildsc);
 
 				stmt = conn.prepareStatement("DELETE FROM TBL_USER_A_IF_N");
 				stmt.executeUpdate();	
@@ -503,36 +459,27 @@ public class SfrScheduler extends QuartzJobBean {
 				*/
 				
 			}else{
-				log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				log.debug(thisDay+"	   USER  인터페이스 테이블 데이터 없음	:	"+mildsc);
+				log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				log.error(thisDay+"	   USER  인터페이스 테이블 데이터 없음	:	"+mildsc);
 			}
 			
+			log.error("DEPT 인터페이스 테이블 확인 (A=국방부) :	"+mildsc);
 			
-			
-			log.debug("DEPT 인터페이스 테이블 확인 (A=국방부) :	"+mildsc);
-			
-			//log.debug(selectSql);
 			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_A_IF_N");
 			
-			//stmt.setString(1, mildsc);
-			//stmt.setString(2, thisDay);
 			rs = stmt.executeQuery();
 			rs.next();
 			
 			if(rs.getInt(1)>0){
 				
-				
-				log.debug("DEPT 테이블 DELETE  (A=국방부) :	"+mildsc);
-				//log.debug(deleteSql);
+				log.error("DEPT 테이블 DELETE  (A=국방부) :	"+mildsc);
 				
 				stmt = conn.prepareStatement("DELETE FROM TBL_DEPT_N WHERE MDCD=?");
 				
 				stmt.setString(1, mildsc);
 				stmt.executeUpdate();	
 				
-				
-				log.debug("DEPT 테이블 INSERT  (A=국방부) :	"+mildsc);
-				//log.debug(insertSql);
+				log.error("DEPT 테이블 INSERT  (A=국방부) :	"+mildsc);
 				
 				stmt = conn.prepareStatement("INSERT INTO TBL_DEPT_N "
 						+ " (SELECT SEQ, ?, ?, DEPT_CD, DEPT_NM, "
@@ -546,9 +493,8 @@ public class SfrScheduler extends QuartzJobBean {
 				stmt.executeUpdate();	
 				conn.commit();		
 
-				
 				/* 인터페이스 삭제 주석
-				log.debug("DEPT 인터페이스 테이블 DELETE (A=국방부) :	"+mildsc);
+				log.error("DEPT 인터페이스 테이블 DELETE (A=국방부) :	"+mildsc);
 
 				stmt = conn.prepareStatement("DELETE FROM TBL_DEPT_A_IF_N");
 				stmt.executeUpdate();	
@@ -556,40 +502,31 @@ public class SfrScheduler extends QuartzJobBean {
 				*/
 				
 			}else{
-				log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-				log.debug(thisDay+"	   DEPT  인터페이스 테이블 데이터 없음	:	"+mildsc);
+				log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				log.error(thisDay+"	   DEPT  인터페이스 테이블 데이터 없음	:	"+mildsc);
 			}
-			
-			
-			
 			
 		}catch(Exception e){
 			conn.rollback();
-			log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			log.debug(thisDay+"	   Exception	:	"+mildsc);
+			log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			log.error(thisDay+"	   Exception	:	"+mildsc);
 			
 			e.printStackTrace();
-			log.debug(e.getMessage());
+			log.error(e.getMessage());
 		}
 	}
-	
-	
-	
-	
 	
 	public void tableBackup(Connection conn,	
 									PreparedStatement stmt,	
 									ResultSet rs,
 									String thisDay) throws Exception {
-		
 		try{
 			
 			int bTot = 0;
 			int bCnt = 0;
 
-
-			log.debug("USER 백업 테이블 삭제 ");
-			
+			log.error("TBL_USER_BACKUP_N 백업 테이블 삭제 ");
+			// TBL_USER_BACKUP_N 전체 데이타 삭제
 			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_BACKUP_N");
 			rs = stmt.executeQuery();
 			rs.next();
@@ -597,14 +534,13 @@ public class SfrScheduler extends QuartzJobBean {
 			bCnt = (bTot/5000)+1;
 			
 			for(int i=0; i<bCnt; i++ ){
-				//log.debug("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + bTot);
+				log.error("TBL_USER_BACKUP_N 테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + bTot);
 				stmt = conn.prepareStatement("DELETE FROM TBL_USER_BACKUP_N LIMIT 5000");
 				stmt.executeUpdate();	
 			}
 			//USER 백업 테이블 삭제 종료
 			
-			
-			log.debug("USER 테이블 백업 ");
+			log.error("USER 테이블 백업 ");
 			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_N");
 			rs = stmt.executeQuery();
 			rs.next();
@@ -612,7 +548,7 @@ public class SfrScheduler extends QuartzJobBean {
 
 			for(int i=0; i < bTot; i+=5000) {
 
-				//log.debug("테이블 ROW 입력중 :	"+ (i+1) + "~" + (i+5000) + "/" + bTot);
+				log.error("테이블 ROW 입력중 :	"+ (i+1) + "~" + (i+5000) + "/" + bTot);
 				stmt = conn.prepareStatement("INSERT INTO TBL_USER_BACKUP_N SELECT * FROM TBL_USER_N"
 											+" WHERE ROWNUM > ? AND ROWNUM < ? ");
 				
@@ -623,9 +559,7 @@ public class SfrScheduler extends QuartzJobBean {
 			//USER 테이블 백업 종료
 			conn.commit();
 			
-			
-			
-			log.debug("DEPT 백업 테이블 삭제 ");
+			log.error("DEPT 백업 테이블 삭제 ");
 			
 			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_BACKUP_N");
 			rs = stmt.executeQuery();
@@ -634,14 +568,13 @@ public class SfrScheduler extends QuartzJobBean {
 			bCnt = (bTot/5000)+1;
 
 			for(int i=0; i<bCnt; i++ ){
-				//log.debug("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + bTot);
+				log.error("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + bTot);
 				stmt = conn.prepareStatement("DELETE FROM TBL_DEPT_BACKUP_N LIMIT 5000");
 				stmt.executeUpdate();	
 			}
 			//DEPT 백업 테이블 삭제 종료
-
 			
-			log.debug("DEPT 테이블 백업 ");
+			log.error("DEPT 테이블 백업 ");
 			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_N");
 			rs = stmt.executeQuery();
 			rs.next();
@@ -649,7 +582,7 @@ public class SfrScheduler extends QuartzJobBean {
 
 			for(int i=0; i < bTot; i+=5000) {
 
-				//log.debug("테이블 ROW 입력중 :	"+ (i+1) + "~" + (i+5000) + "/" + bTot);
+				log.error("테이블 ROW 입력중 :	"+ (i+1) + "~" + (i+5000) + "/" + bTot);
 				stmt = conn.prepareStatement("INSERT INTO TBL_DEPT_BACKUP_N SELECT * FROM TBL_DEPT_N"
 											+" WHERE ROWNUM > ? AND ROWNUM < ? ");
 				
@@ -662,16 +595,14 @@ public class SfrScheduler extends QuartzJobBean {
 			
 		}catch(Exception e){
 			conn.rollback();
-			log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			log.debug(thisDay+"	 BACKUP Exception	");
+			log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			log.error(thisDay+"	 BACKUP Exception	");
 			
 			e.printStackTrace();
-			log.debug(e.getMessage());
+			log.error(e.getMessage());
 		}
 		
 	}
-	
-	
 	
 	/* 상위 부서코드 #으로 초기화*/
 	public void hrgnkSetting(
@@ -681,32 +612,26 @@ public class SfrScheduler extends QuartzJobBean {
 									String mildsc,
 									String deptCd) throws Exception{
 		
-		
 		try{
 			
-			log.debug("상위 부서코드 #으로 초기화  start			: "+ mildsc);
-			stmt = conn.prepareStatement("UPDATE tbl_dept_n SET HGRNK_DEPT_CD='#' WHERE MDCD=? and dept_cd=?");
+			log.error("상위 부서코드 #으로 초기화  start			: "+ mildsc);
+			stmt = conn.prepareStatement("UPDATE TBL_DEPT_N SET HGRNK_DEPT_CD='#' WHERE MDCD=? and dept_cd=?");
 			
 			stmt.setString(1, mildsc);
 			stmt.setString(2, deptCd);
 			
-			
 			stmt.executeUpdate();	
-			
-			
-			
 			
 			conn.commit();
 			
-			
-			log.debug("상위 부서코드 #으로 초기화  end			: "+ mildsc);
+			log.error("상위 부서코드 #으로 초기화  end			: "+ mildsc);
 		}catch(Exception e){
 			conn.rollback();
-			log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			log.debug("상위 부서코드 #으로 초기화 error");
+			log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			log.error("상위 부서코드 #으로 초기화 error");
 			
 			e.printStackTrace();
-			log.debug(e.getMessage());
+			log.error(e.getMessage());
 		}
 
 	}
@@ -718,33 +643,30 @@ public class SfrScheduler extends QuartzJobBean {
 			String mildsc,
 			String hgrnk_dept_cd) throws Exception{
 
-
 	try{
-	
-			log.debug("해군 6000000000 => 6000000001변경  start			: "+ mildsc);
-			stmt = conn.prepareStatement("UPDATE tbl_dept_n SET hgrnk_dept_cd ='6000000001' WHERE  MDCD=? AND hgrnk_dept_cd = ?");
+			log.error("해군 6000000000 => 6000000001변경  start			: "+ mildsc);
+			stmt = conn.prepareStatement("UPDATE TBL_DEPT_N SET hgrnk_dept_cd ='6000000001' WHERE  MDCD=? AND hgrnk_dept_cd = ?");
 			stmt.setString(1, mildsc);
 			stmt.setString(2, hgrnk_dept_cd);
 			
-			
 			stmt.executeUpdate();	
 	
-			stmt = conn.prepareStatement("UPDATE tbl_dept_n SET hgrnk_dept_cd = '6000000000' WHERE MDCD=? and dept_cd = '6000000001'");
+			stmt = conn.prepareStatement("UPDATE TBL_DEPT_N SET hgrnk_dept_cd = '6000000000' WHERE MDCD=? and dept_cd = '6000000001'");
 			stmt.setString(1, mildsc);
 			
 			stmt.executeUpdate();	
 			
 			conn.commit();
 			
-			log.debug("해군 6000000000 => 6000000001변경 end			: "+ mildsc);
+			log.error("해군 6000000000 => 6000000001변경 end			: "+ mildsc);
 			
 		}catch(Exception e){
 			conn.rollback();
-			log.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			log.debug("상위 부서코드 #으로 초기화 error");
+			log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			log.error("상위 부서코드 #으로 초기화 error");
 			
 			e.printStackTrace();
-			log.debug(e.getMessage());
+			log.error(e.getMessage());
 		}
 	
 	}
