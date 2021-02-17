@@ -693,7 +693,7 @@
 		SELECT SUM(c.cnt) FROM
 		(  
 			     SELECT COUNT(*) cnt
-				FROM TBL_QNABOARD  a JOIN tbl_user_n b ON a.reg_id = b.srvno 
+				FROM TBL_QNABOARD  a JOIN tbl_user_n b ON a.reg_id = b.id 
 				WHERE 1=1 
 	 	UNION ALL
 				SELECT COUNT(*) cnt
@@ -723,7 +723,7 @@
 								a.reg_mildsc,
 								c.whl_dept_nm
 							FROM
-								TBL_QNABOARD  a JOIN tbl_user_n b ON a.reg_id = b.srvno AND a.reg_mildsc = b.mdcd
+								TBL_QNABOARD  a JOIN tbl_user_n b ON a.reg_id = b.id AND a.reg_mildsc = b.mdcd
 								JOIN tbl_dept_n c ON b.dept_cd = c.dept_cd
 					 UNION 
 			        SELECT
