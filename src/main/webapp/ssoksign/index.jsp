@@ -5,9 +5,9 @@
 <%@ page import="com.ksign.access.wrapper.api.*"%>
 
 <%	
-	SSORspData rspData = null;
-	SSOService ssoService = SSOService.getInstance();
-	rspData = ssoService.ssoGetLoginData(request);
+// 	SSORspData rspData = null;
+// 	SSOService ssoService = SSOService.getInstance();
+// 	rspData = ssoService.ssoGetLoginData(request);
 %>
 <html>
 <head>
@@ -20,7 +20,7 @@
 	<script>
 	var id = "<%=session.getAttribute("uid")%>";
 		$(document).ready(function(){
-			if(id != ""){
+			if(id != "" && id != "null" && id != null){
 				$.ajax({   
 					url:"/intra/loginUAjax.do",
 					type:"post",
@@ -35,12 +35,13 @@
 							location.href = "/intra/main.do";
 						}else {
 							alert(data.msg);
+							location.href = "/intra/login.do";
 						}
 					}
 				}); 
 			}else{
 				//PKI
-				location.href = "/intra/main.do";
+				location.href = "/intra/login.do";
 			}
 			 
 		});

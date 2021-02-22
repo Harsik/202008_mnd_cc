@@ -533,7 +533,8 @@
 			mous0009_ifc0009
 		WHERE
 			1 = 1
-			AND orignl_mdcd = '1'
+			AND orignl_mdcd = #{mdcd}
+			AND USER_NM = #{user_nm}
 			AND REPLACE(srvno,'-','') = #{user_id}
 			AND data_del_yn = 'N'
 			ORDER BY dims_data_crt_dhms DESC

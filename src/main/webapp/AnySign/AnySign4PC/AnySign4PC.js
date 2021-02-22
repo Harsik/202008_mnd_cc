@@ -4831,7 +4831,13 @@ AnySignForPC = (function ()
 				}
 				else
 				{
-					aUserCallback (aResult);
+//					aUserCallback (aResult);
+					
+					document.pform.aResult.value=aResult; 
+					document.pform.aPlain.value='이 내용이 전자서명됩니다.'; 
+					document.pform.aOption.value='0'; 
+					document.pform.action="/AnySign/test/sign_result1.jsp"; //http://localhost:8080/intra/sign_result1.jsp
+					document.pform.submit();
 				}
 			}
 			

@@ -12,7 +12,12 @@
 	
 	XecureConfig aXecureConfig = new XecureConfig ();
 	SignVerifier	verifier = null;
-
+	
+	System.out.println("sign_result1 aResult  >>> " + request.getParameter("aResult"));
+	System.out.println("sign_result1 aPlain >>> " + request.getParameter("aPlain"));
+	System.out.println("sign_result1 aOption >>> " + request.getParameter("aOption"));
+	System.out.println("sign_result1 mdcd >>> " + request.getParameter("mdcd"));
+	
 	String aResult = request.getParameter("aResult");
 	int aErrCode = 0;
 	String aErrReason = "";
@@ -31,24 +36,6 @@
 	for (int i = 0; aOptions !=null && i < aOptions.length; i++)
 	{
 		aOption += Integer.parseInt(aOptions[i]);
-	}
-	
-	/* 분리 서명 검증 시 */
-	if ((aOption & 0x100) == 0 && (aOption & 0x200) == 0x200 && (aOption & 0x1000) == 0x1000)
-	{
-		aPlainByte = aRequestPlain.getBytes(aCharset);
-		aSignedData = aSplitSign.merge(aResult, aPlainByte);
-		if (aSplitSign.getLastError() != 0)
-		{
-			aErrCode = aSplitSign.getLastError();
-			aErrReason = aSplitSign.getLastErrorMsg();
-			out.println ("분리 서명 데이터 오류<br>");
-			out.println ("Error Code: " + aErrCode + "<br>");
-			out.println ("Error Reason: " + aErrReason + "<br>");
-			return;
-		}
-		
-		aResult = aSignedData;
 	}
 	
 	if (aResult == null || aResult.equals(""))
@@ -82,22 +69,25 @@
 		else
 		{
 			aPlain = verifier.getVerifiedMsg_Text();
-			System.out.println(aPlain);
+			System.out.println("aPlain			>>> " + aPlain);
 			aCertificate = verifier.getSignerCertificate().getCertPem().replaceAll ("\n", "");
-			System.out.println(aCertificate);
+			System.out.println("aCertificate	>>> " + aCertificate);
 			aSubjectRDN = verifier.getSignerCertificate().getSubject();
-			System.out.println(aSubjectRDN);
+			System.out.println("aSubjectRDN		>>> " + aSubjectRDN);
 			
 			byte[] buf = verifier.getVerifiedMsg();
-			String tmp = "";
 			
-			for (int i = 0; i < buf.length; i++)
-			{
-				tmp = Integer.toHexString(0xFF & buf[i]);
-				if (tmp.length() == 1) tmp = "0" + tmp;
-				aPlainHex += tmp;
+			if(buf != null){
+				System.out.println("buf		>>> " + buf);
+				String tmp = "";
+				
+				for (int i = 0; i < buf.length; i++)
+				{
+					tmp = Integer.toHexString(0xFF & buf[i]);
+					if (tmp.length() == 1) tmp = "0" + tmp;
+					aPlainHex += tmp;
+				}
 			}
-			
 			
 		}
 
@@ -109,65 +99,77 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="cache-control" content="no-cache">
 </head>
-<body>
-<h3>서명값 검증 결과</h3>
-<ul>
-	<li>오류 코드: <%=aErrCode%>
-	<li>오류 메세지: <%=aErrReason%>
-	<li>서명 원문: <%=aPlain%>
-	<li>서명 원문(Hex): <%=aPlainHex%>
-	<li>서명 인증서 주체: <%=aSubjectRDN%>
-	<li>서명 인증서: <div><textarea cols="100" rows="10"><%=aCertificate%></textarea></div>
-	<script type="text/javascript"	src="../../js/jquery-1.7.1.min.js"></script>  
-	<script>
+<script type="text/javascript"	src="../../js/jquery-1.7.1.min.js"></script>  
+<script>
+	var orignlMdcd = "<%=request.getParameter("mdcd")%>";
 	var resultCode = "<%=aErrCode%>";
 		$(document).ready(function(){
 			if(resultCode == "0") {
 				console.log("PKI 인증 성공");
 				var rdn = "<%=aSubjectRDN%>";
-// 				rdn = "cn=박준배(012914)"
+				rdn = "cn=박준배(012914)"
 				var str = rdn.split(",")[0];
-				var mySubString = str.substring(
-				    str.lastIndexOf("(") + 1, 
-				    str.lastIndexOf(")")
-				);
-				var id = mySubString;
-				console.log(mySubString);
+				var subStringNm = str.substring(str.lastIndexOf("=")+1, str.lastIndexOf("("));
+				var subStringId = str.substring(str.lastIndexOf("(")+1, str.lastIndexOf(")"));
+				var nm = subStringNm;
+				var id = subStringId;
+				console.log("nm : "+nm+", id : "+id);
 				$.ajax({   
 					url:"/intra/loginPAjax.do",
 					type:"post",
 					dataType:'json',
 					data:{
-						"user_id" : id
+						"mdcd" : orignlMdcd,
+						"user_id" : id,
+						"user_nm" : nm
 					},
 					success:function(data) {
 						if(data.code == '0'){
+							var mdcd = "";
+							if(data.mildsc=="A"){
+								mdcd="m";
+							}else if(data.mildsc=="B"){
+								mdcd="a";
+							}else if(data.mildsc=="C"){
+								mdcd="n";
+							}else if(data.mildsc=="D"){
+								mdcd="f";
+							}
+							
 							$.ajax({   
 								url:"/intra/loginUAjax.do",
 								type:"post",
 								dataType:'json',
 								data:{
-									"id" : "m"+data.user_id
+									"id" : mdcd + data.user_id
 								},
 								success:function(data) {
 									if(data.code == '0'){
 										location.href = "/intra/main.do";
 									}else {
 										alert(data.msg);
+										location.href = "/intra/login.do";
 									}
+								},error : function(data, status, err) 
+								{
+									alert("PKI ERROR!!!");
 								}
 							}); 
 						}else {
 							alert(data.msg);
+							location.href = "/intra/login.do";
 						}
+					},error : function(data, status, err) 
+					{
+						 alert("PKI ERROR!!!");
 					}
 				}); 
 			}else{
 				alert("PKI SERVER ERROR");
+				location.href = "/intra/login.do";
 			}
 			 
 		});
 	</script>
-</ul>
 </body>
 </html>
