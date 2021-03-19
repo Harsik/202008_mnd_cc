@@ -274,7 +274,7 @@ function ctiInit()
 		USERID = $("#CTIID").val();
 		EXT = $("#EXTNO").val();
 		// 20.12.01 관리자/교환원 구분
-		if(USERID == "2019"||USERID == "2002"||USERID == "1020"||USERID == "1050"){
+		if(USERID == "2019"||USERID == "2002"||USERID == "1040"||USERID == "1041"){
 			window.sessionStorage.setItem("ADMIN_YN","Y");
 		}else{
 			window.sessionStorage.setItem("ADMIN_YN","N");
