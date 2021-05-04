@@ -13,10 +13,10 @@
 	XecureConfig aXecureConfig = new XecureConfig ();
 	SignVerifier	verifier = null;
 	
-	System.out.println("sign_result1 aResult  >>> " + request.getParameter("aResult"));
-	System.out.println("sign_result1 aPlain >>> " + request.getParameter("aPlain"));
-	System.out.println("sign_result1 aOption >>> " + request.getParameter("aOption"));
-	System.out.println("sign_result1 mdcd >>> " + request.getParameter("mdcd"));
+// 	System.out.println("sign_result1 aResult  >>> " + request.getParameter("aResult"));
+// 	System.out.println("sign_result1 aPlain >>> " + request.getParameter("aPlain"));
+// 	System.out.println("sign_result1 aOption >>> " + request.getParameter("aOption"));
+// 	System.out.println("sign_result1 mdcd >>> " + request.getParameter("mdcd"));
 	
 	String aResult = request.getParameter("aResult");
 	int aErrCode = 0;
@@ -69,16 +69,16 @@
 		else
 		{
 			aPlain = verifier.getVerifiedMsg_Text();
-			System.out.println("aPlain			>>> " + aPlain);
+// 			System.out.println("aPlain			>>> " + aPlain);
 			aCertificate = verifier.getSignerCertificate().getCertPem().replaceAll ("\n", "");
-			System.out.println("aCertificate	>>> " + aCertificate);
+// 			System.out.println("aCertificate	>>> " + aCertificate);
 			aSubjectRDN = verifier.getSignerCertificate().getSubject();
-			System.out.println("aSubjectRDN		>>> " + aSubjectRDN);
+// 			System.out.println("aSubjectRDN		>>> " + aSubjectRDN);
 			
 			byte[] buf = verifier.getVerifiedMsg();
 			
 			if(buf != null){
-				System.out.println("buf		>>> " + buf);
+// 				System.out.println("buf		>>> " + buf);
 				String tmp = "";
 				
 				for (int i = 0; i < buf.length; i++)
@@ -107,7 +107,8 @@
 			if(resultCode == "0") {
 				console.log("PKI 인증 성공");
 				var rdn = "<%=aSubjectRDN%>";
-				rdn = "cn=박준배(012914)"
+// 				rdn = "cn=박준배(012914)";
+				rdn = "cn=이상현(12510953)";
 				var str = rdn.split(",")[0];
 				var subStringNm = str.substring(str.lastIndexOf("=")+1, str.lastIndexOf("("));
 				var subStringId = str.substring(str.lastIndexOf("(")+1, str.lastIndexOf(")"));
@@ -124,48 +125,23 @@
 						"user_nm" : nm
 					},
 					success:function(data) {
+						
 						if(data.code == '0'){
-							var mdcd = "";
-							if(data.mildsc=="A"){
-								mdcd="m";
-							}else if(data.mildsc=="B"){
-								mdcd="a";
-							}else if(data.mildsc=="C"){
-								mdcd="n";
-							}else if(data.mildsc=="D"){
-								mdcd="f";
-							}
-							
-							$.ajax({   
-								url:"/intra/loginUAjax.do",
-								type:"post",
-								dataType:'json',
-								data:{
-									"id" : mdcd + data.user_id
-								},
-								success:function(data) {
-									if(data.code == '0'){
-										location.href = "/intra/main.do";
-									}else {
-										alert(data.msg);
-										location.href = "/intra/login.do";
-									}
-								},error : function(data, status, err) 
-								{
-									alert("PKI ERROR!!!");
-								}
-							}); 
+							location.href = "/intra/main.do";
 						}else {
-							alert(data.msg);
+							//alert(data.msg);
+							alert("인증서 정보가 올바르지 않습니다.\n포탈에서 로그인 해주세요.");
 							location.href = "/intra/login.do";
 						}
+						
 					},error : function(data, status, err) 
 					{
-						 alert("PKI ERROR!!!");
+						alert("PKI LOGIN ERROR!!!");
+						location.href = "/intra/login.do";
 					}
 				}); 
 			}else{
-				alert("PKI SERVER ERROR");
+				alert("인증서 정보가 올바르지 않습니다.\n포탈에서 로그인 해주세요.");
 				location.href = "/intra/login.do";
 			}
 			 

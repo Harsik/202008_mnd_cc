@@ -5,9 +5,9 @@
 <%@ page import="com.ksign.access.wrapper.api.*"%>
 
 <%	
-// 	SSORspData rspData = null;
-// 	SSOService ssoService = SSOService.getInstance();
-// 	rspData = ssoService.ssoGetLoginData(request);
+	SSORspData rspData = null;
+	SSOService ssoService = SSOService.getInstance();
+	rspData = ssoService.ssoGetLoginData(request);
 %>
 <html>
 <head>

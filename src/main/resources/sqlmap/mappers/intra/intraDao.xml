@@ -482,7 +482,7 @@
 		/* intraLoginU */
 		SELECT * FROM (
 		SELECT
-			DECODE(orignl_mdcd,'1','A','5','B','6','C','7','D') AS mildsc,
+			DECODE( SUBSTR(email_addr,LOCATE('@',email_addr)+1), 'mnd.mil', 'A',  'army.mil', 'B',  'navy.mil', 'C',  'af.mil', 'D', '다른값') AS mildsc,
 			user_id as id,
 			user_nm AS nm,
 			orgnz_cd AS dept_cd,
@@ -511,12 +511,12 @@
 		) WHERE ROWNUM =1
 	</select>
 	
-	<!-- 통합SSO -->
+	<!-- PKI -->
 	<select id="intraLoginP" parameterType="map" resultType="egovMap">
 		/* intraLoginP */
 		SELECT * FROM (
 		SELECT
-			DECODE(orignl_mdcd,'1','A','5','B','6','C','7','D') AS mildsc,
+			DECODE( SUBSTR(email_addr,LOCATE('@',email_addr)+1), 'mnd.mil', 'A',  'army.mil', 'B',  'navy.mil', 'C',  'af.mil', 'D', '다른값') AS mildsc,
 			user_id as id,
 			user_nm AS nm,
 			orgnz_cd AS dept_cd,
@@ -535,7 +535,7 @@
 			1 = 1
 			AND orignl_mdcd = #{mdcd}
 			AND USER_NM = #{user_nm}
-			AND REPLACE(srvno,'-','') = #{user_id}
+			AND (REPLACE(srvno,'-','') = #{user_id})
 			AND data_del_yn = 'N'
 			ORDER BY dims_data_crt_dhms DESC
 		) WHERE ROWNUM =1

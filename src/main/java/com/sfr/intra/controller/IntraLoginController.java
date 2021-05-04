@@ -91,8 +91,12 @@ public class IntraLoginController {
 		//새로만들 쿼리
 		Map loginMap = intraService.intraLoginU(paramMap);
 		Map rtnMap = new HashMap();
-
+		
 		if(loginMap != null) {
+			// id, 군별 셋팅
+			loginId = loginMap.get("id").toString();
+			mildsc = loginMap.get("mildsc").toString();
+			
 			SessionCheck.getInstance().doLogout(mildsc+loginId);
 			
 			if((!SessionCheck.getInstance().isLogin(mildsc+loginId))){
@@ -102,7 +106,7 @@ public class IntraLoginController {
 				
 				session.setAttribute("user_id", loginId);
 				session.setAttribute("user_name", loginMap.get("nm"));
-				session.setAttribute("mildsc", loginMap.get("mildsc"));
+				session.setAttribute("mildsc", mildsc);
 				session.setAttribute("deptCd", loginMap.get("deptCd"));
 				session.setAttribute("deptNm", loginMap.get("deptNm"));
 				session.setAttribute("FullDeptNm", loginMap.get("FullDeptNm"));
@@ -125,7 +129,7 @@ public class IntraLoginController {
 				SessionCheck.getInstance().doLogin(mildsc+loginId, mildsc+loginId, request.getRemoteAddr(), session);
 				
 				Map logMap = new HashMap();
-				logMap.put("mildsc", loginMap.get("mildsc"));
+				logMap.put("mildsc", mildsc);
 				logMap.put("id", loginId);
 				logMap.put("connCd", "4");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
 				logMap.put("userCd", "2"); 						// 0=슈퍼관리자, 1=교환원, 2=일반사용자, 3=일반관리자
@@ -147,10 +151,51 @@ public class IntraLoginController {
 		
 		Map loginMap = intraService.intraLoginP(paramMap);
 		Map rtnMap = new HashMap();
+
 		if(loginMap != null) {
-			rtnMap.put("code","0");
-			rtnMap.put("user_id", loginMap.get("id"));
-			rtnMap.put("mildsc", loginMap.get("mildsc"));
+			String mildsc = loginMap.get("mildsc").toString();
+			String loginId = loginMap.get("id").toString();
+			
+			SessionCheck.getInstance().doLogout(mildsc+loginId);
+			
+			if((!SessionCheck.getInstance().isLogin(mildsc+loginId))){
+				SessionCheck.getInstance().doLogout(mildsc+loginId);
+				
+				HttpSession session = request.getSession();
+				
+				session.setAttribute("user_id", loginId);
+				session.setAttribute("user_name", loginMap.get("nm"));
+				session.setAttribute("mildsc", mildsc);
+				session.setAttribute("deptCd", loginMap.get("deptCd"));
+				session.setAttribute("deptNm", loginMap.get("deptNm"));
+				session.setAttribute("FullDeptNm", loginMap.get("FullDeptNm"));
+				session.setAttribute("milNo", loginMap.get("milNo"));  
+				session.setAttribute("rspsbltBiznes", loginMap.get("rspsbltBiznes"));
+				session.setAttribute("rank", loginMap.get("rank"));
+				session.setAttribute("rspofcNm", loginMap.get("rspofcNm"));
+				
+				session.setAttribute("telno", loginMap.get("telno"));
+				session.setAttribute("mpno", loginMap.get("mpno"));
+				session.setAttribute("email", loginMap.get("email"));
+				session.setAttribute("opnpblYn", loginMap.get("opnpblYn"));
+				session.setAttribute("state", loginMap.get("state"));
+				
+				session.setAttribute("userCd", "2");  //userCd 0 : 슈퍼관리자   1: 교환   2: 일반사용자   3: 일반관리자
+				
+				rtnMap.put("code","0");
+				rtnMap.put("user_id", loginId);
+				
+				SessionCheck.getInstance().doLogin(mildsc+loginId, mildsc+loginId, request.getRemoteAddr(), session);
+				
+				Map logMap = new HashMap();
+				logMap.put("mildsc", mildsc);
+				logMap.put("id", loginId);
+				logMap.put("connCd", "3");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
+				logMap.put("userCd", "2"); 						// 0=슈퍼관리자, 1=교환원, 2=일반사용자, 3=일반관리자
+				logMap.put("regIp", request.getRemoteAddr());
+				adminService.connlog(logMap);
+			}
+			
 		}else {
 			rtnMap.put("code", "-1");
 			rtnMap.put("msg", "등록되지 않은 아이디입니다. 아이디를 다시 확인하세요.");
