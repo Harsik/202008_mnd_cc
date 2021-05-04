@@ -288,7 +288,7 @@ $(document).on("click", "#writePopup", function() {
 			var x = (window.screen.width / 2) - (880 / 2);
 			var y = (window.screen.height / 2) - (700 / 2);
 			
-			window.open('./detailQnaBoard.do?mynm='+mynm+'&replyseq='+seq+'&seq='+replyseq+'', 'qna'
+			window.open('./detailQnaBoard.do?mynm='+encodeURI(mynm)+'&replyseq='+seq+'&seq='+replyseq+'', 'qna'
 						, "location=no,scrollbars=no,resizable=no,top="+y+",left="+x+
 						",width=880,height=700, screenX="+x+", screenY="+y+"");
  			 			
