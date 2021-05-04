@@ -351,7 +351,7 @@ function AnySignInitialize ()
 	// Default CA list.
 	var aCAList	= "Root CA,XecurePKI51 ca,cn=CA131000010,pki50ca,pki70_test_CA";
 	aCAList		+= ",CA131000002Test,CA131000002,CA131000010,Softforum CA 3.0";
-	aCAList		+= ",SoftforumCA,yessignCA-OCSP,signGATE CA,signGATE CA4,SignKorea CA,SignKorea CA2,CrossCertCA,CrossCertCA2";
+	aCAList		+= ",SoftforumCA,yessignCA-OCSP,signGATE CA,signGATE CA4,signGATE CA5,SignKorea CA,SignKorea CA2,CrossCertCA,CrossCertCA2";
 	aCAList		+= ",CrossCertCA-Test2,3280TestCAServer,NCASignCA,TradeSignCA,TradeSignCA2,yessignCA-TEST";
 	aCAList		+= ",lotto test CA,NCATESTSign,SignGateFTCA,SignKorea Test CA,SignKorea Test CA2,TestTradeSignCA";
 	aCAList		+= ",Softforum Demo CA,mma ca,병무청 인증기관,MND CA,signGATE FTCA02";
