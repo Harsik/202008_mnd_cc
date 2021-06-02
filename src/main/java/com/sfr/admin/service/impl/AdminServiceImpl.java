@@ -99,6 +99,11 @@ public class AdminServiceImpl extends EgovAbstractServiceImpl implements AdminSe
 	public void connlog(Map paramMap) throws Exception {
 		adminDao.connLog(paramMap);
 	}
+	
+	@Override
+	public void connErrlog(Map paramMap) throws Exception {
+		adminDao.connErrLog(paramMap);
+	}
 		
 	@Override
 	public void connMngr(Map paramMap) throws Exception {

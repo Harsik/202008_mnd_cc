@@ -711,6 +711,26 @@
 		)
 	</insert>
 	
+	<!-- 접속 실패 로그  -->
+	<insert id="connErrLog" parameterType="map" >
+		INSERT INTO	tbl_cnntn_err_log_n ( 
+				  MDCD
+				, id
+				, LOGIN_METHD_CD
+				, user_cd
+				, RGST_DTTM
+				, RGST_IP 
+		)
+		VALUES	( 
+				#{mildsc},
+				#{id},
+				#{connCd},
+				#{userCd},
+				SYSDATETIME,
+				#{regIp}
+		)
+	</insert>
+	
 	
 	
 	<!-- 관리자 접속  -->

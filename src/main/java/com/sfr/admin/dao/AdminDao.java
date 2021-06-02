@@ -408,6 +408,10 @@ public class AdminDao {
 		sqlSession.insert("admin.admin.connLog", paramMap);
 	}
 	
+	public void connErrLog(Map paramMap) {
+		sqlSession.insert("admin.admin.connErrLog", paramMap);
+	}
+	
 	/**
 	 * 관리자 접속
 	 * 

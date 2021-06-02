@@ -54,6 +54,8 @@ public interface AdminService {
 	Map adminLogin(Map paramMap) throws Exception;
 
 	void connlog(Map paramMap) throws Exception;
+	
+	void connErrlog(Map paramMap) throws Exception;
 
 	void connMngr(Map paramMap) throws Exception;
 
