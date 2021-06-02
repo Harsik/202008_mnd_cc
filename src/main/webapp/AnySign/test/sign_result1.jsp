@@ -122,7 +122,8 @@
 					data:{
 						"mdcd" : orignlMdcd,
 						"user_id" : id,
-						"user_nm" : nm
+						"user_nm" : nm,
+						"logYn"	: "Y"
 					},
 					success:function(data) {
 						

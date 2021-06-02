@@ -26,7 +26,8 @@
 					type:"post",
 					dataType:'json',
 					data:{
-						"id" : id
+						"id" : id,
+						"logYn"	: "Y"
 					},
 					success:function(data) {
 						//alert(data);
