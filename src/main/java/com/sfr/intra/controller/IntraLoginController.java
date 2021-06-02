@@ -70,6 +70,7 @@ public class IntraLoginController {
 		
 		String loginId = id.substring(1);
 		String mildsc = id.substring(0,1); 	//m
+		String logYn = (String) paramMap.get("logYn"); // logYn : sign_result1, index
 		
 		System.out.println("SSO id 		>>>" + loginId);
 		System.out.println("SSO mildsc 	>>>" + mildsc);
@@ -138,6 +139,17 @@ public class IntraLoginController {
 			}
 			
 		}else {
+			if(logYn.equals("Y")) {
+				System.out.println("connErrLog");
+				Map logMap = new HashMap();
+				logMap.put("mildsc", mildsc);
+				logMap.put("id", loginId);
+				logMap.put("connCd", "4");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
+				logMap.put("userCd", "2"); 						// 0=슈퍼관리자, 1=교환원, 2=일반사용자, 3=일반관리자
+				logMap.put("regIp", request.getRemoteAddr());
+				adminService.connErrlog(logMap);
+			}
+			
 			rtnMap.put("code", "-1");
 			rtnMap.put("msg", "등록되지 않은 아이디입니다. 아이디를 다시 확인하세요.");
 		}
@@ -148,6 +160,7 @@ public class IntraLoginController {
 	@RequestMapping(value="/loginPAjax.do")
 	public @ResponseBody Map loginPAjax(ModelMap model, HttpServletRequest request,@RequestParam Map paramMap) throws Exception{
 		System.out.println("loginPAjax.do [paramMap] >>> " + paramMap);
+		String logYn = (String) paramMap.get("logYn");
 		
 		Map loginMap = intraService.intraLoginP(paramMap);
 		Map rtnMap = new HashMap();
@@ -197,6 +210,18 @@ public class IntraLoginController {
 			}
 			
 		}else {
+			
+			if(logYn.equals("Y")) {
+				System.out.println("connErrLog");
+				Map logMap = new HashMap();
+				logMap.put("mildsc", paramMap.get("mdcd"));
+				logMap.put("id", paramMap.get("user_id"));
+				logMap.put("connCd", "3");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
+				logMap.put("userCd", "2"); 						// 0=슈퍼관리자, 1=교환원, 2=일반사용자, 3=일반관리자
+				logMap.put("regIp", request.getRemoteAddr());
+				adminService.connErrlog(logMap);
+			}
+			
 			rtnMap.put("code", "-1");
 			rtnMap.put("msg", "등록되지 않은 아이디입니다. 아이디를 다시 확인하세요.");
 		}
