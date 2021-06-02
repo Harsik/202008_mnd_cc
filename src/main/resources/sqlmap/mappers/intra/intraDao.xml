@@ -478,6 +478,7 @@
 	</insert>
 	
 	<!-- 통합SSO -->
+	<!--
 	<select id="intraLoginU" parameterType="map" resultType="egovMap">
 		/* intraLoginU */
 		SELECT * FROM (
@@ -510,8 +511,44 @@
 			ORDER BY dims_data_crt_dhms DESC
 		) WHERE ROWNUM =1
 	</select>
+	-->
+	
+	<!-- 통합SSO -->
+	<select id="intraLoginU" parameterType="map" resultType="egovMap">
+		/* intraLoginU_mous006 */
+		SELECT * FROM (
+		SELECT
+			DECODE(mdcd,'1','A','5','B','6','C','7','D') AS mildsc,
+			user_id as id,
+			user_nm AS nm,
+			orgnz_cd AS dept_cd,
+			srvno AS mil_no,
+			rspsblt_biznes_nm AS rspsblt_biznes,
+			rnkcd_nm AS RANK,
+			duty_nm AS rspofc_nm,
+			'군)' || mil_ofcrm_telno || ',일)' || gnrl_ofcrm_telno AS telno,
+			mpno AS mpno,
+			email_addr AS email,
+			'' AS opnpbl_yn,
+			'' AS state
+		FROM
+			mous0006_ifc0006
+		WHERE
+			1 = 1
+			AND mdcd = #{orignl_mdcd}
+			<if test='orignl_mdcd == "1"'>
+			AND user_id = #{user_id}
+			</if>
+			<if test='orignl_mdcd != "1"'>
+			AND srvno = #{user_id}
+			</if>
+			AND data_del_yn != 'Y'
+			ORDER BY dims_data_crt_dhms DESC
+		) WHERE ROWNUM = 1
+	</select>
 	
 	<!-- PKI -->
+	<!--
 	<select id="intraLoginP" parameterType="map" resultType="egovMap">
 		/* intraLoginP */
 		SELECT * FROM (
@@ -537,6 +574,36 @@
 			AND USER_NM = #{user_nm}
 			AND (REPLACE(srvno,'-','') = #{user_id})
 			AND data_del_yn = 'N'
+			ORDER BY dims_data_crt_dhms DESC
+		) WHERE ROWNUM =1
+	</select>
+	-->
+	
+	<select id="intraLoginP" parameterType="map" resultType="egovMap">
+		/* intraLoginP_mous006 */
+		SELECT * FROM (
+		SELECT
+			DECODE(mdcd,'1','A','5','B','6','C','7','D') AS mildsc,
+			user_id as id,
+			user_nm AS nm,
+			orgnz_cd AS dept_cd,
+			srvno AS mil_no,
+			rspsblt_biznes_nm AS rspsblt_biznes,
+			rnkcd_nm AS RANK,
+			duty_nm AS rspofc_nm,
+			'군)' || mil_ofcrm_telno || ',일)' || gnrl_ofcrm_telno AS telno,
+			mpno AS mpno,
+			email_addr AS email,
+			'' AS opnpbl_yn,
+			'' AS state
+		FROM
+			mous0009_ifc0009
+		WHERE
+			1 = 1
+			AND orignl_mdcd = #{mdcd}
+			AND USER_NM = #{user_nm}
+			AND (REPLACE(srvno,'-','') = #{user_id})
+			AND data_del_yn != 'Y'
 			ORDER BY dims_data_crt_dhms DESC
 		) WHERE ROWNUM =1
 	</select>
