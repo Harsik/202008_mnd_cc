@@ -169,6 +169,18 @@ public class OperatorDao {
 		return (Map)sqlSession.selectOne("operator.operator.selectUser", paramMap);
 	}
 	
+	public int insertBlockIvr(Map paramMap) {
+		return sqlSession.update("operator.operator.insertBlockIvr", paramMap);
+	}
+	
+	public List selectBlockIvrList(Map paramMap) {
+		return (List)sqlSession.selectList("operator.operator.selectBlockIvrList", paramMap);
+	}
+	
+	public int getBlockIvrCount(Map paramMap) {
+		return sqlSession.selectOne("operator.operator.getBlockIvrCount", paramMap);
+	}
+	
 	public int insertBlock(Map paramMap) {
 		return sqlSession.update("operator.operator.insertBlock", paramMap);
 	}

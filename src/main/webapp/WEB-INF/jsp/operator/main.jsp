@@ -167,14 +167,45 @@
 				SelectBlock("0");
 			});
 			
-			//악성민원 조회 이벤트
+			// 악성민원 조회 이벤트
 			$("#btnSelectBlock").click(function(){
 				SelectBlock("0");
 		  	});
 			
+			// 악성민원 조회 엔터 이벤트
 			$("#cust_info_search").keyup(function (key) {
 				if(key.keyCode == 13){//키가 13이면 실행 (엔터는 13)
 					SelectBlock("0");
+				}
+			});
+			
+			if(window.sessionStorage.getItem("ADMIN_YN") == "Y"){
+				$(".tab-link").eq(2).css("border-right","0px solid #81a5d5");
+			}else{
+				$(".tab-link").eq(2).css("border-right","1px solid #81a5d5");
+				$(".tab-link").eq(3).hide();
+			}
+			
+			// 악성민원 IVR
+			datePicker("#ivr_start_dt");
+			datePicker("#ivr_end_dt");
+			$("#ivr_start_dt").val(retDate());
+			$("#ivr_end_dt").val(getDate());
+			
+			// IVR 탭 클릭 이벤트
+			$(".tab-link").eq(3).click(function(){
+				SelectBlockIvr("0");
+			});
+			
+			// IVR 조회 이벤트
+			$("#btnSelectBlockIvr").click(function(){
+				SelectBlockIvr("0");
+		  	});
+			
+			// IVR 조회 엔터 이벤트
+			$("#block_ivr_search_content").keyup(function (key) {
+				if(key.keyCode == 13){//키가 13이면 실행 (엔터는 13)
+					SelectBlockIvr("0");
 				}
 			});
 			
@@ -219,9 +250,10 @@
 					$("#h_deptNm").val($("#deptNm").val()); 		//부서
 					$("#h_mildsc").val($("#mildsc").val()); 		//군
 					
+					blockIvrInsert(custStat,custNm,custTel);
 					block_popupEvent(custTel,custNm,custStat,callType);
 					
-					fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
+// 					fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
 	 				window.sessionStorage.setItem("callType",""); 	// 초기화
 				}
 			}else{	//OUT
@@ -392,6 +424,118 @@
 		}
 		
 		//Block End
+		
+		
+		//Block Ivr Start
+		function blockIvrInsert(callState,custNm,custTel){
+			var callConnTime = gCallConnectTime.replace(/\B(?=(\d{2})+(?!\d))/g, ':');
+			var sldrYn	= "Y";
+			var telYn	= "N";
+			
+			if(custNm == "미등록인"){
+				sldrYn = "N";
+			}
+			
+			if(custTel.substr(0,2)=="01" && custTel.length >= 10){
+				telYn = "Y";
+			}
+			
+			$.ajax({
+				url : "/operator/insertBlockIvr.do",
+				type : "post",
+				dataType : 'json',
+				data : {
+					"callState"	: callState,		// 1: 언어폭력, 2: 성희롱, 3:업무방해
+					"custNm"	: custNm,			// 민원인명
+					"custTel"	: custTel.trim(),	// 민원인번호
+					"custTelYn"	: telYn,			// 번호구분	Y: 휴대전화번호, N: 일반전화번호
+					"sldrYn"	: sldrYn,			// 군인구분	Y: 군인, N: 미등록인
+					"callDttm"	: callConnTime,		// 호인입시간
+					"rgstId"	: window.sessionStorage.getItem("USERID"),	// 상담원
+				},
+				success : function(data) {
+					console.log("insert BLOCK IVR :: ");
+				},
+				error : function(data, status, err){ 
+					console.log("insert BLOCK IVR ERROR :: " + data);
+				}
+
+			});
+		}
+		
+		function SelectBlockIvr(pageNum){
+			$.ajax({   
+				url:"/operator/selectBlockIvrList.do",
+				dataType:'json',
+				type:"post",
+				async:true,
+				data:{
+					"setPageNum" : pageNum,
+					"startDt"	 : $("#ivr_start_dt").val().replace(/-/gi, ""),
+					"endDt"	 	 : $("#ivr_end_dt").val().replace(/-/gi, ""),
+					"ivrType"	 : $("#block_ivr_type").val(),
+					"searchType" : $("#block_ivr_search").val(),
+					"searchContent" : $("#block_ivr_search_content").val().replace(/-/gi, "")
+				},
+				success:function(data) {
+					console.log("data >> "+data);
+					setBlockIvrPaging(data);
+					createBlockIvr(data);
+				},
+			});
+		}
+		
+		function setBlockIvrPaging(data){
+			var htmlStr = "";
+			htmlStr += "<div class='pagination'>";
+			htmlStr += "<a href='javascript:void(0)' onclick='SelectBlockIvr("+data.paging.prevPageNo+");' class='list_btn'><img src='../images/operator/paging_btn_prev.png' alt='이전'/></a>";
+			var pageSizeVal = data.paging.endPageNo - data.paging.startPageNo;
+
+			for (var i = data.paging.startPageNo; i <= data.paging.endPageNo; i++) {
+				if (i == data.paging.pageNo) {
+					htmlStr += "<a href='javascript:void(0)' onclick='SelectBlockIvr("+i+");' class='list_btn'><b>"+i+"</b></a>";
+				} else {
+					htmlStr += "<a href='javascript:void(0)' onclick='SelectBlockIvr("+i+");' class='list_btn'>"+i+"</a>";
+				}
+			}
+			htmlStr += "<a href='javascript:void(0)' onclick='SelectBlockIvr("+data.paging.nextPageNo+");' class='list_btn'><img src='../images/operator/paging_btn_next.png' alt='다음'/></a>";
+			htmlStr += "</div>";
+			$("#block_ivr_paging").html(htmlStr);
+		}
+		
+		function createBlockIvr(data){
+			$("#content_block_ivr tbody").empty();
+			
+			var datas = data.list;
+			
+			if(datas.length != 0){ // data != null
+				var str = "";
+				$.each(datas , function(i){
+					var tel = datas[i].ani.replace(/ /gi, "");
+					str += "<TR id='blockIvrTr'>";
+					str += '<input type="hidden" id="seq" value='+datas[i].seq+'>'; //PK
+					str += '<td>'+datas[i].rownum+'</td>'; 		//번호
+					str += '<td>'+datas[i].rgstDttm+'</td>'; 	//등록일시
+					str += '<td>'+datas[i].rgstId+'</td>';		//교환원
+					if(datas[i].type == "1"){ 					//유형 - 1:언어폭력, 2:성희롱, 3:업무방해
+						str += '<td>언어폭력</td>';
+					}else if(datas[i].type == "2"){
+						str += '<td>성희롱</td>';
+					}else if(datas[i].type == "3"){
+						str += '<td>업무방해</td>';
+					}
+					str += '<td>'+telnoFormat(datas[i].ani)+'</td>';	//휴대전화 번호
+					str += '<td>'+datas[i].fulnm+'</td>';				//민원인
+					str += '</TR>';
+				});
+				
+				$("#content_block_ivr tbody").append(str); 
+				$("#block_ivr_paging").show(); 
+			} else{
+				$("#block_ivr_paging").hide();
+			}
+		}
+		//Block Ivr End
 		
 		function createTree(mildsc){
 			
@@ -1244,6 +1388,7 @@ function reClear(){
 						<li class="tab-link current" data-tab="tab-4">전화번호 검색</li>
 						<li class="tab-link" data-tab="tab-5">조직도</li>
 						<li class="tab-link" data-tab="tab-block">악성민원인</li>
+						<li class="tab-link" data-tab="tab-block-ivr">IVR송출</li>
 					</ul>
 					<div id="tab-4" class="tab-content01 current">
 						<!--검색-->
@@ -1361,11 +1506,15 @@ function reClear(){
 					
 					<!-- 악성민원 -->
 					<style>
-					#tab-block .selectBox {height: 20px; font-size: 13px}
-					#search-block th {text-align: left; padding-right: 5px;}
-					#content_block th {text-align: center;}
-					
+					.selectBox {height: 20px; font-size: 13px}
+/*  					#tab-block-ivr .selectBox {height: 20px; font-size: 13px}  */
+ 					#search-block-ivr th {text-align: left; padding-right: 5px;} 
+ 					#content_block_ivr th {text-align: center;} 
+/*  					#tab-block .selectBox {height: 20px; font-size: 13px}  */
+ 					#search-block  th {text-align: left; padding-right: 5px;} 
+ 					#content_block  th {text-align: center;} 
 					</style>
+					
 					<div id="tab-block" class="tab-content01">
 					<div id="search-block" style="height: 45px;">
 							<table summary="상담이력조회" class="search2_tbl">
@@ -1407,7 +1556,7 @@ function reClear(){
 									</select>
 								</td>
 								<td>
-									<input type="text" class="text_ol" id="cust_info_search" style=" font-size: 13px; margin-left: 5px; line-height: 0px; font-family: 'Nanum Gothic';" alt="검색어" title="검색어">
+									<input type="text" class="text_ol" id="cust_info_search" style="height: 20px !important; font-size: 13px; margin-left: 5px; line-height: 0px; font-family: 'Nanum Gothic';" alt="검색어" title="검색어">
 								</td>
 								<td>
 									<button type="button" id="btnSelectBlock"  class="btnComm_aksung" style="margin-left: 175px;">조회</button>
@@ -1416,7 +1565,7 @@ function reClear(){
 						</table>
 					</div>
                
-	               	<div id="content_block" class="tbl_type_board" style="width: 100%; height: 250px; margin-bottom: 0px;">
+	               	<div id="content_block" class="tbl_type_board" style="width: 100%; height: 505px; margin-bottom: 0px;">
 						<table>
 							<colgroup>
 								<col width="5%">
@@ -1445,9 +1594,86 @@ function reClear(){
 							<tbody>
 							</tbody>
 						 </table>
-						 <div id="block_paging" style="margin-top: 5px;"></div>
+<!-- 						 <div id="block_paging" style="margin-top: 5px;"></div> -->
 	               	</div>
+	               	<div id="block_paging" style="margin-top: 5px;"></div>
             	</div>
+            	<!-- 악성민원 탭 end -->
+            	
+            	<!-- tab-block-ivr start -->
+            	<div id="tab-block-ivr" class="tab-content01">
+            		<div id="search-block-ivr" style="height: 45px;">
+						<table summary="IVR송출조회" class="search2_tbl">
+						<tr>
+							<th scope="row" style="font-size: 14px; text-align: left;">등록일</th>
+							<td class="selectBox" style="width: 300px;" colspan="2">
+								<input type="text" class="text_ol_half" id="ivr_start_dt" maxlength="16" alt="시작날짜" title="시작날짜" style="border: 1px solid rgb(205, 205, 205); border-image: none; width: 80px; height: 20px; line-height: 0px; font-size: 13px;">
+								 ~ 
+								<input type="text" class="text_ol_half" id="ivr_end_dt" maxlength="16"  alt="종료날짜" title="종료날짜" style="border: 1px solid rgb(205, 205, 205); border-image: none; width: 80px; height: 20px; line-height: 0px; font-size: 13px;">
+							</td>
+							
+							<th scope="row" style="font-size: 14px; text-align: left;">유형</th>
+							<td>
+								<select class="selectBox" style="width:100px; font-size: 13px" id="block_ivr_type" title="유형">
+									<option value="all">전체</option>
+									<option value="1">언어폭력</option>
+									<option value="2">성희롱</option>
+									<option value="3">업무방해</option>
+								</select>
+							</td>
+							
+							<th scope="row" style="text-align: left; padding-left: 60px; font-size: 14px;">검색</th>
+							<td>
+								<select class="selectBox" style="width:100px; font-size: 13px" id="block_ivr_search" title="유형">
+									<option value="all">전체</option>
+									<option value="cust_nm">민원인</option>
+									<option value="agent_id">교환원</option>
+									<option value="cust_infm">연락처</option>
+								</select>
+							</td>
+							
+							<td>
+								<input type="text" class="text_ol" id="block_ivr_search_content" style="height: 20px !important; font-size: 13px; margin-left: 5px; line-height: 0px; font-family: 'Nanum Gothic';" alt="검색어" title="검색어">
+							</td>
+						
+							<td>
+								<button type="button" id="btnSelectBlockIvr"  class="btnComm_aksung" style="margin-left: 150px;">조회</button>
+							</td>
+						</tr>
+							
+						</table>
+					</div>
+               
+	               	<div id="content_block_ivr" class="tbl_type_board" style="width: 100%; height: 505px; margin-bottom: 0px;">
+						<table style="width: 100%;">
+							<colgroup>
+								<col width="5%">
+								<col width="20%">
+								<col width="15%">
+								<col width="20%">
+								<col width="20%">
+								<col width="20%">
+							</colgroup>
+							<thead>
+								<tr>
+									<th>번호</th>
+									<th>등록일</th>
+									<th>교환원</th>
+									<th>유형</th>
+									<th>연락처</th>
+									<th>민원인</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						 </table>
+<!-- 						 <div id="block_ivr_paging" style="margin-top: 5px;"></div> -->
+	               	</div>
+	               	<div id="block_ivr_paging" style="margin-top: 5px;"></div>
+            	</div>
+            	<!-- tab-block-ivr end -->
+            	
+            	
 				</div>
 				<!--//전화번호검색 / 조직도-->
 			

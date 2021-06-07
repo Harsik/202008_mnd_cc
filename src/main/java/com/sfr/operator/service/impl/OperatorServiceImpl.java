@@ -131,6 +131,21 @@ public class OperatorServiceImpl implements OperatorService{
 	}
 	
 	@Override
+	public int insertBlockIvr(Map paramMap) throws Exception {
+		return operatorDao.insertBlockIvr(paramMap);
+	}
+	
+	@Override
+	public List selectBlockIvrList(Map paramMap) throws Exception {
+		return operatorDao.selectBlockIvrList(paramMap);
+	}
+	
+	@Override
+	public int getBlockIvrCount(Map paramMap) throws Exception {
+		return operatorDao.getBlockIvrCount(paramMap);
+	}
+	
+	@Override
 	public int insertBlock(Map paramMap) throws Exception {
 		return operatorDao.insertBlock(paramMap);
 	}

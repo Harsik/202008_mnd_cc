@@ -601,6 +601,131 @@
 			AND SYSDATE BETWEEN strt_date AND end_date
 	</select>
 	
+	<insert id="insertBlockIvr">
+	    INSERT INTO TBL_BLOCK_IVR (
+			[TYPE],
+			<if test = 'sldrYn.equals("Y")'>
+			MDCD,
+			SERVNO,
+			DEPT_CD,
+			DEPT_NM,
+			FULL_DEPT_NM,
+			RANK_NM,
+			RSPONM,
+			TELNO,
+			MPNO,
+			</if>
+			FULNM,
+			ANI,
+			CALL_DTTM,
+			RGST_ID,
+			RGST_DTTM
+		)
+	    SELECT
+	        #{callState} AS [TYPE]
+	        <if test = 'sldrYn.equals("Y")'>
+	        , C.MDCD
+	        , C.SRVNO
+	        , C.DEPT_CD
+	        , (SELECT B.DEPT_NM FROM TBL_DEPT_N B WHERE B.DEPT_CD = C.DEPT_CD) AS DEPT_NM
+	        , (SELECT B.whl_dept_nm FROM TBL_DEPT_N B WHERE B.DEPT_CD = C.DEPT_CD) AS DEPT_FUL_NM
+	        , C.RANK_NM
+	        , DECODE(C.MDCD,'A',C.RSPONM,C.RSPSBLT_BIZNES_NM) AS RSPOFC_NM
+	        , C.TELNO
+	        , C.MPNO
+	        , C.FULNM
+	        , #{custTel}
+	        </if>
+	        <if test = 'sldrYn.equals("N")'>
+	        , #{custNm}
+	        , #{custTel}
+	        </if>
+			<if test = "callDttm != null and !callDttm.equals('')">
+			, TO_DATETIME(TO_CHAR(SYSDATE,'YYYY/MM/DD') + #{callDttm}, 'YYYY/MM/DD HH24:MI:SS') AS CALL_DTTM
+			</if>
+			<if test = "callDttm == null or callDttm.equals('')">
+			, SYSDATETIME AS CALL_DTTM
+			</if>
+	        , #{rgstId} AS RGST_ID
+	        , SYSDATETIME AS RGST_DTTM
+	    <if test = 'sldrYn.equals("Y")'>
+	    FROM TBL_USER_N C
+	    WHERE 1=1
+			<if test = 'custTelYn.equals("N")'>
+			AND REPLACE(C.TELNO,'-','') like '%' || #{custTel} || '%'
+			</if>
+			<if test = 'custTelYn.equals("Y")'>
+			AND REPLACE(C.MPNO,'-','') like '%' || #{custTel} || '%'
+			</if>
+	        AND C.FULNM = #{custNm}
+	        AND ROWNUM = 1
+	    </if>
+	</insert>
+	
+	<select id="selectBlockIvrList" parameterType="map" resultType="egovMap">
+	    SELECT ROWNUM,A.* FROM (
+			SELECT
+				seq,
+				[type],
+				fulnm,
+				ani,
+				TO_CHAR(rgst_dttm, 'YYYY-MM-DD HH24:MI') AS rgst_dttm,
+				rgst_id
+			FROM
+				tbl_block_ivr
+			WHERE
+				1 = 1
+				<if test="!ivrType.equals('all')">
+				AND [type] = #{ivrType}
+				</if>
+				<if test="searchContent != null and !searchContent.equals('')">
+					<if test="!searchType.equals('all')">
+						<if test="searchType.equals('cust_nm')">
+						AND fulnm LIKE '%' || #{searchContent} || '%'
+						</if>
+						<if test="searchType.equals('cust_infm')">
+						AND ani LIKE '%' || #{searchContent} || '%'
+						</if>	    
+						<if test="searchType.equals('agent_id')">
+						AND rgst_id LIKE '%' || #{searchContent} || '%'
+						</if>	    
+					</if>
+					<if test="searchType.equals('all')">
+					AND (ani LIKE '%' || #{searchContent} || '%' OR fulnm LIKE '%' || #{searchContent} || '%' OR rgst_id LIKE '%' || #{searchContent} || '%')
+					</if>
+				</if>
+				AND TO_CHAR(rgst_dttm, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+			ORDER BY rgst_dttm DESC
+			) A
+		WHERE ROWNUM BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+	<select  id="getBlockIvrCount" resultType="int" parameterType="map">
+		SELECT  COUNT(*) 
+		FROM 	TBL_BLOCK_IVR 
+		WHERE   1=1
+		<if test="!ivrType.equals('all')">
+		AND [type] = #{ivrType}
+		</if>
+		<if test="searchContent != null and !searchContent.equals('')">
+			<if test="!searchType.equals('all')">
+				<if test="searchType.equals('cust_nm')">
+			    AND fulnm LIKE '%' || #{searchContent} || '%'
+				</if>
+				<if test="searchType.equals('cust_infm')">
+				AND ani LIKE '%' || #{searchContent} || '%'
+				</if>	    
+				<if test="searchType.equals('agent_id')">
+				AND rgst_id LIKE '%' || #{searchContent} || '%'
+				</if>	    
+			</if>
+			<if test="searchType.equals('all')">
+			AND (ani LIKE '%' || #{searchContent} || '%' OR fulnm LIKE '%' || #{searchContent} || '%' OR rgst_id LIKE '%' || #{searchContent} || '%')
+			</if>
+		</if>
+		AND TO_CHAR(rgst_dttm, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
+	</select>
+	
 	<insert id="insertPrompt" parameterType="map" >
 		INSERT INTO TBL_PROMPT_N(		 rgst_dttm
 			                             ,	fulnm

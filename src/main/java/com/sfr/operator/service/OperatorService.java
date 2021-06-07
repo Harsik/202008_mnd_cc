@@ -33,6 +33,12 @@ public interface OperatorService {
 	
 	Map selectUser(Map paramMap) throws Exception;
 	
+	int insertBlockIvr(Map paramMap) throws Exception;
+	
+	List selectBlockIvrList(Map paramMap) throws Exception;
+	
+	int getBlockIvrCount(Map paramMap) throws Exception;
+	
 	int insertBlock(Map paramMap) throws Exception;
 
 	List selectBlockList(Map paramMap) throws Exception;

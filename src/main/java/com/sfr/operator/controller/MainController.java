@@ -334,6 +334,56 @@ public class MainController {
 		return modelAndView;
 	}
 	
+	@RequestMapping(value="/insertBlockIvr.do", method=RequestMethod.POST)
+	public @ResponseBody ModelAndView insertBlockIvr(@RequestParam Map paramMap, HttpServletRequest requset ) throws Exception{
+		System.out.println("paramMap >> " + paramMap);
+		
+		ModelAndView model = new ModelAndView("jsonView");
+		
+		int result =	operatorService.insertBlockIvr(paramMap);
+		System.out.println("result >> "+result);
+		model.addObject("result", result);
+		
+		return model;
+	}
+	
+	@RequestMapping(value="/selectBlockIvrList.do", method=RequestMethod.POST)
+	public @ResponseBody ModelAndView selectBlockIvrList(@RequestParam Map paramMap, HttpServletRequest requset, @ModelAttribute("searchVO") PagingVO vo ) throws Exception{
+		System.out.println("paramMap >> " + paramMap);
+		
+		vo.setPageSize(13); // 한 페이지에 보일 게시글 수
+		vo.setPageNo(1); // 현재 페이지 번호
+		
+		if(vo.getSetPageNum() != 0){
+			vo.setPageNo(vo.getSetPageNum());
+		}
+		vo.setBlockSize(13);
+		
+		String startDt = (String) paramMap.get("startDt");
+		paramMap.put("startDt", startDt.replace("&lrm;", ""));
+		
+		paramMap.put("endRowNum", vo.getEndRowNum());
+		paramMap.put("startRowNum", vo.getStartRowNum());
+		
+		ModelAndView model = new ModelAndView("jsonView");
+		
+		System.out.println("paramMap >> " + paramMap);
+		
+		List<Map> list = new ArrayList<>();
+		list = operatorService.selectBlockIvrList(paramMap);
+		int toTalCount = operatorService.getBlockIvrCount(paramMap);
+		vo.setTotalCount(toTalCount);
+		
+		System.out.println("toTalCount >>" +toTalCount);
+		
+		System.out.println("list >> "+list);
+		
+		model.addObject("paging",vo);
+		model.addObject("list", list);
+
+		return model;
+	}
+	
 	@RequestMapping(value="/insertBlock.do", method=RequestMethod.POST)
 	public @ResponseBody ModelAndView insertBlock(@RequestParam Map paramMap, HttpServletRequest requset ) throws Exception{
 		System.out.println("paramMap >> " + paramMap);
