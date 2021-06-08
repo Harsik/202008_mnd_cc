@@ -179,13 +179,6 @@
 				}
 			});
 			
-			if(window.sessionStorage.getItem("ADMIN_YN") == "Y"){
-				$(".tab-link").eq(2).css("border-right","0px solid #81a5d5");
-			}else{
-				$(".tab-link").eq(2).css("border-right","1px solid #81a5d5");
-				$(".tab-link").eq(3).hide();
-			}
-			
 			// 악성민원 IVR
 			datePicker("#ivr_start_dt");
 			datePicker("#ivr_end_dt");
@@ -208,6 +201,8 @@
 					SelectBlockIvr("0");
 				}
 			});
+			
+			$("#btnExcelBlockIvr").bind("click", btnExcelBlockIvrClickEvent);
 			
 		});// ready END
 		
@@ -475,7 +470,9 @@
 					"endDt"	 	 : $("#ivr_end_dt").val().replace(/-/gi, ""),
 					"ivrType"	 : $("#block_ivr_type").val(),
 					"searchType" : $("#block_ivr_search").val(),
-					"searchContent" : $("#block_ivr_search_content").val().replace(/-/gi, "")
+					"searchContent" : $("#block_ivr_search_content").val().replace(/-/gi, ""),
+					"adminYn" 		: window.sessionStorage.getItem("ADMIN_YN"),
+					"userId" 		: window.sessionStorage.getItem("USERID")
 				},
 				success:function(data) {
 					console.log("data >> "+data);
@@ -534,6 +531,29 @@
 			} else{
 				$("#block_ivr_paging").hide();
 			}
+		}
+		
+		function btnExcelBlockIvrClickEvent(){
+			var frm = document.form2;
+			frm.action = "/csv/blockIvrCsvDownload.do";
+			
+			var startDt = $("#ivr_start_dt").val().replace(/-/gi, "");
+			var endDt = $("#ivr_end_dt").val().replace(/-/gi, "");
+			var ivrType = $("#block_ivr_type").val();
+			var searchType = $("#block_ivr_search").val();
+			var searchContent = $("#block_ivr_search_content").val().replace(/-/gi, "");
+			var adminYn = window.sessionStorage.getItem("ADMIN_YN");
+			var userId = window.sessionStorage.getItem("USERID");
+			
+			$("#startDt").val(startDt);
+			$("#endDt").val(endDt);
+			$("#ivrType").val(ivrType);
+			$("#searchType").val(searchType);
+			$("#searchContent").val(searchContent); 
+			$("#adminYn").val(adminYn); 
+			$("#userId").val(userId); 
+			
+			frm.submit();
 		}
 		//Block Ivr End
 		
@@ -1387,8 +1407,8 @@ function reClear(){
 					<ul class="tabs01">
 						<li class="tab-link current" data-tab="tab-4">전화번호 검색</li>
 						<li class="tab-link" data-tab="tab-5">조직도</li>
-						<li class="tab-link" data-tab="tab-block">악성민원인</li>
-						<li class="tab-link" data-tab="tab-block-ivr">IVR송출</li>
+						<li class="tab-link" data-tab="tab-block">악성민원 차단요청</li>
+						<li class="tab-link" data-tab="tab-block-ivr">악성민원 송출조회</li>
 					</ul>
 					<div id="tab-4" class="tab-content01 current">
 						<!--검색-->
@@ -1602,6 +1622,15 @@ function reClear(){
             	
             	<!-- tab-block-ivr start -->
             	<div id="tab-block-ivr" class="tab-content01">
+            		<form method="post" action="#" class="search-box_ad" id="form2" name="form2" style="display:none;">
+						<input type="hidden" id="startDt" name="startDt" value='' />
+						<input type="hidden" id="endDt" name="endDt" value='' />
+						<input type="hidden" id="ivrType" name="ivrType" value='' />
+						<input type="hidden" id="searchType" name="searchType" value='' />
+						<input type="hidden" id="searchContent" name="searchContent" value='' />
+						<input type="hidden" id="adminYn" name="adminYn" value='' />
+						<input type="hidden" id="userId" name="userId" value='' />
+            		</form>
             		<div id="search-block-ivr" style="height: 45px;">
 						<table summary="IVR송출조회" class="search2_tbl">
 						<tr>
@@ -1637,7 +1666,9 @@ function reClear(){
 							</td>
 						
 							<td>
-								<button type="button" id="btnSelectBlockIvr"  class="btnComm_aksung" style="margin-left: 150px;">조회</button>
+								<button class="btnComm_aksung" id="btnExcelBlockIvr" style="width: 85px; margin-left: 55px;" type="button">엑셀다운로드</button>
+								<button class="btnComm_aksung" id="btnSelectBlockIvr" style="margin-left: 10px;" type="button">조회</button>
+<!-- 								<button type="button" id="btnSelectBlockIvr"  class="btnComm_aksung" style="margin-left: 150px;">조회</button> -->
 							</td>
 						</tr>
 							

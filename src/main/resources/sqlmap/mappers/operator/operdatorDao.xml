@@ -665,16 +665,41 @@
 	<select id="selectBlockIvrList" parameterType="map" resultType="egovMap">
 	    SELECT ROWNUM,A.* FROM (
 			SELECT
+				<if test="startRowNum != null and !startRowNum.equals('')">
 				seq,
 				[type],
 				fulnm,
-				ani,
+				NVL(ani,'') as ani,
 				TO_CHAR(rgst_dttm, 'YYYY-MM-DD HH24:MI') AS rgst_dttm,
 				rgst_id
+				</if>
+				<if test="startRowNum == null or startRowNum.equals('')">
+				DECODE([type],1,'언어폭력',2,'성희롱',3,'업무방해') AS type,
+				fulnm,
+				<!-- 
+				NVL(servno,'') AS servno,
+				NVL(full_dept_nm,'') AS full_dept_nm,
+				NVL(rank_nm,'') AS rank_nm,
+				NVL(ani,'') as ani,
+				NVL(REPLACE(telno,',','/'),'') AS telno,
+				NVL(call_dttm,'') AS call_dttm,
+				 -->
+				servno,
+				full_dept_nm,
+				rank_nm,
+				ani,
+				telno,
+				call_dttm,
+				rgst_dttm,
+				rgst_id
+				</if>
 			FROM
 				tbl_block_ivr
 			WHERE
 				1 = 1
+				<if test='adminYn.equals("N")'>
+				AND rgst_id = #{userId}
+				</if>
 				<if test="!ivrType.equals('all')">
 				AND [type] = #{ivrType}
 				</if>
@@ -697,13 +722,18 @@
 				AND TO_CHAR(rgst_dttm, 'YYYYMMDD') BETWEEN #{startDt} AND #{endDt}
 			ORDER BY rgst_dttm DESC
 			) A
+		<if test="startRowNum != null and !startRowNum.equals('')">
 		WHERE ROWNUM BETWEEN #{startRowNum} AND #{endRowNum}
+		</if>
 	</select>
 	
 	<select  id="getBlockIvrCount" resultType="int" parameterType="map">
 		SELECT  COUNT(*) 
 		FROM 	TBL_BLOCK_IVR 
 		WHERE   1=1
+		<if test='adminYn.equals("N")'>
+		AND rgst_id = #{usrId}
+		</if>
 		<if test="!ivrType.equals('all')">
 		AND [type] = #{ivrType}
 		</if>

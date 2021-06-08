@@ -19,12 +19,15 @@ import org.supercsv.prefs.CsvPreference;
 public class ExcelCsvWriteView extends AbstractView {
 	@Override
     protected void renderMergedOutputModel(Map<String, Object> modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		System.out.println(" renderMergedOutputModel >> ");
         response.setContentType("text/csv; charset=MS949");
         
         SimpleDateFormat dateFormat = new SimpleDateFormat ( "yyyyMMdd_HHmmss");
         Date date = new Date();
         
-        String csvFileName = URLEncoder.encode("시설물명현황_" + dateFormat.format(date) + ".csv", "utf-8");
+        String fileNm = (String) modelMap.get("csvFileNm");
+        
+        String csvFileName = URLEncoder.encode( fileNm + "_" + dateFormat.format(date) + ".csv", "utf-8");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + csvFileName +  "\"");
         
         excelDataPurification(modelMap, request, response);
@@ -40,14 +43,21 @@ public class ExcelCsvWriteView extends AbstractView {
      * @throws Exception
      */
     protected void excelDataPurification(Map<String, Object> modelMap, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	System.out.println(" excelDataPurification >> ");
+    	
     	// Map 을 사용한다면 CsvMapWriter 사용
         ICsvMapWriter csvMapWriter = new CsvMapWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
  
         // VO 를 사용한다면 CsvBeanWriter 사용
         //        ICsvBeanWriter csvBeanWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
- 
+        
         String columnIds = (String) modelMap.get("columnIds");
         String columnNames = (String) modelMap.get("columnNames");
+        
+        System.out.println(" columnIds >> " + columnIds);
+        System.out.println(" columnNames >> " + columnNames);
+        
+        
         String[] colids = columnIds.split(",");
         String[] colnms = columnNames.split(",");
  
@@ -57,8 +67,8 @@ public class ExcelCsvWriteView extends AbstractView {
         csvMapWriter.writeHeader(colnms);
         
         for (int i = 0; i < excelDataList.size(); i++) {
-                Map<String, Object> rowData = (Map<String, Object>) excelDataList.get(i);
-                csvMapWriter.write(rowData, colids);
+               Map<String, Object> rowData = (Map<String, Object>) excelDataList.get(i);
+               csvMapWriter.write(rowData, colids);
         }
         
         csvMapWriter.close();

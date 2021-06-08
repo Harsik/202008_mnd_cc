@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sfr.admin.service.AdminService;
+import com.sfr.operator.service.OperatorService;
 
 @Controller
 @RequestMapping("/csv")
@@ -26,6 +27,9 @@ public class ExcelCsvController {
 	
 	@Autowired
 	private AdminService userService;
+	
+	@Autowired
+	private OperatorService operatorService;
 	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/csvDownload.do")
@@ -69,10 +73,68 @@ public class ExcelCsvController {
         
 		mav.addObject("columnIds","facilityNm,fullDeptNm,tel,regId,regDt");
 		mav.addObject("columnNames","시설물이름,등록부대,전화번호,등록자,등록일");
+		mav.addObject("csvFileNm","시설물명현황");
         mav.addObject("excelDataList", data2);
         
         mav.setViewName("excelCsvWriteView");
 
         return mav;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/blockIvrCsvDownload.do")
+	public ModelAndView blockIvrCsvDownload(HttpServletRequest request, HttpServletResponse response,@RequestParam Map params) throws Exception {
+		System.out.println(">> blockIvrCsvDownload");
+		ModelAndView mav = new ModelAndView("CsvDownloadView");
+		
+		System.out.println("paramMap >> " + params);
+		//데이터
+		List<Map<String, Object>> data = operatorService.selectBlockIvrList(params);
+        List<Map<String, String>> data2 = new ArrayList<Map<String, String>>();
+        
+        System.out.println("data >> "+data);
+        
+        //CSV에 넣을 데이터 추출
+        for(int i=0; i<data.size(); i++) {
+            Map<String, String> dataMap = new HashMap<String, String>();
+            
+            dataMap.put("rownum"    , NVL( data.get(i).get("rownum") ) );
+            dataMap.put("type"		, NVL( data.get(i).get("type") ) );
+            dataMap.put("fulnm"     , NVL( data.get(i).get("fulnm") ) );
+            dataMap.put("servno"    , NVL( data.get(i).get("servno") ) );
+            dataMap.put("fullDeptNm", NVL( data.get(i).get("fullDeptNm") ) );
+            dataMap.put("rankNm"    , NVL( data.get(i).get("rankNm") ) );
+            dataMap.put("ani"       , NVL( data.get(i).get("ani") ) );
+            dataMap.put("telno"     , NVL( data.get(i).get("telno") ) );
+            dataMap.put("callDttm"  , NVL( data.get(i).get("callDttm") ) );
+            dataMap.put("rgstDttm"  , NVL( data.get(i).get("rgstDttm") ) );
+            dataMap.put("rgstId"    , NVL( data.get(i).get("rgstId") ) );
+            
+            data2.add(dataMap);
+        }
+        
+		mav.addObject("columnIds","rownum,type,fulnm,servno,fullDeptNm,rankNm,ani,telno,callDttm,rgstDttm,rgstId");
+		mav.addObject("columnNames","번호,유형,이름,군번,부대,계급,인입번호,군전화번호,인입시간,송출시간,교환원");
+		mav.addObject("csvFileNm","악성민원 송출조회");
+        mav.addObject("excelDataList", data2);
+        
+        mav.setViewName("excelCsvWriteView");
+
+        return mav;
+	}
+	
+	
+	/**
+      * NULL 값을 제거한다. 입력값(text)이 NULL이이면 공백("")을 리턴한다.
+      * @param text NULL을 제거할 입력값
+      * @return NULL을 제거한 값
+      */
+    public static String NVL(Object text) {
+        if(text == null) {
+         return "";
+        } else {
+         return "\t"+text.toString();
+        
+        }
+    }
 }
