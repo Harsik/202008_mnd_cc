@@ -29,7 +29,6 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
 		, "/operator/ivrCallUser"
 		, "/operator/blockCheck"
 		, "/operator/reqPrompt"
-		, "/csv/blockIvrCsvDownload.do"
 	};
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
