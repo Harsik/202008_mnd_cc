@@ -202,6 +202,10 @@
 				}
 			});
 			
+			if(window.sessionStorage.getItem("ADMIN_YN")=="N"){
+				$("#btnExcelBlockIvr").css( "visibility", "hidden" );
+			}
+			
 			$("#btnExcelBlockIvr").bind("click", btnExcelBlockIvrClickEvent);
 			
 		});// ready END
@@ -534,6 +538,7 @@
 		}
 		
 		function btnExcelBlockIvrClickEvent(){
+			$(window).off("beforeunload");
 			var frm = document.form2;
 			frm.action = "/csv/blockIvrCsvDownload.do";
 			
