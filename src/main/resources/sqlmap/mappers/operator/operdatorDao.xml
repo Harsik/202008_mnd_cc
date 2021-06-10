@@ -601,7 +601,7 @@
 			AND SYSDATE BETWEEN strt_date AND end_date
 	</select>
 	
-	<insert id="insertBlockIvr">
+	<insert id="insertBlockIvr"  parameterType="map">
 	    INSERT INTO TBL_BLOCK_IVR (
 			[TYPE],
 			<if test = 'sldrYn.equals("Y")'>
@@ -676,14 +676,6 @@
 				<if test="startRowNum == null or startRowNum.equals('')">
 				DECODE([type],1,'언어폭력',2,'성희롱',3,'업무방해') AS type,
 				fulnm,
-				<!-- 
-				NVL(servno,'') AS servno,
-				NVL(full_dept_nm,'') AS full_dept_nm,
-				NVL(rank_nm,'') AS rank_nm,
-				NVL(ani,'') as ani,
-				NVL(REPLACE(telno,',','/'),'') AS telno,
-				NVL(call_dttm,'') AS call_dttm,
-				 -->
 				servno,
 				full_dept_nm,
 				rank_nm,
@@ -732,7 +724,7 @@
 		FROM 	TBL_BLOCK_IVR 
 		WHERE   1=1
 		<if test='adminYn.equals("N")'>
-		AND rgst_id = #{usrId}
+		AND rgst_id = #{userId}
 		</if>
 		<if test="!ivrType.equals('all')">
 		AND [type] = #{ivrType}
