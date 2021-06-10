@@ -699,7 +699,8 @@
 				, LOGIN_METHD_CD
 				, user_cd
 				, RGST_DTTM
-				, RGST_IP 
+				, RGST_IP
+				, WAS_IP 
 		)
 		VALUES	( 
 				#{mildsc},
@@ -707,7 +708,8 @@
 				#{connCd},
 				#{userCd},
 				SYSDATETIME,
-				#{regIp}
+				#{regIp},
+				'11.2.17.191'
 		)
 	</insert>
 	
@@ -720,6 +722,7 @@
 				, user_cd
 				, RGST_DTTM
 				, RGST_IP 
+				, WAS_IP 
 		)
 		VALUES	( 
 				#{mildsc},
@@ -727,7 +730,8 @@
 				#{connCd},
 				#{userCd},
 				SYSDATETIME,
-				#{regIp}
+				#{regIp},
+				'11.2.17.191'
 		)
 	</insert>
 	
