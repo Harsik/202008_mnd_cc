@@ -539,27 +539,35 @@
 		
 		function btnExcelBlockIvrClickEvent(){
 			$(window).off("beforeunload");
-			var frm = document.form2;
-			frm.action = "/csv/blockIvrCsvDownload.do";
-			
-			var startDt = $("#ivr_start_dt").val().replace(/-/gi, "");
-			var endDt = $("#ivr_end_dt").val().replace(/-/gi, "");
-			var ivrType = $("#block_ivr_type").val();
-			var searchType = $("#block_ivr_search").val();
-			var searchContent = $("#block_ivr_search_content").val().replace(/-/gi, "");
-			var adminYn = window.sessionStorage.getItem("ADMIN_YN");
-			var userId = window.sessionStorage.getItem("USERID");
-			
-			$("#startDt").val(startDt);
-			$("#endDt").val(endDt);
-			$("#ivrType").val(ivrType);
-			$("#searchType").val(searchType);
-			$("#searchContent").val(searchContent); 
-			$("#adminYn").val(adminYn); 
-			$("#userId").val(userId); 
-			
-			frm.submit();
-		}
+	    	  
+	    	var param = {
+	    		    "startDt"	 : $("#ivr_start_dt").val().replace(/-/gi, ""),
+					"endDt"	 	 : $("#ivr_end_dt").val().replace(/-/gi, ""),
+					"ivrType"	 : $("#block_ivr_type").val(),
+					"searchType" : $("#block_ivr_search").val(),
+					"searchContent" : $("#block_ivr_search_content").val().replace(/-/gi, ""),
+					"adminYn" 		: window.sessionStorage.getItem("ADMIN_YN"),
+					"userId" 		: window.sessionStorage.getItem("USERID"),
+	    		 	"colHeader"	: ["rownum","type","fulnm","servno","fullDeptNm","rankNm","ani","telno","callDttm","rgstDttm","rgstId"],
+	    		 	"colName"	: ["번호","유형","이름","군번","부대","계급","인입번호","군전화번호","인입시간","송출시간","교환원"],
+	    		 	"title"	:   "악성민원"
+	    	};
+	    	  
+	        var form = document.createElement("form");
+	        form.setAttribute("method", "post");
+	        form.action = "/csv/blockIvrCsvDownload.do";
+	         
+	        var hiddenField = document.createElement("input");
+		    hiddenField.setAttribute("type", "hidden");
+		    hiddenField.setAttribute("name", "excelDown");
+		    hiddenField.setAttribute("value", JSON.stringify(param));
+		    form.appendChild(hiddenField);
+		    document.body.appendChild(form);
+	          
+		    form.submit();
+	     }
+		
+		
 		//Block Ivr End
 		
 		function createTree(mildsc){
