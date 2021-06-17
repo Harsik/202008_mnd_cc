@@ -124,7 +124,7 @@ public class ExcelCsvController {
         // 엑셀파일 생성
         this.createExcel(workbook, pMap, data);
         // 파일 다운로드
-        this.fileDownload(workbook, res, title);
+        this.fileDownload(workbook, res, excelFileName);
     }
     
     
@@ -185,12 +185,10 @@ public class ExcelCsvController {
         OutputStream out = null;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String date = simpleDateFormat.format(new Date());
-        String csvFileName = URLEncoder.encode( ps_file + "_" + date + ".csv", "utf-8");
         try {
-        	response.setContentType("text/csv; charset=UTF-8");
-            response.setHeader("Content-Type", "application/octet-stream;charset=UTF-8" );
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + csvFileName +  "\"");
-            response.setHeader("Content-Transfer-Encoding", "binary;");
+            response.setContentType("Application/Msexcel");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + ps_file + "_" + date + ".xlsx\";");
+			response.setContentType("application/vnd.ms-excel");
             
             out = new BufferedOutputStream(response.getOutputStream());
             workbook.write(out);
