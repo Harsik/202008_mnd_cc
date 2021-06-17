@@ -252,7 +252,7 @@
 					blockIvrInsert(custStat,custNm,custTel);
 					block_popupEvent(custTel,custNm,custStat,callType);
 					
-// 					fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
+ 					fnSingleStepTransfer(trnsCall,"",custTel);		// 특정큐로 호전환
 	 				window.sessionStorage.setItem("callType",""); 	// 초기화
 				}
 			}else{	//OUT
@@ -1635,15 +1635,6 @@ function reClear(){
             	
             	<!-- tab-block-ivr start -->
             	<div id="tab-block-ivr" class="tab-content01">
-            		<form method="post" action="#" class="search-box_ad" id="form2" name="form2" style="display:none;">
-						<input type="hidden" id="startDt" name="startDt" value='' />
-						<input type="hidden" id="endDt" name="endDt" value='' />
-						<input type="hidden" id="ivrType" name="ivrType" value='' />
-						<input type="hidden" id="searchType" name="searchType" value='' />
-						<input type="hidden" id="searchContent" name="searchContent" value='' />
-						<input type="hidden" id="adminYn" name="adminYn" value='' />
-						<input type="hidden" id="userId" name="userId" value='' />
-            		</form>
             		<div id="search-block-ivr" style="height: 45px;">
 						<table summary="IVR송출조회" class="search2_tbl">
 						<tr>
