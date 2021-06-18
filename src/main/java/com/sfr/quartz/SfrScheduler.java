@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 import org.quartz.JobExecutionContext;
@@ -216,9 +218,16 @@ public class SfrScheduler extends QuartzJobBean {
 		
 		try{
 			
+			/*
+			 * n일 전 날짜 반환
+			 * minusDays(n)
+			 * return : yyyymmdd
+			 */
+			String minusDay = LocalDate.now().minusDays(3).format(DateTimeFormatter.BASIC_ISO_DATE);
+			
 			log.error("USER 인터페이스 테이블 확인 (B=육군, C=해군, D=공군) :	"+mildsc);
 			
-			stmt = conn.prepareStatement("SELECT COUNT(*) FROM tbl_user_if_n WHERE MDCD=? AND RGST_DATE=?");
+			stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_IF_N WHERE MDCD=? AND RGST_DATE=?");
 			
 			stmt.setString(1, mildsc);
 			stmt.setString(2, thisDay);
@@ -228,7 +237,7 @@ public class SfrScheduler extends QuartzJobBean {
 			int ifCnt = rs.getInt(1);
 			if(ifCnt>0){
 				
-				log.error("USER 테이블 DELETE :	"+mildsc);
+				log.error("TBL_USER_N 테이블 DELETE :	"+mildsc);
 
 				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_N WHERE MDCD=?");
 				stmt.setString(1, mildsc);
@@ -238,7 +247,7 @@ public class SfrScheduler extends QuartzJobBean {
 				int uCnt = (uTot/5000)+1;
 				
 				for(int i=0; i<uCnt; i++ ){
-					log.error("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + uTot);
+					log.error("TBL_USER_N 테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + uTot);
 					stmt = conn.prepareStatement("DELETE FROM TBL_USER_N WHERE MDCD=? LIMIT 5000");
 					
 					stmt.setString(1, mildsc);
@@ -246,7 +255,7 @@ public class SfrScheduler extends QuartzJobBean {
 				}	
 				// USER 테이블 DELETE 종료
 				
-				log.error("USER 테이블 INSERT :	"+mildsc);
+				log.error("TBL_USER_N 테이블 INSERT :	"+mildsc);
 				
 				String queryString ="INSERT INTO TBL_USER_N  (  " + 
 									"  SEQ, RGST_DATE, MDCD, ID, ECRYPTPW " + 
@@ -262,7 +271,7 @@ public class SfrScheduler extends QuartzJobBean {
 									"AND ROWNUM > ? AND ROWNUM < ? ";
 				
 				for(int i=0; i < ifCnt; i+=5000) {
-					log.error("USER 테이블 INSERT  분할중 :	"+ (i+1) + "~" + (i+5000) + "/" + ifCnt);
+					log.error("TBL_USER_N 테이블 INSERT  분할중 :	"+ (i+1) + "~" + (i+5000) + "/" + ifCnt);
 					
 					stmt = conn.prepareStatement(queryString);
 					
@@ -276,23 +285,25 @@ public class SfrScheduler extends QuartzJobBean {
 					
 				
 				/* 인터페이스 삭제 주석
-				log.error("USER 인터페이스 테이블 DELETE :	"+mildsc);
+				 * 21.06.18 n일치를 제외한 나머지 삭제 */
+				log.error("TBL_USER_IF_N 인터페이스 테이블 DELETE :	"+mildsc);
 
-				stmt = conn.prepareStatement("SELECT COUNT(*) FROM tbl_user_if_n WHERE MDCD=?");
+				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_IF_N WHERE MDCD=? AND RGST_DATE < ?");
 				stmt.setString(1, mildsc);
+				stmt.setString(2, minusDay);
 				rs = stmt.executeQuery();
 				rs.next();
 				int iTot = rs.getInt(1);
 				int iCnt = (iTot/5000)+1;
 
 				for(int i=0; i<iCnt; i++ ){
-					log.error("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
-					stmt = conn.prepareStatement("DELETE FROM tbl_user_if_n WHERE MDCD=? LIMIT 5000");
+					log.error("TBL_USER_IF_N 테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
+					stmt = conn.prepareStatement("DELETE FROM TBL_USER_IF_N WHERE MDCD=? AND RGST_DATE < ? LIMIT 5000");
 					stmt.setString(1, mildsc);
+					stmt.setString(2, minusDay);
 					stmt.executeUpdate();	
 				}	
 				conn.commit();	
-				*/
 				
 			}else{
 				log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -364,23 +375,25 @@ public class SfrScheduler extends QuartzJobBean {
 				conn.commit();
 				
 				/* 인터페이스 삭제 주석
-				log.error("DEPT 인터페이스 테이블 DELETE :	"+mildsc);
+				 * 21.06.18 n일치를 제외한 나머지 삭제 */
+				log.error("TBL_DEPT_IF_N 인터페이스 테이블 DELETE :	"+mildsc);
 
-				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_IF_N WHERE MDCD=?");
+				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_IF_N WHERE MDCD=? AND RGST_DATE < ?");
 				stmt.setString(1, mildsc);
+				stmt.setString(2, minusDay);
 				rs = stmt.executeQuery();
 				rs.next();
 				int iTot = rs.getInt(1);
 				int iCnt = (iTot/5000)+1;
 
 				for(int i=0; i<iCnt; i++ ){
-					log.error("테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
-					stmt = conn.prepareStatement("DELETE FROM TBL_DEPT_IF_N WHERE MDCD=? LIMIT 5000");
+					log.error("TBL_DEPT_IF_N 테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
+					stmt = conn.prepareStatement("DELETE FROM TBL_DEPT_IF_N WHERE MDCD=? AND RGST_DATE < ? LIMIT 5000");
 					stmt.setString(1, mildsc);
+					stmt.setString(2, minusDay);
 					stmt.executeUpdate();		
 				}		
 				conn.commit();
-				*/
 				
 			}else{
 				log.error("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
