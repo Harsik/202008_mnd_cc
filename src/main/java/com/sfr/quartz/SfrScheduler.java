@@ -286,7 +286,7 @@ public class SfrScheduler extends QuartzJobBean {
 				
 				/* 인터페이스 삭제 주석
 				 * 21.06.18 n일치를 제외한 나머지 삭제 */
-				log.error("TBL_USER_IF_N 인터페이스 테이블 DELETE :	"+mildsc);
+				log.error("TBL_USER_IF_N 인터페이스 테이블 DELETE :	"+mildsc+ ", "+minusDay+" 이전 데이터 삭제");
 
 				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_IF_N WHERE MDCD=? AND RGST_DATE < ?");
 				stmt.setString(1, mildsc);
@@ -376,7 +376,7 @@ public class SfrScheduler extends QuartzJobBean {
 				
 				/* 인터페이스 삭제 주석
 				 * 21.06.18 n일치를 제외한 나머지 삭제 */
-				log.error("TBL_DEPT_IF_N 인터페이스 테이블 DELETE :	"+mildsc);
+				log.error("TBL_DEPT_IF_N 인터페이스 테이블 DELETE :	" +mildsc+ ", "+minusDay+" 이전 데이터 삭제");
 
 				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_IF_N WHERE MDCD=? AND RGST_DATE < ?");
 				stmt.setString(1, mildsc);
