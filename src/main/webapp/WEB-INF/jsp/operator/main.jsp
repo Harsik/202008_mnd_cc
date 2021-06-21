@@ -446,7 +446,7 @@
 				data : {
 					"callState"	: callState,		// 1: 언어폭력, 2: 성희롱, 3:업무방해
 					"custNm"	: custNm,			// 민원인명
-					"custTel"	: custTel.trim(),	// 민원인번호
+					"custTel"	: custTel.replace(/-/gi, "").trim(),	// 민원인번호
 					"custTelYn"	: telYn,			// 번호구분	Y: 휴대전화번호, N: 일반전화번호
 					"sldrYn"	: sldrYn,			// 군인구분	Y: 군인, N: 미등록인
 					"callDttm"	: callConnTime,		// 호인입시간
