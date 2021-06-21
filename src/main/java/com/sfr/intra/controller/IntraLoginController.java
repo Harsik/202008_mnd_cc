@@ -130,6 +130,7 @@ public class IntraLoginController {
 				SessionCheck.getInstance().doLogin(mildsc+loginId, mildsc+loginId, request.getRemoteAddr(), session);
 				
 				Map logMap = new HashMap();
+				logMap.put("initId", id);
 				logMap.put("mildsc", mildsc);
 				logMap.put("id", loginId);
 				logMap.put("connCd", "4");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
@@ -140,8 +141,18 @@ public class IntraLoginController {
 			
 		}else {
 			if(logYn.equals("Y")) {
-				System.out.println("connErrLog");
+				if(mildsc.equals("m")){	// m:국방(1), a:육군(5), n: 해군(6), f:공군(7)
+					mildsc = "A";
+				}else if(mildsc.equals("a")) {
+					mildsc = "B";
+				}else if(mildsc.equals("n")) {
+					mildsc = "C";
+				}else if(mildsc.equals("f")) {
+					mildsc = "D";
+				}
+				
 				Map logMap = new HashMap();
+				logMap.put("initId", id);
 				logMap.put("mildsc", mildsc);
 				logMap.put("id", loginId);
 				logMap.put("connCd", "4");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
@@ -160,6 +171,8 @@ public class IntraLoginController {
 	@RequestMapping(value="/loginPAjax.do")
 	public @ResponseBody Map loginPAjax(ModelMap model, HttpServletRequest request,@RequestParam Map paramMap) throws Exception{
 		System.out.println("loginPAjax.do [paramMap] >>> " + paramMap);
+		String initId = (String) paramMap.get("initId");
+		System.out.println("loginPAjax.do initId >>> " + initId);
 		String logYn = (String) paramMap.get("logYn");
 		
 		Map loginMap = intraService.intraLoginP(paramMap);
@@ -201,6 +214,7 @@ public class IntraLoginController {
 				SessionCheck.getInstance().doLogin(mildsc+loginId, mildsc+loginId, request.getRemoteAddr(), session);
 				
 				Map logMap = new HashMap();
+				logMap.put("initId", initId);
 				logMap.put("mildsc", mildsc);
 				logMap.put("id", loginId);
 				logMap.put("connCd", "3");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
@@ -212,9 +226,20 @@ public class IntraLoginController {
 		}else {
 			
 			if(logYn.equals("Y")) {
-				System.out.println("connErrLog");
+				String mildsc = (String) paramMap.get("mdcd");	// 1:국방부, 5:육군, 6:해군, 7:공군
+				if(mildsc.equals("1")){
+					mildsc = "A";
+				}else if(mildsc.equals("5")) {
+					mildsc = "B";
+				}else if(mildsc.equals("6")) {
+					mildsc = "C";
+				}else if(mildsc.equals("7")) {
+					mildsc = "D";
+				}
+				
 				Map logMap = new HashMap();
-				logMap.put("mildsc", paramMap.get("mdcd"));
+				logMap.put("initId", initId);
+				logMap.put("mildsc", mildsc);
 				logMap.put("id", paramMap.get("user_id"));
 				logMap.put("connCd", "3");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
 				logMap.put("userCd", "2"); 						// 0=슈퍼관리자, 1=교환원, 2=일반사용자, 3=일반관리자

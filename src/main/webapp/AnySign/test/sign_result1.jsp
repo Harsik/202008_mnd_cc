@@ -5,18 +5,12 @@
 <%@ page import="xecure.crypto.*" %>
 <%@ page import="java.io.*" %>
 <%
-	//out.println(java.nio.charset.Charset.defaultCharset().name());
 	request.setCharacterEncoding("UTF-8");
 	response.setContentType("text/html; charset=UTF-8");
 	String aCharset = "UTF-8";
 	
 	XecureConfig aXecureConfig = new XecureConfig ();
 	SignVerifier	verifier = null;
-	
-// 	System.out.println("sign_result1 aResult  >>> " + request.getParameter("aResult"));
-// 	System.out.println("sign_result1 aPlain >>> " + request.getParameter("aPlain"));
-// 	System.out.println("sign_result1 aOption >>> " + request.getParameter("aOption"));
-// 	System.out.println("sign_result1 mdcd >>> " + request.getParameter("mdcd"));
 	
 	String aResult = request.getParameter("aResult");
 	int aErrCode = 0;
@@ -69,16 +63,12 @@
 		else
 		{
 			aPlain = verifier.getVerifiedMsg_Text();
-// 			System.out.println("aPlain			>>> " + aPlain);
 			aCertificate = verifier.getSignerCertificate().getCertPem().replaceAll ("\n", "");
-// 			System.out.println("aCertificate	>>> " + aCertificate);
 			aSubjectRDN = verifier.getSignerCertificate().getSubject();
-// 			System.out.println("aSubjectRDN		>>> " + aSubjectRDN);
 			
 			byte[] buf = verifier.getVerifiedMsg();
 			
 			if(buf != null){
-// 				System.out.println("buf		>>> " + buf);
 				String tmp = "";
 				
 				for (int i = 0; i < buf.length; i++)
@@ -107,8 +97,6 @@
 			if(resultCode == "0") {
 				console.log("PKI 인증 성공");
 				var rdn = "<%=aSubjectRDN%>";
-// 				rdn = "cn=박준배(012914)";
-				rdn = "cn=이상현(12510953)";
 				var str = rdn.split(",")[0];
 				var subStringNm = str.substring(str.lastIndexOf("=")+1, str.lastIndexOf("("));
 				var subStringId = str.substring(str.lastIndexOf("(")+1, str.lastIndexOf(")"));
@@ -120,6 +108,7 @@
 					type:"post",
 					dataType:'json',
 					data:{
+						"initId"  : rdn,
 						"mdcd" : orignlMdcd,
 						"user_id" : id,
 						"user_nm" : nm,

@@ -701,6 +701,9 @@
 				, RGST_DTTM
 				, RGST_IP
 				, WAS_IP 
+				<if test="initId != null and !initId.equals('') ">
+				, INIT_ID
+				</if>
 		)
 		VALUES	( 
 				#{mildsc},
@@ -710,6 +713,9 @@
 				SYSDATETIME,
 				#{regIp},
 				'11.2.17.191'
+				<if test="initId != null and !initId.equals('') ">
+				, #{initId}
+				</if>
 		)
 	</insert>
 	
@@ -723,6 +729,9 @@
 				, RGST_DTTM
 				, RGST_IP 
 				, WAS_IP 
+				<if test="initId != null and !initId.equals('') ">
+				, INIT_ID
+				</if>
 		)
 		VALUES	( 
 				#{mildsc},
@@ -732,6 +741,9 @@
 				SYSDATETIME,
 				#{regIp},
 				'11.2.17.191'
+				<if test="initId != null and !initId.equals('') ">
+				, #{initId}
+				</if>
 		)
 	</insert>
 	
