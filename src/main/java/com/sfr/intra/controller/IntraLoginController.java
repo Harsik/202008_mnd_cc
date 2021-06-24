@@ -344,6 +344,12 @@ public class IntraLoginController {
 	}
 	
 	@RequestMapping(value="/logina.do")
+	public @ResponseBody ModelAndView loginProcA(String uid,ModelMap model, HttpServletRequest request,HttpServletResponse response) throws Exception {
+		return new ModelAndView("redirect:/intra/login.do");
+	}
+	
+	/*
+	@RequestMapping(value="/logina.do")
 	public @ResponseBody ModelAndView loginProcA(String uid, ModelMap model, HttpServletRequest request,HttpServletResponse response ,@RequestParam Map paramMap) throws Exception {
 				
 		System.out.println("loginId :" +uid);
@@ -361,9 +367,7 @@ public class IntraLoginController {
 		if(loginMap != null) {
 			System.out.println("0");
 			String loginId = loginMap.get("id").toString();
-				/*
-				 * 아이디 중복 로그인 체크
-				 * */
+				// 아이디 중복 로그인 체크
 				SessionCheck.getInstance().doLogout(mildsc+loginId);
 				
 				if((!SessionCheck.getInstance().isLogin(mildsc+loginId))){
@@ -424,6 +428,7 @@ public class IntraLoginController {
 		//return rtnMap;
 		return new ModelAndView("redirect:/intra/main.do");
 	}
+	*/
 	
 	@RequestMapping(value="/loginb.do")
 	public @ResponseBody ModelAndView loginProcB(String uid, String SMSESSION, ModelMap model, HttpServletRequest request, HttpServletResponse response,@RequestParam Map paramMap) throws Exception {
