@@ -453,7 +453,35 @@
 					"rgstId"	: window.sessionStorage.getItem("USERID"),	// 상담원
 				},
 				success : function(data) {
-					console.log("insert BLOCK IVR :: ");
+					if(data.result > 0){
+						SelectBlockIvr("0");
+					}else{
+						// 군인임에도 해당 데이터가 조회가 안 될 경우, 이름/인입번호라도 저장
+						$.ajax({
+							url : "/operator/insertBlockIvr.do",
+							type : "post",
+							dataType : 'json',
+							data : {
+								"callState"	: callState,		// 1: 언어폭력, 2: 성희롱, 3:업무방해
+								"custNm"	: custNm,			// 민원인명
+								"custTel"	: custTel.replace(/-/gi, "").trim(),	// 민원인번호
+								"custTelYn"	: telYn,			// 번호구분	Y: 휴대전화번호, N: 일반전화번호
+								"sldrYn"	: "N",				// 군인구분	Y: 군인, N: 미등록인
+								"callDttm"	: callConnTime,		// 호인입시간
+								"rgstId"	: window.sessionStorage.getItem("USERID"),	// 상담원
+							},
+							success : function(data) {
+								if(data.result > 0){
+									SelectBlockIvr("0");
+								}
+							},
+							error : function(data, status, err){ 
+								console.log("insert BLOCK IVR ERROR :: " + data);
+							}
+
+						});
+					}
+					
 				},
 				error : function(data, status, err){ 
 					console.log("insert BLOCK IVR ERROR :: " + data);
