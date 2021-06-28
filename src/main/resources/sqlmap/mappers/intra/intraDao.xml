@@ -597,7 +597,7 @@
 			'' AS opnpbl_yn,
 			'' AS state
 		FROM
-			mous0009_ifc0009
+			mous0006_ifc0006
 		WHERE
 			1 = 1
 			AND orignl_mdcd = #{mdcd}
