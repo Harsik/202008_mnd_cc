@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Properties;
 
 import org.quartz.JobExecutionContext;
@@ -218,12 +217,12 @@ public class SfrScheduler extends QuartzJobBean {
 		
 		try{
 			
-			/*
-			 * n일 전 날짜 반환
-			 * minusDays(n)
-			 * return : yyyymmdd
-			 */
-			String minusDay = LocalDate.now().minusDays(3).format(DateTimeFormatter.BASIC_ISO_DATE);
+			// 21.06.26
+			Calendar cal = Calendar.getInstance();
+			cal.add(Calendar.DATE, -3);
+			
+			String beforeDate = new java.text.SimpleDateFormat("yyyyMMdd").format(cal.getTime());
+			System.out.println("beforeDate >>> " + beforeDate);
 			
 			log.error("USER 인터페이스 테이블 확인 (B=육군, C=해군, D=공군) :	"+mildsc);
 			
@@ -286,11 +285,11 @@ public class SfrScheduler extends QuartzJobBean {
 				
 				/* 인터페이스 삭제 주석
 				 * 21.06.18 n일치를 제외한 나머지 삭제 */
-				log.error("TBL_USER_IF_N 인터페이스 테이블 DELETE :	"+mildsc+ ", "+minusDay+" 이전 데이터 삭제");
+				log.error("TBL_USER_IF_N 인터페이스 테이블 DELETE :	"+mildsc+ ", "+beforeDate+" 이전 데이터 삭제");
 
 				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_USER_IF_N WHERE MDCD=? AND RGST_DATE < ?");
 				stmt.setString(1, mildsc);
-				stmt.setString(2, minusDay);
+				stmt.setString(2, beforeDate);
 				rs = stmt.executeQuery();
 				rs.next();
 				int iTot = rs.getInt(1);
@@ -300,7 +299,7 @@ public class SfrScheduler extends QuartzJobBean {
 					log.error("TBL_USER_IF_N 테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
 					stmt = conn.prepareStatement("DELETE FROM TBL_USER_IF_N WHERE MDCD=? AND RGST_DATE < ? LIMIT 5000");
 					stmt.setString(1, mildsc);
-					stmt.setString(2, minusDay);
+					stmt.setString(2, beforeDate);
 					stmt.executeUpdate();	
 				}	
 				conn.commit();	
@@ -376,11 +375,11 @@ public class SfrScheduler extends QuartzJobBean {
 				
 				/* 인터페이스 삭제 주석
 				 * 21.06.18 n일치를 제외한 나머지 삭제 */
-				log.error("TBL_DEPT_IF_N 인터페이스 테이블 DELETE :	" +mildsc+ ", "+minusDay+" 이전 데이터 삭제");
+				log.error("TBL_DEPT_IF_N 인터페이스 테이블 DELETE :	" +mildsc+ ", "+beforeDate+" 이전 데이터 삭제");
 
 				stmt = conn.prepareStatement("SELECT COUNT(*) FROM TBL_DEPT_IF_N WHERE MDCD=? AND RGST_DATE < ?");
 				stmt.setString(1, mildsc);
-				stmt.setString(2, minusDay);
+				stmt.setString(2, beforeDate);
 				rs = stmt.executeQuery();
 				rs.next();
 				int iTot = rs.getInt(1);
@@ -390,7 +389,7 @@ public class SfrScheduler extends QuartzJobBean {
 					log.error("TBL_DEPT_IF_N 테이블 ROW 삭제중... "+ (i+1)*5000 + "/" + iTot);
 					stmt = conn.prepareStatement("DELETE FROM TBL_DEPT_IF_N WHERE MDCD=? AND RGST_DATE < ? LIMIT 5000");
 					stmt.setString(1, mildsc);
-					stmt.setString(2, minusDay);
+					stmt.setString(2, beforeDate);
 					stmt.executeUpdate();		
 				}		
 				conn.commit();
