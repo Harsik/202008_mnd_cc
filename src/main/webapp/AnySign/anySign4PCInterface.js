@@ -600,14 +600,16 @@ function UnifiedPluginInterface (aBasePath,
 				"/AnySign/v" + aVersion + "/anysign4pc_linux_x86_64.deb",
 				"/AnySign/v" + aVersion + "/anysign4pc_linux_x86_64.rpm"
 			],
-			aInstallPage	: "./installAnySign.jsp"
+			//aInstallPage		: "./installAnySign.jsp"
+			aInstallPage		: "/AnySign/test/installAnySign.jsp"
 		},
 		{
 			aName				: "mac universal",
 			aSearchWord			: "Mac",
 			//aAnySignInstallPath	: window.location.protocol + "//download.softforum.com/Published/AnySign/v" + aVersion + "/anysign4pc_mac_universal.pkg",
 			aAnySignInstallPath	: "/AnySign/v" + aVersion + "/anysign4pc_mac_universal.pkg",
-			aInstallPage		: "./installAnySign.jsp"
+			//aInstallPage		: "./installAnySign.jsp"
+			aInstallPage		: "/AnySign/test/installAnySign.jsp"
 		},
 		{
 			aName				: "windows 32bit",
@@ -616,7 +618,8 @@ function UnifiedPluginInterface (aBasePath,
 			aInstallPath		: "../install/xwcup_install_windows_x86.exe",
 			//aAnySignInstallPath	: window.location.protocol + "//download.softforum.com/Published/AnySign/v" + aVersion + "/AnySign_Installer.exe",
 			aAnySignInstallPath	: "/AnySign/v" + aVersion + "/AnySign_Installer.exe",
-			aInstallPage		: "./installAnySign.jsp"
+			//aInstallPage		: "./installAnySign.jsp"
+			aInstallPage		: "/AnySign/test/installAnySign.jsp"
 		},
 		{
 			aName				: "windows 64bit",
@@ -625,7 +628,8 @@ function UnifiedPluginInterface (aBasePath,
 			aInstallPath		: "../install/xwcup_install_windows_x64.exe",
 			//aAnySignInstallPath	: window.location.protocol + "//download.softforum.com/Published/AnySign/v" + aVersion + "/AnySign_Installer.exe",
 			aAnySignInstallPath	: "/AnySign/v" + aVersion + "/AnySign_Installer.exe",
-			aInstallPage		: "./installAnySign.jsp"
+			//aInstallPage		: "./installAnySign.jsp"
+			aInstallPage		: "/AnySign/test/installAnySign.jsp"
 		}
 	]
 

@@ -21,7 +21,8 @@ caption { display: none; }
 .infoReferBox {background-color: #fbfbfb; border: 1px solid #d6d6d6; overflow: hidden; font-size:14px; width:780px}
 
 .btn{vertical-align:top;display:inline-block}
-.btn.home{margin-left:295px;width:104px;height:42px;background:url(../AnySign4PC/img/sp_com.png) no-repeat -356px -700px}
+/* .btn.home{margin-left:295px;width:104px;height:42px;background:url(../AnySign4PC/img/sp_com.png) no-repeat -356px -700px} */
+.btn.home{margin-left:350px;width:104px;height:42px;background:url(../AnySign4PC/img/btn_ok_blue.png) no-repeat}
 .btn.down{margin-left:5px;width:70px;height:30px;background:url(../AnySign4PC/img/sp_com.png) no-repeat -268px -705px}
 </style>
 </head>
@@ -143,7 +144,8 @@ function installCheck_callback (result) {
 }
 
 function link () {	
-	document.location = AnySign.mBasePath + "/../test/AnySign4PCTest.jsp";
+// 	document.location = AnySign.mBasePath + "/../test/AnySign4PCTest.jsp";
+	location.href = "/intra/login.do";
 }
 
 AnySign.mAnySignShowImg.showImg = false;
