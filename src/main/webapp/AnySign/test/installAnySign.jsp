@@ -27,7 +27,7 @@ caption { display: none; }
 </style>
 </head>
 
-<script type="text/javascript" src="../anySign4PCInterface.js"></script>
+<script type="text/javascript" src="/AnySign/anySign4PCInterface.js"></script>
 <script type="text/javascript">
 <%
     VidVerifier vid = new VidVerifier(new XecureConfig());
@@ -144,8 +144,8 @@ function installCheck_callback (result) {
 }
 
 function link () {	
-// 	document.location = AnySign.mBasePath + "/../test/AnySign4PCTest.jsp";
-	location.href = "/intra/login.do";
+<!--	document.location = AnySign.mBasePath + "/../test/AnySign4PCTest.jsp"; -->
+	document.location = "/intra/login.do";
 }
 
 AnySign.mAnySignShowImg.showImg = false;

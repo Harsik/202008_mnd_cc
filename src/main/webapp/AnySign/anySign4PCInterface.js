@@ -45,7 +45,8 @@ function AnySignInitialize ()
 	}
 
 	// 사이트에서 사용할 AnySign 버전.
-	var aVersion = "1.1.1.0";
+	//var aVersion = "1.1.1.0";
+	var aVersion = "1.1.2.8";
 
 	// support ko-KR and en-US
 	var aLanguage = "ko-KR";
