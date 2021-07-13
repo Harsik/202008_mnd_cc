@@ -22,7 +22,8 @@ caption { display: none; }
 
 .btn{vertical-align:top;display:inline-block}
 /* .btn.home{margin-left:295px;width:104px;height:42px;background:url(../AnySign4PC/img/sp_com.png) no-repeat -356px -700px} */
-.btn.home{margin-left:350px;width:104px;height:42px;background:url(../AnySign4PC/img/btn_ok_blue.png) no-repeat}
+/* .btn.home{margin-left:350px;width:104px;height:42px;background:url(../AnySign4PC/img/btn_ok_blue.png) no-repeat} */
+.btn.home{display:inline-block; padding:5px 10px; margin-left:300px;font-size:15px; line-height:18px;border:1px solid #55a4e3; color:#ffffff; background:#55a4e3;text-align:center; white-space:nowrap;}
 .btn.down{margin-left:5px;width:70px;height:30px;background:url(../AnySign4PC/img/sp_com.png) no-repeat -268px -705px}
 </style>
 </head>
@@ -195,14 +196,16 @@ setTimeout(function () {
 <p>
 <div class="infoReferBox">
 <ul>
-<li>운영 시스템(OS) : <strong><script type="text/javascript">document.write(AnySign.mPlatform.aName);</script></strong></li>
+<!-- <li>운영 시스템(OS) : <strong><script type="text/javascript">document.write(AnySign.mPlatform.aName);</script></strong></li> -->
 <li>웹브라우저 : <strong><script type="text/javascript">document.write(AnySign.mBrowser.aName);</script></strong></li>
 <li>필요 모듈버전 : <strong><script type="text/javascript">document.write(AnySign.mAnySignVersion);</script></strong></li>
 
 </ul>
 </div>
 <p>
-<a class="btn home" href="javascript:link();"></a>
+<!-- <a class="btn home" href="javascript:link();">전화번호 검색체계</a> -->
+<p style="width: 780px; text-align: center;">* 프로그램 설치 후 아래의 버튼을 클릭해 로그인 페이지로 이동해 주세요</p>
+<button class="btn home" onclick="link()">전화번호 검색체계</button>
 
 
 </body>
