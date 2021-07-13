@@ -497,10 +497,14 @@ public class SfrScheduler extends QuartzJobBean {
 						+ " (SELECT SEQ, ?, ?, DEPT_CD, DEPT_NM, "
 						+ "  SEQC, DEPT_ABRVWD_NM, WHL_DEPT_NM, HGRNK_DEPT_CD, "
 						+ "  TELNO, OPNPBL_YN, DEPT_EXSTNC_EXNEX "
-						+ " FROM TBL_DEPT_A_IF_N)");
+						+ " FROM TBL_DEPT_A_IF_N WHERE DEPT_CD NOT IN (?,?))");
 				
 				stmt.setString(1, thisDay);
 				stmt.setString(2, mildsc);
+				// 국방부 국직기관 안보지원사령부 제외
+				stmt.setString(3, "9800105");
+				// 국방부 기타 800군사안보지원부대 제외
+				stmt.setString(4, "999C215");
 				
 				stmt.executeUpdate();	
 				conn.commit();		
