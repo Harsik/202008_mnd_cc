@@ -25,8 +25,8 @@
 }
 .login_notice_line {
 	padding: 10px; text-align: center; color: rgb(102, 102, 102); font-size: 15px; box-sizing:border-box;
-/* 	background-color: rgb(235, 235, 235); */
-	background-color: rgb(255, 255, 255);
+ 	background-color: rgb(235, 235, 235);
+/* 	background-color: rgb(255, 255, 255); */
 }
 .login_form .login_radio_wrap {
 	margin-left: 27%; float: left; padding: 2px; border: 1px solid rgb(204, 204, 204); border-image: none; width: 250px; height:130px; text-align: center; display: block;
@@ -105,14 +105,75 @@
 a {
 	color: rgb(0, 123, 255); text-decoration: none; background-color: transparent;
 }
+
+/* Modal Css */
+/* The Modal (background) */
+.modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    
+    /* Modal Content/Box */
+    .modal-content {
+    	
+        background-color: #fefefe;
+		/* margin: 15% auto;  15% from the top and centered */
+        margin: 22% 15% 15% 41%;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 20%; /* Could be more or less, depending on screen size */                          
+    }
+    /* The Close Button */
+    .close {
+	    color: #aaa;
+	    float: right;
+	    font-size: 28px;
+	    font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+    	color: black;
+    	text-decoration: none;
+    	cursor: pointer;
+    }
+
 </style>
 	
-	<script type="text/javascript">
-		function fnLogin(){
-			$("#mdcd").val($(".login_radio_wrap input[type='radio']:checked").val());
-			AnySign.SignDataCMS ("","","",0,"","3","0");
+<script type="text/javascript">
+$(document).ready(function() {
+			
+	$('.modal span.close').on('click', function(){
+		modal.style.display = "none";
+	});
+		 
+	window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
 		}
-	</script>	
+	}
+});
+		
+var modal = "";
+		
+function openModal(i){
+	modal = document.getElementById('myModal'+i);
+	modal.style.display = "block";
+}
+		
+function fnLogin(){
+	$("#mdcd").val($(".login_radio_wrap input[type='radio']:checked").val());
+	AnySign.SignDataCMS ("","","",0,"","3","0");
+}
+		
+</script>	
 </head>
 <body>
 
@@ -120,11 +181,7 @@ a {
 
 	<!-- start -->
 	<div class="login_content">
-		<div class="login_notice_line">
-			<a onclick="" href="#" target='_blank'></a><br />
-			<a onclick="" href="#" target='_blank'></a><br />
-			<a onclick="" href="#" target='_blank'></a><br />
-		</div>
+		<%@include file="./notice/loginProNotice.jsp"%>
 		<form name="loginForm" class="login_form" id="loginForm" onsubmit="return false;" method="post">
 		<p style="text-align: center; padding-top: 10px; font-size: 13px;">본래 소속 군을 선택해주세요. <span style="color: red;">( 주의! 근무지 소속 아님! )</span> </p> 
 		
@@ -171,6 +228,7 @@ a {
 	<!-- end -->
 	
 </div>
+	
 <form id="pform" name="pform" method="post">
 	<input type="hidden" id="aResult" name="aResult">
 	<input type="hidden" id="aPlain" name="aPlain">
