@@ -97,12 +97,6 @@
 			if(resultCode == "0") {
 				console.log("PKI 인증 성공");
 				var rdn = "<%=aSubjectRDN%>";
-				var str = rdn.split(",")[0];
-				var subStringNm = str.substring(str.lastIndexOf("=")+1, str.lastIndexOf("("));
-				var subStringId = str.substring(str.lastIndexOf("(")+1, str.lastIndexOf(")"));
-				var nm = subStringNm;
-				var id = subStringId;
-				console.log("nm : "+nm+", id : "+id);
 				$.ajax({   
 					url:"/intra/loginPAjax.do",
 					type:"post",
@@ -110,8 +104,6 @@
 					data:{
 						"initId"  : rdn,
 						"mdcd" : orignlMdcd,
-						"user_id" : id,
-						"user_nm" : nm,
 						"logYn"	: "Y"
 					},
 					success:function(data) {

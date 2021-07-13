@@ -601,8 +601,9 @@
 		WHERE
 			1 = 1
 			AND orignl_mdcd = #{mdcd}
-			AND USER_NM = #{user_nm}
-			AND (REPLACE(srvno,'-','') = #{user_id})
+<!-- 			AND USER_NM = #{user_nm} -->
+<!-- 			AND (REPLACE(srvno,'-','') = #{user_id}) -->
+			AND certino = #{initId}
 			AND data_del_yn != 'Y'
 			ORDER BY dims_data_crt_dhms DESC
 		) WHERE ROWNUM =1
