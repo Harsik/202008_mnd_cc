@@ -348,6 +348,21 @@ public class IntraLoginController {
 		return new ModelAndView("redirect:/intra/login.do");
 	}
 	
+	@RequestMapping(value="/loginb.do")
+	public @ResponseBody ModelAndView loginProcB(String uid, String SMSESSION, ModelMap model, HttpServletRequest request, HttpServletResponse response,@RequestParam Map paramMap) throws Exception {
+		return new ModelAndView("redirect:/intra/login.do");
+	}
+	
+	@RequestMapping(value="/loginc.do")
+	public @ResponseBody ModelAndView loginProcC(String uid,String ssotoken ,ModelMap model, HttpServletRequest request, @RequestParam Map paramMap) throws Exception {
+		return new ModelAndView("redirect:/intra/login.do");
+	}
+	
+	@RequestMapping(value="/logind.do")
+	public @ResponseBody ModelAndView loginProcD(String uid,  String sofotoken,ModelMap model, HttpServletRequest request,HttpServletResponse response,@RequestParam Map paramMap) throws Exception {
+		return new ModelAndView("redirect:/intra/login.do");
+	}
+	
 	/*
 	@RequestMapping(value="/logina.do")
 	public @ResponseBody ModelAndView loginProcA(String uid, ModelMap model, HttpServletRequest request,HttpServletResponse response ,@RequestParam Map paramMap) throws Exception {
@@ -428,7 +443,7 @@ public class IntraLoginController {
 		//return rtnMap;
 		return new ModelAndView("redirect:/intra/main.do");
 	}
-	*/
+	
 	
 	@RequestMapping(value="/loginb.do")
 	public @ResponseBody ModelAndView loginProcB(String uid, String SMSESSION, ModelMap model, HttpServletRequest request, HttpServletResponse response,@RequestParam Map paramMap) throws Exception {
@@ -492,9 +507,6 @@ public class IntraLoginController {
 		if(loginMap != null) {
 			
 			String loginId = loginMap.get("id").toString();
-				/*
-				 * 아이디 중복 로그인 체크
-				 * */
 					SessionCheck.getInstance().doLogout(mildsc+loginId);
 			
 				if((!SessionCheck.getInstance().isLogin(mildsc+loginId)) || "true".equals(paramMap.get("loginFlag"))){
@@ -553,7 +565,6 @@ public class IntraLoginController {
 	}
 	
 	
-	
 	@RequestMapping(value="/loginc.do")
 	public @ResponseBody ModelAndView loginProcC(String uid,String ssotoken ,ModelMap model, HttpServletRequest request, @RequestParam Map paramMap) throws Exception {
 		
@@ -594,9 +605,6 @@ public class IntraLoginController {
 			if(loginMap != null) {
 				
 				String loginId = loginMap.get("id").toString();
-					/*
-					 * 아이디 중복 로그인 체크
-					 * */
 				
 						SessionCheck.getInstance().doLogout(mildsc+loginId);
 					if((!SessionCheck.getInstance().isLogin(mildsc+loginId)) || "true".equals(paramMap.get("loginFlag"))){
@@ -654,7 +662,6 @@ public class IntraLoginController {
 			return new ModelAndView("redirect:/intra/main.do");
 	}
 
-
 	@RequestMapping(value="/logind.do")
 	public @ResponseBody ModelAndView loginProcD(String uid,  String sofotoken,ModelMap model, HttpServletRequest request,HttpServletResponse response,@RequestParam Map paramMap) throws Exception {
 
@@ -665,21 +672,20 @@ public class IntraLoginController {
 	        
 	        String sToken = null;
 	        
-	       /* Cookie cookies[] = request.getCookies();
+	        //Cookie cookies[] = request.getCookies();
 	        //System.out.println("##" +cookies.length);
 	       
-	        if(cookies != null) {
-	        	for(int i = 0; i < cookies.length; i++) {
-	            	System.out.println("length " + cookies[i].getName());
-	               if (cookies[i].getName().equals("ka_sso_token")) {
-	                  sToken = cookies[i].getValue();
-	                  //whichToken = "softforum";
-	                  break;
-	               }
-	            }
-	        }   
+//	        if(cookies != null) {
+//	        	for(int i = 0; i < cookies.length; i++) {
+//	            	System.out.println("length " + cookies[i].getName());
+//	               if (cookies[i].getName().equals("ka_sso_token")) {
+//	                  sToken = cookies[i].getValue();
+//	                  //whichToken = "softforum";
+//	                  break;
+//	               }
+//	            }
+//	        }   
 
-*/
 	        sToken = sofotoken;
 	        System.out.println("sToken :  " + sToken);
 	        
@@ -716,10 +722,7 @@ public class IntraLoginController {
 		if(loginMap != null) {
 			
 			String loginId = loginMap.get("id").toString();
-				/*
-				 * 아이디 중복 로그인 체크
-				 * */
-			
+
 					SessionCheck.getInstance().doLogout(mildsc+loginId);
 				if((!SessionCheck.getInstance().isLogin(mildsc+loginId)) || "true".equals(paramMap.get("loginFlag"))){
 					
@@ -776,7 +779,7 @@ public class IntraLoginController {
 		return new ModelAndView("redirect:/intra/main.do");
 	}
 	
-	
+	*/
 	
 	
 	@RequestMapping("/logout.do")
