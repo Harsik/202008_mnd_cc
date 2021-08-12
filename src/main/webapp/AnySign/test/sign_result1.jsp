@@ -93,10 +93,11 @@
 <script>
 	var orignlMdcd = "<%=request.getParameter("mdcd")%>";
 	var resultCode = "<%=aErrCode%>";
+	var rdn = "<%=aSubjectRDN%>";
+	var errReason = "<%=aErrReason%>";
 		$(document).ready(function(){
 			if(resultCode == "0") {
 				console.log("PKI 인증 성공");
-				var rdn = "<%=aSubjectRDN%>";
 				$.ajax({   
 					url:"/intra/loginPAjax.do",
 					type:"post",
@@ -111,7 +112,6 @@
 						if(data.code == '0'){
 							location.href = "/intra/main.do";
 						}else {
-							//alert(data.msg);
 							alert("인증서 정보가 올바르지 않습니다.\n포탈에서 로그인 해주세요.");
 							location.href = "/intra/login.do";
 						}
@@ -123,8 +123,23 @@
 					}
 				}); 
 			}else{
-				alert("인증서 정보가 올바르지 않습니다.\n포탈에서 로그인 해주세요.");
-				location.href = "/intra/login.do";
+				$.ajax({   
+					url:"/intra/errLog.do",
+					type:"post",
+					dataType:'json',
+					data:{
+						"initId"  : rdn,
+						"mdcd" : orignlMdcd,
+						"resultCode" : resultCode,
+						"errReason"	: errReason
+					},
+					success:function(data) {
+						alert("PKI ERROR !! 에러코드 : "+resultCode+"\n"+errReason);
+					},error : function(data, status, err) 
+					{
+						alert("PKI ERROR !! 에러코드 : "+resultCode+"\n"+errReason);
+					}
+				}); 
 			}
 			 
 		});

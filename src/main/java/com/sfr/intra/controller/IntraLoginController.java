@@ -363,6 +363,34 @@ public class IntraLoginController {
 		return new ModelAndView("redirect:/intra/login.do");
 	}
 	
+	@RequestMapping(value="/errLog.do")
+	public @ResponseBody ModelAndView errLog(HttpServletRequest request,@RequestParam Map paramMap) throws Exception {
+		System.out.println("errLog.do paramMap >>> " + paramMap);
+		String initId = (String) paramMap.get("initId");
+		String mildsc = (String) paramMap.get("mdcd");	// 1:국방부, 5:육군, 6:해군, 7:공군
+		String errorInfo = (String) paramMap.get("resultCode") + ", " + (String) paramMap.get("errReason");	// ERROR_CD + ERROR_REASON
+		if(mildsc.equals("1")){
+			mildsc = "A";
+		}else if(mildsc.equals("5")) {
+			mildsc = "B";
+		}else if(mildsc.equals("6")) {
+			mildsc = "C";
+		}else if(mildsc.equals("7")) {
+			mildsc = "D";
+		}
+		
+		Map logMap = new HashMap();
+		logMap.put("initId", initId);
+		logMap.put("mildsc", mildsc);
+		logMap.put("id", errorInfo);
+		logMap.put("connCd", "3");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
+		logMap.put("userCd", "2"); 						// 0=슈퍼관리자, 1=교환원, 2=일반사용자, 3=일반관리자
+		logMap.put("regIp", request.getRemoteAddr());
+		adminService.connErrlog(logMap);
+		
+		return new ModelAndView("redirect:/intra/login.do");
+	}
+	
 	/*
 	@RequestMapping(value="/logina.do")
 	public @ResponseBody ModelAndView loginProcA(String uid, ModelMap model, HttpServletRequest request,HttpServletResponse response ,@RequestParam Map paramMap) throws Exception {

@@ -26,9 +26,11 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
 		, "/intra/loginc"
 		, "/intra/logind"
 		, "/intra/loginU"
+		, "/intra/errLog"
 		, "/operator/ivrCallUser"
 		, "/operator/blockCheck"
 		, "/operator/reqPrompt"
+		, "/test"
 	};
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
