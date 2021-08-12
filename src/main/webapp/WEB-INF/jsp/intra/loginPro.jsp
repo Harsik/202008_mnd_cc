@@ -126,10 +126,10 @@ a {
     	
         background-color: #fefefe;
 		/* margin: 15% auto;  15% from the top and centered */
-        margin: 22% 15% 15% 41%;
+        margin: 18% 15% 15% 31%;
         padding: 20px;
         border: 1px solid #888;
-        width: 20%; /* Could be more or less, depending on screen size */                          
+        width: 40%; height: 40%;            
     }
     /* The Close Button */
     .close {
