@@ -269,4 +269,9 @@ public class IntraServiceImpl implements IntraService{
         return intraDao.selectBkmkSubGroupList(paramMap);
     }
     
+    @Override
+	public int selectUserMpno(Map paramMap) {
+		return intraDao.selectUserMpno(paramMap);
+	}
+    
 }

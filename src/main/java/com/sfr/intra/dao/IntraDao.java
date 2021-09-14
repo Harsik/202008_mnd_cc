@@ -364,4 +364,7 @@ public class IntraDao {
         return (List)sqlSession.selectList("intra.intra.selectBkmkSubGroupList", paramMap);
     }   
     
+    public int selectUserMpno(Map paramMap) {
+        return sqlSession.selectOne("intra.intra.selectUserMpno", paramMap);
+    }
 }

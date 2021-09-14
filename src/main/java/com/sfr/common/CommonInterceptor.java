@@ -27,6 +27,7 @@ public class CommonInterceptor extends HandlerInterceptorAdapter {
 		, "/intra/logind"
 		, "/intra/loginU"
 		, "/intra/errLog"
+		, "/intra/mpnoYN"
 		, "/operator/ivrCallUser"
 		, "/operator/blockCheck"
 		, "/operator/reqPrompt"

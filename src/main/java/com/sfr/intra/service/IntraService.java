@@ -100,4 +100,5 @@ public interface IntraService {
     
     List<Map> selectBkmkSubGroupList(Map paramMap) throws Exception;    
     
+    int selectUserMpno(Map paramMap) throws Exception;
 }

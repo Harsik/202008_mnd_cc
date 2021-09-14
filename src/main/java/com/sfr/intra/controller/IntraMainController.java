@@ -888,6 +888,26 @@ public class IntraMainController {
        list.addAll(intraService.selectBkmkSubGroupList(paramMap));
        
        return list;
-   }    
+   }
+   
+   @ResponseBody
+   @RequestMapping(value="/mpnoYN.do")
+   public String selectUserMpno(@RequestParam Map paramMap, HttpServletRequest requset){
+	   int result;
+	   String check ="";
+	   try {
+		   result = intraService.selectUserMpno(paramMap);
+				
+		   if(result!=0) {
+			   check = "Y";
+		   }else {
+			   check = "N";
+		   }
+		   
+	   } catch (Exception e) {
+		   check = "N";
+	   }
+	   return check;  
+   }
    
 }
