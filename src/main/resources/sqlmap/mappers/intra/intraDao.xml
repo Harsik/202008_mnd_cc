@@ -1110,4 +1110,14 @@
 			REPLACE(MPNO, '-', '') = #{ANI}
 			AND DATA_DEL_YN = 'N'
   </select>
+<!-- 
+  <select  id="selectUserMpno" resultType="int" parameterType="map">
+  		SELECT
+			COUNT(*)
+		FROM
+			tbl_user_n
+		WHERE
+			REPLACE(MPNO, '-', '') = #{ANI}
+  </select>
+-->
 </mapper>
