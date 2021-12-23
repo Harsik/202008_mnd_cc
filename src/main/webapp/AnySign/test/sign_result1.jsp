@@ -135,9 +135,11 @@
 					},
 					success:function(data) {
 						alert("PKI ERROR !! 에러코드 : "+resultCode+"\n"+errReason);
+						location.href = "/intra/login.do";
 					},error : function(data, status, err) 
 					{
 						alert("PKI ERROR !! 에러코드 : "+resultCode+"\n"+errReason);
+						location.href = "/intra/login.do";
 					}
 				}); 
 			}

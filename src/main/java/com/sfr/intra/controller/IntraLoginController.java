@@ -240,7 +240,7 @@ public class IntraLoginController {
 				Map logMap = new HashMap();
 				logMap.put("initId", initId);
 				logMap.put("mildsc", mildsc);
-				logMap.put("id", paramMap.get("user_id"));
+				logMap.put("id", initId);
 				logMap.put("connCd", "3");						// 1=ip/pw, 2=sso, 3=공인인증서, 4=통합SSO
 				logMap.put("userCd", "2"); 						// 0=슈퍼관리자, 1=교환원, 2=일반사용자, 3=일반관리자
 				logMap.put("regIp", request.getRemoteAddr());
