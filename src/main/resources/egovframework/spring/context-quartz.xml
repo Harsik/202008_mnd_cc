@@ -14,6 +14,10 @@
 	<bean name="sfrJob2" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
 		<property name="jobClass" value="com.sfr.quartz.SfrScheduler2" />
 	</bean>
+	<!-- MOUS 일배치 -->
+	<bean name="sfrJob3" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="jobClass" value="com.sfr.quartz.SfrScheduler3" />
+	</bean>
 
 	<!-- 각군 일배치 -->
 	<bean id="sfrCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
@@ -30,20 +34,19 @@
 		<property name="jobDetail" ref="sfrJob2" />
 		<property name="cronExpression" value="0 30 1 ? * 1 *" />
 	</bean>
+	<!-- MOUS 일배치-->
+	<bean id="sfrCronTrigger3" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="sfrJob3" />
+		<property name="cronExpression" value="0 53 15 * * ?" />
+	</bean>
 
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<!-- 
-		<property name="jobDetails">
-			<list>
-				<ref bean="sfrJob"/>
-			</list>
-		</property>
-		-->
 		<property name="triggers">
 			<list>
 				<ref bean="sfrCronTrigger"/>
 				<ref bean="sfrCronTrigger1"/>
 				<ref bean="sfrCronTrigger2"/>
+				<ref bean="sfrCronTrigger3"/>
 			</list>
 		</property>
 	</bean>
