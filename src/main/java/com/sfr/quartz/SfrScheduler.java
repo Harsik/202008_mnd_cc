@@ -493,18 +493,30 @@ public class SfrScheduler extends QuartzJobBean {
 				
 				log.error("DEPT 테이블 INSERT  (A=국방부) :	"+mildsc);
 				
+				
 				stmt = conn.prepareStatement("INSERT INTO TBL_DEPT_N "
 						+ " (SELECT SEQ, ?, ?, DEPT_CD, DEPT_NM, "
 						+ "  SEQC, DEPT_ABRVWD_NM, WHL_DEPT_NM, HGRNK_DEPT_CD, "
 						+ "  TELNO, OPNPBL_YN, DEPT_EXSTNC_EXNEX "
-						+ " FROM TBL_DEPT_A_IF_N WHERE DEPT_CD NOT IN (?,?))");
+						+ " FROM TBL_DEPT_A_IF_N)");
+				
+				/* 2022.01.21 : 1515에서 안보사 포함되어야 하기 때문에 주석처리
+				stmt = conn.prepareStatement("INSERT INTO TBL_DEPT_N "
+						+ " (SELECT SEQ, ?, ?, DEPT_CD, DEPT_NM, "
+						+ "  SEQC, DEPT_ABRVWD_NM, WHL_DEPT_NM, HGRNK_DEPT_CD, "
+						+ "  TELNO, OPNPBL_YN, DEPT_EXSTNC_EXNEX "
+						+ " FROM TBL_DEPT_A_IF_N WHERE DEPT_CD NOT IN (?,?))"); 
+				*/
 				
 				stmt.setString(1, thisDay);
 				stmt.setString(2, mildsc);
+				
+				/* 2022.01.21 : 1515에서 안보사 포함되어야 하기 때문에 주석처리
 				// 국방부 국직기관 안보지원사령부 제외
 				stmt.setString(3, "9800105");
 				// 국방부 기타 800군사안보지원부대 제외
 				stmt.setString(4, "999C215");
+				*/
 				
 				stmt.executeUpdate();	
 				conn.commit();		
