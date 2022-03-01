@@ -162,20 +162,29 @@ public class MainController {
 	@RequestMapping(value="/selectPopupList.do", method=RequestMethod.POST)
 	public @ResponseBody ModelAndView selectPopupList(@RequestParam Map paramMap, HttpServletRequest requset, @ModelAttribute("searchVO") PagingVO vo ){
 		System.out.println("MainController Popup paramMap >> " + paramMap);
-		
 		ModelAndView model = new ModelAndView("jsonView");
 		
 		List<Map> list = new ArrayList<>();
 		
+		String deptNm = requset.getSession().getAttribute("user_dept").toString();
+		System.out.println("user_dept > " + deptNm);
 		try {
 			paramMap.put("id", requset.getSession().getAttribute("user_id").toString());
 			
+			/*
 			if(requset.getRemoteAddr().equals("79.1.30.2")) { // 70대대
 				list = operatorService.selectoperatorList70(paramMap);
 			} else if(requset.getRemoteAddr().equals("1.1.51.33")) { // 70대대 (국방망PC. 테스트로 70대대 조회하도록 설정함)
 				list = operatorService.selectoperatorList70(paramMap);
 			} else {
 				list = operatorService.selectoperatorList(paramMap); // 60대대, 국방망 등등
+			}
+			*/
+			
+			if(deptNm.equals("60")) {
+				list = operatorService.selectoperatorList(paramMap);
+			}else {
+				list = operatorService.selectoperatorList70(paramMap);
 			}
 		
 		} catch (Exception e) {
@@ -186,6 +195,19 @@ public class MainController {
 		model.addObject("list", list);
 
 		return model;
+	}
+	
+	@RequestMapping("/selectUserIp.do")
+	public @ResponseBody ModelAndView selectUserIp(@RequestParam Map paramMap, HttpServletRequest requset){
+		System.out.println("MainController selectUserIp paramMap >> " + paramMap);
+		
+		ModelAndView model = new ModelAndView("jsonView");
+		
+		String usrIp = requset.getRemoteAddr();
+		System.out.println("usrIp > " + usrIp);
+		model.addObject("usrIp", usrIp);
+		
+		return model; 
 	}
 
 	

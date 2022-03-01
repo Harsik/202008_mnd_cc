@@ -247,6 +247,14 @@
 	</select>
 	
 	
+	<select id="selectAgentInfo" parameterType="map" resultType="egovMap">
+		SELECT   AGENT_ID AS EMPLOYEE_NAME 
+		       , AGENT_ID AS LOGIN_ID
+		       , DEPT_NM
+		FROM     TBL_AGENT_N
+		WHERE    AGENT_ID = #{id}
+	</select>
+	
 	<select id="selectCtiUser" parameterType="map" resultType="egovMap">
 		SELECT   EMPLOYEE_NAME 
 		       , LOGIN_ID

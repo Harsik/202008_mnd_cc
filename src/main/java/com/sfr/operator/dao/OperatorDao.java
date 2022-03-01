@@ -138,7 +138,11 @@ public class OperatorDao {
 	public List selectDeptTree(Map paramMap) {
 		return (List)sqlSession.selectList("operator.operator.selectDeptTree", paramMap);
 	}
-
+	
+	public Map selectAgentInfo(Map paramMap) {
+		
+		return sqlSession.selectOne("operator.operator.selectAgentInfo", paramMap);
+	}
 
 	public Map selectCtiUser(Map paramMap) {
 		

@@ -31,6 +31,8 @@ $(document).on("click","#btn_close", function() {
 })  
 
 function fnInit(){
+	getUserIp();
+	
 	//월별  set start
     $("#MonthStart").MonthPicker({
         MaxMonth: 0
@@ -159,6 +161,20 @@ function fnSearch(){
 		},
 		success:function(data) {
 			createTable(data);
+		}
+	});
+}
+
+function getUserIp(){
+	$.ajax({   
+		url:"/operator/selectUserIp.do",
+		dataType:'json',
+		type:"post",
+		async:true,
+		data:{
+		},
+		success:function(data) {
+			alert("사용자IP [  " + data.usrIp + "  ]");
 		}
 	});
 }

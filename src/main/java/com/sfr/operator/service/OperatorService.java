@@ -27,6 +27,8 @@ public interface OperatorService {
 	
 	List<Map> selectoperatorList70(Map paramMap) throws Exception;
 
+	Map selectAgentInfo(Map paramMap) throws Exception;
+	
 	Map selectCtiUserInfo(Map paramMap) throws Exception;
 
 	Map selectCtiUserInfo70(Map paramMap) throws Exception;

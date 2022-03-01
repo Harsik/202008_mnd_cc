@@ -63,7 +63,7 @@ public class LoginController {
 		
 		System.out.println(" >>>>> /loginProc.do  >>> id : " + id);
 
-		
+		/*
 		if(request.getRemoteAddr().equals("79.1.30.2")) { // 70대대
 			loginMap = operatorService.selectCtiUserInfo70(paramMap);
 			System.out.println(" >>>>> /loginProc.do  >>> 70 ip : " + request.getRemoteAddr());
@@ -71,6 +71,8 @@ public class LoginController {
 			loginMap = operatorService.selectCtiUserInfo(paramMap); // 60대대, 국방망 등등
 			System.out.println(" >>>>> /loginProc.do  >>> else ip : " + request.getRemoteAddr());
 		}
+		*/
+		loginMap = operatorService.selectAgentInfo(paramMap);
 		
 		Map rtnMap = new HashMap();
 
@@ -80,6 +82,8 @@ public class LoginController {
 				HttpSession session = request.getSession();
 				session.setAttribute("user_id", loginMap.get("loginId"));
 				session.setAttribute("user_name", loginMap.get("employeeName"));
+				
+				session.setAttribute("user_dept", loginMap.get("deptNm"));
 				
 				session.setAttribute("userCd", "1");
 				

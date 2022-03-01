@@ -93,7 +93,12 @@ public class OperatorServiceImpl implements OperatorService{
 	public int getDeptCount(Map paramMap) throws Exception {
 		return operatorDao.getDeptCount(paramMap);
 	}
-
+	
+	@Override
+	public Map selectAgentInfo(Map paramMap) throws Exception {
+		
+		return operatorDao.selectAgentInfo(paramMap);
+	}
 
 	@Override
 	public Map selectCtiUserInfo(Map paramMap) throws Exception {
