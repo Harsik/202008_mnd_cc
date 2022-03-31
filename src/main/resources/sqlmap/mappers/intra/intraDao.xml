@@ -1101,23 +1101,23 @@
 
   </select>   
   
-<!--
-   <select  id="selectUserMpno" resultType="int" parameterType="map">
-  		SELECT
-			COUNT(*)
-		FROM
-			MOUS0006_IFC0006
-		WHERE
-			REPLACE(MPNO, '-', '') = #{ANI}
-			AND DATA_DEL_YN = 'N'
+  <select  id="selectUserMpno" resultType="int" parameterType="map">
+  	SELECT
+		COUNT(*)
+	FROM
+		tbl_mous_user
+	WHERE
+		REPLACE(MPNO, '-', '') = #{ANI}
   </select>
- -->
-   <select  id="selectUserMpno" resultType="int" parameterType="map">
-  		SELECT
-			COUNT(*)
-		FROM
-			tbl_user_n
-		WHERE
-			REPLACE(MPNO, '-', '') = #{ANI}
+	
+  <!-- 
+  <select  id="selectUserMpno" resultType="int" parameterType="map">
+	SELECT
+		COUNT(*)
+	FROM
+		tbl_user_n
+	WHERE
+		REPLACE(MPNO, '-', '') = #{ANI}
   </select>
+   -->
 </mapper>
