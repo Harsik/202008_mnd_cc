@@ -8,13 +8,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import org.quartz.DisallowConcurrentExecution;
+import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-public class SfrScheduler3 extends QuartzJobBean {
+@DisallowConcurrentExecution
+public class SfrScheduler3 extends QuartzJobBean implements Job{
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -91,29 +94,24 @@ public class SfrScheduler3 extends QuartzJobBean {
 						int batCnt = rs2.getInt(1); // 원본 테이블 전체 갯수 
 						
 						if(batCnt == 0) {
-							log.debug("신규 데이터 추가");
 							// 신규 데이터 추가
 							sql = "INSERT INTO "+tblBatNm+ " (SELECT * FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ ="+seq+")";
 							stmt.addBatch(sql);
 						}else {
-							log.debug("기존 데이터 삭제");
 							// 기존 데이터 삭제
 							sql = "DELETE FROM "+tblBatNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd;
 							stmt.addBatch(sql);
 							
 							// 변경 데이터 추가
-							log.debug("변경 데이터 추가");
 							sql = "INSERT INTO "+tblBatNm+ " (SELECT * FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ ="+seq+")";
 							stmt.addBatch(sql);
 						}
 						
 						// 백업 테이블에 추가
-						log.debug("백업 데이터 추가");
 						sql = "INSERT INTO "+tblBakNm+ " (SELECT * FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ = "+seq+")";
 						stmt.addBatch(sql);
 						
 						// 원본 데이터 삭제
-						log.debug("원본 데이터 삭제");
 //						sql = "DELETE FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ = "+seq;
 						sql = "UPDATE "+tblOrgNm+" SET result_code ='1' WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ = "+seq;
 						stmt.addBatch(sql);
@@ -133,6 +131,8 @@ public class SfrScheduler3 extends QuartzJobBean {
 				}
 				
 	            System.out.println(sdfNow.format(System.currentTimeMillis()) + "] " + resultCnt + "건 executeBatch()");
+			}else {
+				log.debug("-------------MOUS BATCH COUNT 0------------	:"+sdfNow.format(System.currentTimeMillis()));
 			}
 			
 			log.debug("-------------MOUS BATCH END------------	:"+sdfNow.format(System.currentTimeMillis()));
