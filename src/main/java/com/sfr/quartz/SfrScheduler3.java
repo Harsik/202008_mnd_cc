@@ -53,7 +53,7 @@ public class SfrScheduler3 extends QuartzJobBean {
 			String tblBatNm = "TBL_MOUS_USER"; 		// 배치 테이블 이름
 			int splitNum = 100; // 분할 건수
 			
-			pstmt = conn.prepareStatement("SELECT COUNT(*) FROM " + tblOrgNm);
+			pstmt = conn.prepareStatement("SELECT COUNT(*) FROM " + tblOrgNm + " WHERE result_code ='0'");
 			
 			rs = pstmt.executeQuery();
 			rs.next();
@@ -67,9 +67,9 @@ public class SfrScheduler3 extends QuartzJobBean {
 			
 			if(orgTot>0){ // 원본 테이블에 들어온 데이터가 1건이라도 있으면 실행
 				for(int i=0; i<orgTot; i+=splitNum ){
-					log.debug("================== " + i + " / " + orgTot);
+					log.debug("[ " + i + " / " + orgTot + " ] " + sdfNow.format(System.currentTimeMillis()));
 					
-					pstmt = conn.prepareStatement("SELECT mdcd,srvno,dims_data_seq FROM " + tblOrgNm + " ORDER BY DIMS_DATA_SEQ ASC LIMIT "+splitNum);
+					pstmt = conn.prepareStatement("SELECT MDCD,SRVNO,DIMS_DATA_SEQ FROM " + tblOrgNm + " WHERE RESULT_CODE ='0' ORDER BY DIMS_DATA_SEQ ASC LIMIT "+splitNum);
 					rs = pstmt.executeQuery();
 					
 					while(rs.next()) {
@@ -91,41 +91,32 @@ public class SfrScheduler3 extends QuartzJobBean {
 						int batCnt = rs2.getInt(1); // 원본 테이블 전체 갯수 
 						
 						if(batCnt == 0) {
+							log.debug("신규 데이터 추가");
 							// 신규 데이터 추가
 							sql = "INSERT INTO "+tblBatNm+ " (SELECT * FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ ="+seq+")";
 							stmt.addBatch(sql);
-//							stmt = conn.createStatement();
-//							stmt.executeUpdate(sql);
-//							stmt.close();
 						}else {
+							log.debug("기존 데이터 삭제");
 							// 기존 데이터 삭제
 							sql = "DELETE FROM "+tblBatNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd;
 							stmt.addBatch(sql);
-//							stmt = conn.createStatement();
-//							stmt.executeUpdate(sql);
-//							stmt.close();
 							
 							// 변경 데이터 추가
+							log.debug("변경 데이터 추가");
 							sql = "INSERT INTO "+tblBatNm+ " (SELECT * FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ ="+seq+")";
 							stmt.addBatch(sql);
-//							stmt = conn.createStatement();
-//							stmt.executeUpdate(sql);
-//							stmt.close();
 						}
 						
 						// 백업 테이블에 추가
+						log.debug("백업 데이터 추가");
 						sql = "INSERT INTO "+tblBakNm+ " (SELECT * FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ = "+seq+")";
 						stmt.addBatch(sql);
-//						stmt = conn.createStatement();
-//						stmt.executeUpdate(sql);
-//						stmt.close();
 						
 						// 원본 데이터 삭제
-						sql = "DELETE FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ = "+seq;
+						log.debug("원본 데이터 삭제");
+//						sql = "DELETE FROM "+tblOrgNm+" WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ = "+seq;
+						sql = "UPDATE "+tblOrgNm+" SET result_code ='1' WHERE SRVNO='"+srvno+"' AND MDCD ="+mdcd+" AND DIMS_DATA_SEQ = "+seq;
 						stmt.addBatch(sql);
-//						stmt = conn.createStatement();
-//						stmt.executeUpdate(sql);
-//						stmt.close();
 						
 						resultCnt++;
 						
